@@ -6,12 +6,19 @@ Our task is to develop a smart study planner. A Java application that organizes 
 
 **Deliverables**
 1. Access: github repository (working release) + upload source code to canvas
+   
 • documentation and instructions
+
 • Jira (& Confluence) repository where you store your project management details that show how you progressed through your sprints (e.g., reviews and retrospectives)
 
-2. Provide: Additional Material
+
+3. Provide: Additional Material
 • demonstration video (10 minutes) including technical details
+
 • advertising video (2 minutes) appropriate for marketing to potential customers
+
 • statement of code provenance (in line with copyrights!, usage of tools)
+
 • statement of contribution
+
 • a URL to a running web version of your project
