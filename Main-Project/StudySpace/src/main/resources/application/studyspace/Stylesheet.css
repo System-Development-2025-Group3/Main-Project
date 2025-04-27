@@ -1,0 +1,66 @@
+/* Login Screen*/
+
+.custom-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-padding: 2;
+    -fx-background-insets: 0;
+    -fx-shape: "M0,0 H12 V12 H0 Z";
+    -fx-alignment: LEFT;
+}
+
+.custom-checkbox:selected .box {
+    -fx-background-color: green;
+    -fx-border-color: black;
+}
+
+.custom-checkbox .mark {
+    -fx-background-color: white;
+}
+
+.password-field {
+    -fx-background-color: #f2f1f1;
+    -fx-border-color: #ffffff;
+    -fx-background-radius: 20;
+}
+
+.password-field:hover {
+    -fx-background-color: #becaff;
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-prompt-text-fill: #ffffff;
+
+}
+
+.password-field:focused {
+    -fx-background-color: #becaff;
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+}
+
+
+.text-field {
+    -fx-background-color: #f2f1f1;
+    -fx-border-color: #ffffff;
+    -fx-background-radius: 20;
+}
+
+.text-field:hover {
+    -fx-background-color: #becaff;
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-prompt-text-fill: #ffffff;
+}
+
+.text-field:focused {
+    -fx-background-color: #becaff;
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+}
+
+
