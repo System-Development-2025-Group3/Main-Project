@@ -5,10 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -54,10 +51,13 @@ public class LoginController extends BaseControllerLoginRegister {
     private CheckBox StayLoggedInCheckBox;
 
     @FXML
-    private TextField WelcomeTitleTextfield, DescriptionPasswordTextfield, DescriptionEmailTextfield, InputEmailTextfield;
+    private TextField DescriptionPasswordTextfield, DescriptionEmailTextfield, InputEmailTextfield;
 
     @FXML
     private Text linkText;
+
+    @FXML
+    private Label WelcomeTitle;
 
     @FXML
     public void initialize() {
@@ -68,7 +68,7 @@ public class LoginController extends BaseControllerLoginRegister {
 
         // List of elements to configure
         List<Region> elementsToConfigure = new ArrayList<>();
-        elementsToConfigure.add(WelcomeTitleTextfield);
+        elementsToConfigure.add(WelcomeTitle);
         elementsToConfigure.add(textFlow);
         elementsToConfigure.add(DescriptionEmailTextfield);
         elementsToConfigure.add(InputEmailTextfield);
@@ -88,7 +88,7 @@ public class LoginController extends BaseControllerLoginRegister {
 
         // Apply additional style bindings for specific elements if needed
         Map<Region, Double> elementsWithFontScales = new LinkedHashMap<>();
-        elementsWithFontScales.put(WelcomeTitleTextfield, 0.05);
+        elementsWithFontScales.put(WelcomeTitle, 0.05);
         elementsWithFontScales.put(textFlow, 0.04);
         elementsWithFontScales.put(DescriptionEmailTextfield, 0.04);
         elementsWithFontScales.put(InputEmailTextfield, 0.04);

@@ -62,5 +62,12 @@
     -fx-border-width: 2px;
     -fx-border-radius: 20px;
 }
+#linkText {
+    -fx-fill: blue;
+    -fx-underline: true;
+}
 
+#linkText:hover {
+    -fx-fill: darkblue;
+}
 

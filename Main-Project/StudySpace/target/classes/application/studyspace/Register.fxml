@@ -1,178 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Arc?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="AnchorPaneLogin"
-    prefHeight="615.0"
-    prefWidth="786.0"
-    style="-fx-background-color: #ecf1ff;"
-    stylesheets="Stylesheet.css"
-    xmlns="http://javafx.com/javafx/23.0.1"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="application.studyspace.RegisterController">
+<AnchorPane fx:id="AnchorPaneLogin" prefHeight="615.0" prefWidth="786.0" style="-fx-background-color: #ecf1ff;" stylesheets="Stylesheet.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.RegisterController">
 
     <children>
-        <Arc
-            fx:id="arc1"
-            fill="#6e85d5"
-            length="180.0"
-            radiusX="361.0"
-            radiusY="308.0"
-            startAngle="90.0"
-            stroke="#6e85d5"
-            strokeType="INSIDE"
-            type="ROUND" />
-        <Arc
-            fx:id="arc2"
-            fill="#a6b1f6"
-            length="180.0"
-            radiusX="282.0"
-            radiusY="308.0"
-            startAngle="90.0"
-            stroke="#a6b1f6"
-            strokeType="INSIDE"
-            type="ROUND" />
-        <Arc
-            fx:id="arc3"
-            fill="#e2e4ff"
-            length="180.0"
-            radiusX="180.0"
-            radiusY="308.0"
-            startAngle="90.0"
-            stroke="#e2e4ff"
-            strokeType="INSIDE"
-            type="ROUND" />
-        <Pane
-            fx:id="LoginPane"
-            layoutX="71.0"
-            layoutY="119.0"
-            prefHeight="415.0"
-            prefWidth="316.0"
-            style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
+        <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0" startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND" />
+        <Arc fx:id="arc2" fill="#a6b1f6" length="180.0" radiusX="282.0" radiusY="308.0" startAngle="90.0" stroke="#a6b1f6" strokeType="INSIDE" type="ROUND" />
+        <Arc fx:id="arc3" fill="#e2e4ff" length="180.0" radiusX="180.0" radiusY="308.0" startAngle="90.0" stroke="#e2e4ff" strokeType="INSIDE" type="ROUND" />
+        <Pane fx:id="LoginPane" layoutX="71.0" layoutY="119.0" prefHeight="415.0" prefWidth="316.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
             <children>
-                <TextField
-                    fx:id="WelcomeTitleTextfield"
-                    alignment="CENTER"
-                    editable="false"
-                    layoutX="26.0"
-                    layoutY="14.0"
-                    style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                    text="Welcome to StudySpace!">
+                <TextField fx:id="WelcomeTitleTextfield" alignment="CENTER" editable="false" layoutX="26.0" layoutY="14.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Welcome to StudySpace!">
                     <font>
                         <Font name="Apple Braille" size="21.0" />
                     </font>
                 </TextField>
-                <TextArea
-                    fx:id="TextAreaRegister"
-                    layoutY="58.0"
-                    prefHeight="122.0"
-                    prefWidth="316.0"
-                    style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                    text="Welcome to our Application. As you have chosen to create an account, please do so by providing your e-mail and username below.">
-                </TextArea>
+                <Label fx:id="TextAreaRegister" layoutY="58.0" prefWidth="316.0"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                       text="Welcome to our Application. As you have chosen to create an account, please do so by providing your e-mail and username below."
+                       wrapText="true">
+                    <font>
+                        <Font name="Apple Braille" size="16.0" />
+                    </font>
+                </Label>
 
-                <TextField
-                    fx:id="RegisterEmailField"
-                    id="tfEmail"
-                    layoutX="31.0"
-                    layoutY="171.0"
-                    prefHeight="37.0"
-                    prefWidth="246.0"
-                    promptText="Please input your email ..."
-                    styleClass="text-field"
-                    stylesheets="@Stylesheet.css">
+                <TextField id="tfEmail" fx:id="RegisterEmailField" layoutX="31.0" layoutY="171.0" prefHeight="37.0" prefWidth="246.0" promptText="Please input your email ..." styleClass="text-field" stylesheets="@Stylesheet.css">
                     <font>
                         <Font name="Apple Braille" size="16.0" />
                     </font>
                 </TextField>
-                <TextField
-                    fx:id="DescriptionEmailTextfield"
-                    editable="false"
-                    layoutX="33.0"
-                    layoutY="134.0"
-                    style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                    text="E-Mail">
+                <TextField fx:id="DescriptionEmailTextfield" editable="false" layoutX="33.0" layoutY="134.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="E-Mail">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
                 </TextField>
 
-                <PasswordField
-                    fx:id="RegisterPassword_1"
-                    layoutX="31.0"
-                    layoutY="258.0"
-                    prefHeight="37.0"
-                    prefWidth="246.0"
-                    promptText="Please input your Password ..."
-                    styleClass="password-field"
-                    stylesheets="@Stylesheet.css">
+                <PasswordField fx:id="RegisterPassword_1" layoutX="31.0" layoutY="258.0" prefHeight="37.0" prefWidth="246.0" promptText="Please input your Password ..." styleClass="password-field" stylesheets="@Stylesheet.css">
                     <styleClass>password-field</styleClass>
                     <font>
                         <Font name="Apple Braille" size="16.0" />
                     </font>
                 </PasswordField>
 
-                <PasswordField
-                        fx:id="RegisterPassword_2"
-                        layoutX="31.0"
-                        layoutY="258.0"
-                        prefHeight="37.0"
-                        prefWidth="246.0"
-                        promptText="Please confirm your Password ..."
-                        styleClass="password-field"
-                        stylesheets="@Stylesheet.css">
+                <PasswordField fx:id="RegisterPassword_2" layoutX="31.0" layoutY="258.0" prefHeight="37.0" prefWidth="246.0" promptText="Please confirm your Password ..." styleClass="password-field" stylesheets="@Stylesheet.css">
                     <styleClass>password-field</styleClass>
                     <font>
                         <Font name="Apple Braille" size="16.0" />
                     </font>
                 </PasswordField>
 
-                <TextField
-                    fx:id="DescriptionPasswordTextfield_1"
-                    editable="false"
-                    layoutX="33.0"
-                    layoutY="221.0"
-                    style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                    text="Please choose a Password for the Application:">
+                <TextField fx:id="DescriptionPasswordTextfield_1" editable="false" layoutX="33.0" layoutY="221.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Please choose a Password for the Application:">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
                 </TextField>
 
-                <TextField
-                        fx:id="DescriptionPasswordTextfield_2"
-                        editable="false"
-                        layoutX="33.0"
-                        layoutY="221.0"
-                        style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                        text="Please confirm your Password:">
+                <TextField fx:id="DescriptionPasswordTextfield_2" editable="false" layoutX="33.0" layoutY="221.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Please confirm your Password:">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
                 </TextField>
 
-                <Button
-                        fx:id="SubmitRegistrationButton"
-                        layoutX="111.0"
-                        layoutY="353.0"
-                        mnemonicParsing="false"
-                        prefHeight="43.0"
-                        prefWidth="86.0"
-                        style="-fx-background-color: #e2e4ff; -fx-background-radius: 20; -fx-alignment: CENTER"
-                        text="Login">
+                <Button fx:id="SubmitRegistrationButton" layoutX="111.0" layoutY="353.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="86.0" style="-fx-background-color: #e2e4ff; -fx-background-radius: 20; -fx-alignment: CENTER" text="Login">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
@@ -182,52 +75,26 @@
         </Pane>
 
 
-        <Pane
-                layoutX="26.0"
-                layoutY="23.0"
-                style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
+        <Pane layoutX="26.0" layoutY="23.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
             <children>
-                <MenuBar
-                        accessibleRole="BUTTON"
-                        layoutX="79.0"
-                        layoutY="11.0"
-                        prefHeight="37.0"
-                        style="-fx-background-color: #ffffff; -fx-border-color: #ffffff; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 5px;">
+                <MenuBar accessibleRole="BUTTON" layoutX="79.0" layoutY="11.0" prefHeight="37.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 5px;">
                     <menus>
-                        <Menu
-                                mnemonicParsing="false"
-                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                                text="Home |">
+                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="Home |">
                         </Menu>
-                        <Menu
-                                mnemonicParsing="false"
-                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                                text="About Us |">
+                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="About Us |">
                         </Menu>
-                        <Menu
-                                mnemonicParsing="false"
-                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                                text="Contact">
+                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="Contact">
                         </Menu>
                     </menus>
                 </MenuBar>
-                <ImageView
-                        fitHeight="53.0"
-                        fitWidth="67.0"
-                        pickOnBounds="true"
-                        preserveRatio="true">
+                <ImageView fitHeight="53.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../images/LoginPage03.png" />
                     </image>
                 </ImageView>
             </children>
         </Pane>
-        <ImageView
-                fx:id="Image01"
-                fitHeight="375.0"
-                fitWidth="358.0"
-                pickOnBounds="true"
-                preserveRatio="true">
+        <ImageView fx:id="Image01" fitHeight="375.0" fitWidth="358.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/LoginPage01.png" />
             </image>

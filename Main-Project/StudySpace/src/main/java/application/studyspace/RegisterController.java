@@ -16,7 +16,7 @@ import static application.studyspace.BaseControllerLoginRegister.LayoutBindings.
 public class RegisterController extends BaseControllerLoginRegister {
 
     @FXML
-    private TextArea TextAreaRegister;
+    private Label TextAreaRegister;
 
     @FXML
     private Button SubmitRegistrationButton;
