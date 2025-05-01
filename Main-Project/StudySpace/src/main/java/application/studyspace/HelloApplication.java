@@ -13,7 +13,6 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
-        //loads css to be used without direct reference
         scene.getStylesheets().add(getClass().getResource("Stylesheet.css").toExternalForm());
         
         stage.setTitle("LoginPage");
