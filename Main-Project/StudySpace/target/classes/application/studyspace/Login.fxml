@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -24,7 +23,7 @@
     stylesheets="Stylesheet.css"
     xmlns="http://javafx.com/javafx/23.0.1"
     xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="application.studyspace.HelloController">
+    fx:controller="application.studyspace.LoginController">
 
     <children>
         <Arc
@@ -88,7 +87,8 @@
                         <Text
                             fx:id="linkText"
                             text="register"
-                            style="-fx-fill: blue; -fx-underline: true;" />
+                            style="-fx-fill: blue; -fx-underline: true;"
+                            onMouseClicked="#handleRegisterTextClick"/>
                         <Text text=" for a new user Account on StudyFlow?" />
                     </children>
                 </TextFlow>

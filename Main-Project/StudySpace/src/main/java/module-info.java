@@ -9,6 +9,7 @@ module application.studyspace {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires java.desktop;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;

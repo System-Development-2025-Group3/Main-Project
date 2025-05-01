@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,18 +13,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextArea?>
 
-<AnchorPane
-    fx:id="AnchorPaneLogin"
+<AnchorPane fx:id="AnchorPaneLogin"
     prefHeight="615.0"
     prefWidth="786.0"
     style="-fx-background-color: #ecf1ff;"
     stylesheets="Stylesheet.css"
     xmlns="http://javafx.com/javafx/23.0.1"
     xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="application.studyspace.HelloController">
+    fx:controller="application.studyspace.RegisterController">
 
     <children>
         <Arc
@@ -77,24 +75,17 @@
                         <Font name="Apple Braille" size="21.0" />
                     </font>
                 </TextField>
-                <TextFlow
-                    fx:id="textFlow"
+                <TextArea
+                    fx:id="TextAreaRegister"
                     layoutY="58.0"
                     prefHeight="122.0"
                     prefWidth="316.0"
-                    style="-fx-background-color: transparent; -fx-border-color: transparent;">
-                    <children>
-                        <Text text="Do you have an Account or would you like to " />
-                        <Text
-                            fx:id="linkText"
-                            text="register"
-                            style="-fx-fill: blue; -fx-underline: true;" />
-                        <Text text=" for a new user Account on StudyFlow?" />
-                    </children>
-                </TextFlow>
+                    style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                    text="Welcome to our Application. As you have chosen to create an account, please do so by providing your e-mail and username below.">
+                </TextArea>
 
                 <TextField
-                    fx:id="InputEmailTextfield"
+                    fx:id="RegisterEmailField"
                     id="tfEmail"
                     layoutX="31.0"
                     layoutY="171.0"
@@ -120,7 +111,7 @@
                 </TextField>
 
                 <PasswordField
-                    fx:id="InputPassword"
+                    fx:id="RegisterPassword_1"
                     layoutX="31.0"
                     layoutY="258.0"
                     prefHeight="37.0"
@@ -134,85 +125,97 @@
                     </font>
                 </PasswordField>
 
+                <PasswordField
+                        fx:id="RegisterPassword_2"
+                        layoutX="31.0"
+                        layoutY="258.0"
+                        prefHeight="37.0"
+                        prefWidth="246.0"
+                        promptText="Please confirm your Password ..."
+                        styleClass="password-field"
+                        stylesheets="@Stylesheet.css">
+                    <styleClass>password-field</styleClass>
+                    <font>
+                        <Font name="Apple Braille" size="16.0" />
+                    </font>
+                </PasswordField>
+
                 <TextField
-                    fx:id="DescriptionPasswordTextfield"
+                    fx:id="DescriptionPasswordTextfield_1"
                     editable="false"
                     layoutX="33.0"
                     layoutY="221.0"
                     style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                    text="Password">
+                    text="Please choose a Password for the Application:">
+                    <font>
+                        <Font name="Apple Braille" size="18.0" />
+                    </font>
+                </TextField>
+
+                <TextField
+                        fx:id="DescriptionPasswordTextfield_2"
+                        editable="false"
+                        layoutX="33.0"
+                        layoutY="221.0"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                        text="Please confirm your Password:">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
                 </TextField>
 
                 <Button
-                    fx:id="SubmitLoginButton"
-                    layoutX="111.0"
-                    layoutY="353.0"
-                    mnemonicParsing="false"
-                    prefHeight="43.0"
-                    prefWidth="86.0"
-                    style="-fx-background-color: #e2e4ff; -fx-background-radius: 20; -fx-alignment: CENTER"
-                    text="Login">
+                        fx:id="SubmitRegistrationButton"
+                        layoutX="111.0"
+                        layoutY="353.0"
+                        mnemonicParsing="false"
+                        prefHeight="43.0"
+                        prefWidth="86.0"
+                        style="-fx-background-color: #e2e4ff; -fx-background-radius: 20; -fx-alignment: CENTER"
+                        text="Login">
                     <font>
                         <Font name="Apple Braille" size="18.0" />
                     </font>
                 </Button>
-
-                <CheckBox
-                    fx:id="StayLoggedInCheckBox"
-                    layoutX="33.0"
-                    layoutY="308.0"
-                    mnemonicParsing="false"
-                    style="-fx-background-color: #ffffff;"
-                    styleClass="custom-checkbox"
-                    stylesheets="@Stylesheet.css"
-                    text="Stay Logged in?">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </CheckBox>
-
             </children>
 
         </Pane>
 
 
         <Pane
-            layoutX="26.0"
-            layoutY="23.0"
-            style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
+                layoutX="26.0"
+                layoutY="23.0"
+                style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
             <children>
                 <MenuBar
-                    accessibleRole="BUTTON"
-                    layoutX="79.0"
-                    layoutY="11.0"
-                    prefHeight="37.0"
-                    style="-fx-background-color: #ffffff; -fx-border-color: #ffffff; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 5px;">
+                        accessibleRole="BUTTON"
+                        layoutX="79.0"
+                        layoutY="11.0"
+                        prefHeight="37.0"
+                        style="-fx-background-color: #ffffff; -fx-border-color: #ffffff; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 5px;">
                     <menus>
                         <Menu
-                            mnemonicParsing="false"
-                            style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                            text="Home |">
+                                mnemonicParsing="false"
+                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
+                                text="Home |">
                         </Menu>
                         <Menu
-                            mnemonicParsing="false"
-                            style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                            text="About Us |">
+                                mnemonicParsing="false"
+                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
+                                text="About Us |">
                         </Menu>
                         <Menu
-                            mnemonicParsing="false"
-                            style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
-                            text="Contact">
+                                mnemonicParsing="false"
+                                style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;"
+                                text="Contact">
                         </Menu>
                     </menus>
                 </MenuBar>
                 <ImageView
-                    fitHeight="53.0"
-                    fitWidth="67.0"
-                    pickOnBounds="true"
-                    preserveRatio="true">
+                        fitHeight="53.0"
+                        fitWidth="67.0"
+                        pickOnBounds="true"
+                        preserveRatio="true">
                     <image>
                         <Image url="@../../images/LoginPage03.png" />
                     </image>
@@ -220,11 +223,11 @@
             </children>
         </Pane>
         <ImageView
-            fx:id="Image01"
-            fitHeight="375.0"
-            fitWidth="358.0"
-            pickOnBounds="true"
-            preserveRatio="true">
+                fx:id="Image01"
+                fitHeight="375.0"
+                fitWidth="358.0"
+                pickOnBounds="true"
+                preserveRatio="true">
             <image>
                 <Image url="@../../images/LoginPage01.png" />
             </image>
