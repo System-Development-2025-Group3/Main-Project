@@ -13,7 +13,7 @@
             fx:controller="application.studyspace.controllers.auth.RegisterController"
             prefHeight="720.0" prefWidth="1280.0"
             style="-fx-background-color: #ecf1ff;"
-            stylesheets="@Login.css">
+            stylesheets="@Stylesheet.css">
 
     <!-- Background arcs -->
     <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0"

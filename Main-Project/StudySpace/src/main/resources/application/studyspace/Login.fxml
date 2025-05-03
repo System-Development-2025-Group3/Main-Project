@@ -13,7 +13,7 @@
             fx:id="AnchorPaneLogin"
             prefHeight="720.0" prefWidth="1280.0"
             style="-fx-background-color: #ecf1ff;"
-            stylesheets="@Login.css">
+            stylesheets="@Stylesheet.css">
 
     <!-- Background Arcs -->
     <Arc fx:id="arc1" startAngle="90.0" length="180.0"

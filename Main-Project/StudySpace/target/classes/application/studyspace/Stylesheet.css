@@ -1,72 +1,70 @@
-/* Login Screen*/
+/* LOGIN AND REGISTER SCREEN — Login.css */
 
-.custom-checkbox .box {
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-    -fx-padding: 2;
-    -fx-background-insets: 0;
-    -fx-shape: "M0,0 H12 V12 H0 Z";
+/* General Text Styling */
+.welcome-title {
+    -fx-font-size: 22px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #333;
 }
 
-.custom-checkbox:selected .box {
-    -fx-background-color: green;
-    -fx-border-color: black;
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-padding: 5 0 0 5;
 }
 
-.custom-checkbox .mark {
-    -fx-background-color: white;
-}
-
-.password-field {
-    -fx-background-color: #f2f1f1;
-    -fx-border-color: #ffffff;
-    -fx-background-radius: 20;
-}
-
-.password-field:hover {
-    -fx-background-color: #becaff;
-    -fx-border-color: #b8aefd;
-    -fx-border-width: 2px;
-    -fx-border-radius: 20px;
-    -fx-prompt-text-fill: #ffffff;
-
-}
-
-.password-field:focused {
-    -fx-background-color: #becaff;
-    -fx-border-color: #b8aefd;
-    -fx-border-width: 2px;
-    -fx-border-radius: 20px;
-}
-
-
-.text-field {
-    -fx-background-color: #f2f1f1;
-    -fx-border-color: #ffffff;
-    -fx-background-radius: 20;
-}
-
-.text-field:hover {
-    -fx-background-color: #becaff;
-    -fx-border-color: #b8aefd;
-    -fx-border-width: 2px;
-    -fx-border-radius: 20px;
-    -fx-prompt-text-fill: #ffffff;
-}
-
-.text-field:focused {
-    -fx-background-color: #becaff;
-    -fx-border-color: #b8aefd;
-    -fx-border-width: 2px;
-    -fx-border-radius: 20px;
-}
+/* Link text inside TextFlow */
 #linkText {
-    -fx-fill: blue;
+    -fx-fill: #3a56d8;
     -fx-underline: true;
+    -fx-cursor: hand;
 }
-
 #linkText:hover {
     -fx-fill: darkblue;
 }
 
+/* TextField & PasswordField styling */
+.text-field, .password-field {
+    -fx-background-color: #becaff;
+    -fx-border-color: transparent;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #888;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+}
+
+/* Login/Register Button */
+.button {
+    -fx-background-color: #e2e4ff;
+    -fx-background-radius: 20;
+    -fx-font-size: 16px;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #cfd3ff;
+}
+
+/* Custom Checkbox */
+.custom-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #444;
+    -fx-border-width: 2px;
+    -fx-shape: "M0,0 H12 V12 H0 Z";
+    -fx-background-insets: 0;
+    -fx-padding: 2;
+}
+.custom-checkbox:selected .box {
+    -fx-background-color: green;
+    -fx-border-color: black;
+}
+.custom-checkbox .mark {
+    -fx-background-color: white;
+}
