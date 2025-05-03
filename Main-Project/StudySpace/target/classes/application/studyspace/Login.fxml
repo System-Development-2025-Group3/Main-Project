@@ -22,15 +22,19 @@
 
     <!-- Login Card -->
     <VBox fx:id="LoginCard"
-          spacing="16"
+          spacing="12"
           alignment="CENTER_LEFT"
           style="-fx-background-color: white; -fx-background-radius: 18;">
         <padding>
-            <Insets top="30" right="40" bottom="30" left="40"/>
+            <Insets top="15" right="40" bottom="30" left="40"/>
         </padding>
 
         <Label fx:id="WelcomeTitle" text="Welcome to StudySpace!"
-               styleClass="welcome-title" />
+               styleClass="welcome-title">
+            <VBox.margin>
+                <Insets top="0"/>
+            </VBox.margin>
+        </Label>
 
         <TextFlow fx:id="textFlow" textAlignment="CENTER">
             <Text text="Do you have an Account or would you like to " />
@@ -38,12 +42,20 @@
             <Text text=" for a new user Account on StudyFlow?" />
         </TextFlow>
 
-        <Label text="E-Mail" styleClass="form-label"/>
+        <Label text="E-Mail" styleClass="form-label">
+            <VBox.margin>
+                <Insets top="10" bottom="2"/>
+            </VBox.margin>
+        </Label>
         <TextField fx:id="InputEmailTextfield"
                    promptText="Please input your email ..."
                    styleClass="text-field" />
 
-        <Label text="Password" styleClass="form-label"/>
+        <Label text="Password" styleClass="form-label">
+            <VBox.margin>
+                <Insets top="10" bottom="2"/>
+            </VBox.margin>
+        </Label>
         <PasswordField fx:id="InputPassword"
                        promptText="Please input your Password ..."
                        styleClass="password-field" />
