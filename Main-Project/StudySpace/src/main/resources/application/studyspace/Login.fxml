@@ -1,96 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
 
-<AnchorPane fx:id="AnchorPaneLogin" prefHeight="615.0" prefWidth="786.0" style="-fx-background-color: #ecf1ff;" stylesheets="Stylesheet.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.controllers.LoginController">
+<AnchorPane fx:id="AnchorPaneLogin" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="application.studyspace.controllers.LoginController" prefWidth="800" prefHeight="600">
 
-    <children>
-        <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0" startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND" />
-        <Arc fx:id="arc2" fill="#a6b1f6" length="180.0" radiusX="282.0" radiusY="308.0" startAngle="90.0" stroke="#a6b1f6" strokeType="INSIDE" type="ROUND" />
-        <Arc fx:id="arc3" fill="#e2e4ff" length="180.0" radiusX="180.0" radiusY="308.0" startAngle="90.0" stroke="#e2e4ff" strokeType="INSIDE" type="ROUND" />
-        <Pane fx:id="LoginPane" layoutX="71.0" layoutY="119.0" prefHeight="415.0" prefWidth="316.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
-            <children>
-                <Label fx:id="WelcomeTitle" layoutX="26.0" layoutY="14.0" styleClass="welcome-title" text="Welcome to StudySpace!">
-                    <font>
-                        <Font name="Apple Braille" size="21.0"/>
-                    </font>
-                </Label>
-                <TextFlow fx:id="textFlow" layoutY="58.0" prefHeight="122.0" prefWidth="316.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-                    <children>
-                        <Text text="Do you have an Account or would you like to " />
-                        <Text fx:id="linkText" onMouseClicked="#handleRegisterTextClick" text="register"/>
-                        <Text text=" for a new user Account on StudyFlow?" />
-                    </children>
-                </TextFlow>
+    <!-- Background decorative arcs -->
+    <Arc fx:id="arc1" type="ROUND" fill="#d0e1f9"/>
+    <Arc fx:id="arc2" type="ROUND" fill="#4d648d"/>
+    <Arc fx:id="arc3" type="ROUND" fill="#283655"/>
 
-                <TextField id="tfEmail" fx:id="InputEmailTextfield" layoutX="31.0" layoutY="171.0" prefHeight="37.0" prefWidth="246.0" promptText="Please input your email ..." styleClass="text-field" stylesheets="@Stylesheet.css">
-                    <font>
-                        <Font name="Apple Braille" size="16.0" />
-                    </font>
-                </TextField>
-                <TextField fx:id="DescriptionEmailTextfield" editable="false" layoutX="33.0" layoutY="134.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="E-Mail">
-                    <font>
-                        <Font name="Apple Braille" size="18.0" />
-                    </font>
-                </TextField>
+    <!-- Centered laptop image -->
+    <ImageView fx:id="Image01" AnchorPane.leftAnchor="400.0" AnchorPane.topAnchor="100.0"/>
 
-                <PasswordField fx:id="InputPassword" layoutX="31.0" layoutY="258.0" prefHeight="37.0" prefWidth="246.0" promptText="Please input your Password ..." styleClass="password-field" stylesheets="@Stylesheet.css">
-                    <styleClass>password-field</styleClass>
-                    <font>
-                        <Font name="Apple Braille" size="16.0" />
-                    </font>
-                </PasswordField>
+    <!-- VBox container for login form -->
+    <VBox fx:id="LoginPane" spacing="10" alignment="CENTER"
+          AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0"
+          AnchorPane.topAnchor="150.0" AnchorPane.bottomAnchor="100.0">
 
-                <TextField fx:id="DescriptionPasswordTextfield" editable="false" layoutX="33.0" layoutY="221.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Password">
-                    <font>
-                        <Font name="Apple Braille" size="18.0" />
-                    </font>
-                </TextField>
+        <Label fx:id="WelcomeTitle" text="Welcome to StudySpace" />
+        <TextFlow fx:id="textFlow">
+            <Text text="Login to access your dashboard" />
+        </TextFlow>
 
-                <Button fx:id="SubmitLoginButton" layoutX="111.0" layoutY="353.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="86.0" style="-fx-background-color: #e2e4ff; -fx-background-radius: 20; -fx-alignment: CENTER" text="Login">
-                    <font>
-                        <Font name="Apple Braille" size="18.0" />
-                    </font>
-                </Button>
+        <TextField fx:id="DescriptionEmailTextfield" promptText="Email Description"/>
+        <TextField fx:id="InputEmailTextfield" promptText="Email"/>
 
-                <CheckBox fx:id="StayLoggedInCheckBox" layoutX="33.0" layoutY="308.0" mnemonicParsing="false" style="-fx-background-color: #ffffff;" styleClass="custom-checkbox" stylesheets="@Stylesheet.css" text="Stay Logged in?">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </CheckBox>
+        <TextField fx:id="DescriptionPasswordTextfield" promptText="Password Description"/>
+        <PasswordField fx:id="InputPassword" promptText="Password"/>
 
-            </children>
+        <CheckBox fx:id="StayLoggedInCheckBox" text="Stay Logged In"/>
 
-        </Pane>
-
-
-        <Pane layoutX="26.0" layoutY="23.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20;">
-            <children>
-                <MenuBar accessibleRole="BUTTON" layoutX="79.0" layoutY="11.0" prefHeight="37.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 5px;">
-                    <menus>
-                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="Home |">
-                        </Menu>
-                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="About Us |">
-                        </Menu>
-                        <Menu mnemonicParsing="false" style="-fx-padding: 0 10 0 10; -fx-font-size: 18px; -fx-font-family: 'Apple Braille'; -fx-alignment: center;" text="Contact">
-                        </Menu>
-                    </menus>
-                </MenuBar>
-                <ImageView fitHeight="53.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../../images/LoginPage03.png" />
-                    </image>
-                </ImageView>
-            </children>
-        </Pane>
-        <ImageView fx:id="Image01" fitHeight="375.0" fitWidth="358.0" layoutX="367.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../../images/LoginPage01.png" />
-            </image>
-        </ImageView>
-    </children>
+        <Button fx:id="SubmitLoginButton" text="Log In"/>
+        <Text fx:id="linkText" text="Don't have an account? Register here." style="-fx-fill: blue; -fx-underline: true;"/>
+    </VBox>
 </AnchorPane>
