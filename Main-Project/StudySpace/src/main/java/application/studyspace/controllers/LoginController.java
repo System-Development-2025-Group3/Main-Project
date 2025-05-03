@@ -1,5 +1,6 @@
-package application.studyspace;
+package application.studyspace.controllers;
 
+import application.studyspace.MainApp;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,9 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static application.studyspace.BaseControllerLoginRegister.LayoutBindings.bindFontSize;
+import static application.studyspace.controllers.BaseController.LayoutBindings.bindFontSize;
 
-public class LoginController extends BaseControllerLoginRegister {
+public class LoginController extends BaseController {
 
     @FXML
     private ImageView Image01;
@@ -108,7 +109,7 @@ public class LoginController extends BaseControllerLoginRegister {
     @FXML
     private void handleRegisterTextClick(MouseEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Register.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("Register.fxml"));
             Parent registerView = fxmlLoader.load();
 
             // Set the current stage

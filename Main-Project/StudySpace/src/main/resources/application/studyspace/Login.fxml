@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="AnchorPaneLogin" prefHeight="615.0" prefWidth="786.0" style="-fx-background-color: #ecf1ff;" stylesheets="Stylesheet.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.LoginController">
+<AnchorPane fx:id="AnchorPaneLogin" prefHeight="615.0" prefWidth="786.0" style="-fx-background-color: #ecf1ff;" stylesheets="Stylesheet.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.controllers.LoginController">
 
     <children>
         <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0" startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND" />

@@ -1,4 +1,4 @@
-package application.studyspace;
+package application.studyspace.services;
 
 import java.sql.*;
 

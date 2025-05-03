@@ -1,9 +1,7 @@
-package application.studyspace;
+package application.studyspace.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import java.util.ArrayList;
@@ -11,9 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static application.studyspace.BaseControllerLoginRegister.LayoutBindings.bindFontSize;
+import static application.studyspace.controllers.BaseController.LayoutBindings.bindFontSize;
 
-public class RegisterController extends BaseControllerLoginRegister {
+public class RegisterController extends BaseController {
 
     @FXML
     private Label TextAreaRegister;

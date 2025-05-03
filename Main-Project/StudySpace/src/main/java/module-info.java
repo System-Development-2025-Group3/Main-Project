@@ -13,4 +13,8 @@ module application.studyspace {
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;
+    exports application.studyspace.controllers;
+    opens application.studyspace.controllers to javafx.fxml;
+    exports application.studyspace.services;
+    opens application.studyspace.services to javafx.fxml;
 }
