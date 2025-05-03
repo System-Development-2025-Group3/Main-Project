@@ -1,4 +1,4 @@
-package application.studyspace.controllers;
+package application.studyspace.controllers.auth;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

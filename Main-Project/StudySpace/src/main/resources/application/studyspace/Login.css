@@ -1,0 +1,72 @@
+/* LOGIN SCREEN — login.css */
+
+/* General Text Styling */
+.welcome-title {
+    -fx-font-size: 22px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #333;
+}
+
+#linkText {
+    -fx-fill: #3a56d8;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
+#linkText:hover {
+    -fx-fill: darkblue;
+}
+
+/* Input fields */
+.text-field, .password-field {
+    -fx-background-color: #becaff;
+    -fx-border-color: transparent;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #888;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #b8aefd;
+    -fx-border-width: 2px;
+}
+
+/* Login Button */
+.button {
+    -fx-background-color: #e2e4ff;
+    -fx-background-radius: 20;
+    -fx-font-size: 16px;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #cfd3ff;
+}
+
+/* Checkbox */
+.custom-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #444;
+    -fx-border-width: 2px;
+    -fx-shape: "M0,0 H12 V12 H0 Z";
+    -fx-background-insets: 0;
+    -fx-padding: 2;
+}
+
+.custom-checkbox:selected .box {
+    -fx-background-color: green;
+    -fx-border-color: black;
+}
+
+.custom-checkbox .mark {
+    -fx-background-color: white;
+}
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-padding: 5 0 0 5;
+}

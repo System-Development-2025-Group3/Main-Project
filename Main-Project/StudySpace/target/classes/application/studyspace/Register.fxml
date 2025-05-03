@@ -2,27 +2,68 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane fx:id="AnchorPaneLogin" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.RegisterController" prefWidth="800" prefHeight="600">
+<?import javafx.scene.shape.Arc?>
+<AnchorPane fx:id="AnchorPaneLogin"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="application.studyspace.controllers.auth.RegisterController"
+            prefHeight="720.0" prefWidth="1280.0"
+            style="-fx-background-color: #ecf1ff;"
+            stylesheets="@Login.css">
 
-    <VBox fx:id="LoginPane" spacing="10" alignment="CENTER"
-          AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0"
-          AnchorPane.topAnchor="150.0" AnchorPane.bottomAnchor="100.0">
+    <!-- Background arcs -->
+    <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0"
+         startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND" />
+    <Arc fx:id="arc2" fill="#a6b1f6" length="180.0" radiusX="282.0" radiusY="308.0"
+         startAngle="90.0" stroke="#a6b1f6" strokeType="INSIDE" type="ROUND" />
+    <Arc fx:id="arc3" fill="#e2e4ff" length="180.0" radiusX="180.0" radiusY="308.0"
+         startAngle="90.0" stroke="#e2e4ff" strokeType="INSIDE" type="ROUND" />
 
-        <TextField fx:id="WelcomeTitleTextfield" promptText="Welcome Title"/>
-        <Label fx:id="TextAreaRegister" text="Create your StudySpace account"/>
+    <!-- Register Card -->
+    <VBox fx:id="LoginCard"
+          spacing="16"
+          alignment="CENTER"
+          style="-fx-background-color: white; -fx-background-radius: 18;">
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
 
-        <TextField fx:id="DescriptionEmailTextfield" promptText="Email Description"/>
-        <TextField fx:id="RegisterEmailField" promptText="Email"/>
+        <Label fx:id="TextAreaRegister" text="Create your StudySpace account"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
-        <TextField fx:id="DescriptionPasswordTextfield_1" promptText="Password Description"/>
-        <PasswordField fx:id="RegisterPassword_1" promptText="Password"/>
+        <Label text="E-Mail" />
+        <TextField fx:id="RegisterEmailField" promptText="Enter your email" />
 
-        <TextField fx:id="DescriptionPasswordTextfield_2" promptText="Repeat Password Description"/>
-        <PasswordField fx:id="RegisterPassword_2" promptText="Repeat Password"/>
+        <Label text="Password" />
+        <PasswordField fx:id="RegisterPassword_1" promptText="Enter password" />
 
-        <Button fx:id="SubmitRegistrationButton" text="Register"/>
+        <Label text="Repeat Password" />
+        <PasswordField fx:id="RegisterPassword_2" promptText="Repeat password" />
+
+        <Button fx:id="SubmitRegistrationButton" text="Register"
+                styleClass="button" />
     </VBox>
+
+    <!-- Laptop Image -->
+    <ImageView fx:id="Image01" preserveRatio="true">
+        <Image url="@../../images/LoginPage01.png"/>
+    </ImageView>
+
+    <!-- Top menu bar -->
+    <Pane layoutX="20.0" layoutY="20.0"
+          style="-fx-background-color: white; -fx-background-radius: 20;">
+        <MenuBar layoutX="79.0" layoutY="11.0" prefHeight="37.0"
+                 style="-fx-background-color: white;">
+            <Menu text="Home |"/>
+            <Menu text="About Us |"/>
+            <Menu text="Contact"/>
+        </MenuBar>
+        <ImageView fitHeight="53.0" fitWidth="67.0" preserveRatio="true">
+            <Image url="@../../images/LoginPage03.png"/>
+        </ImageView>
+    </Pane>
 </AnchorPane>
