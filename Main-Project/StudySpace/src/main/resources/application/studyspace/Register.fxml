@@ -5,8 +5,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.shape.Arc?>
+
 <AnchorPane fx:id="AnchorPaneLogin"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml"
@@ -16,36 +16,32 @@
             stylesheets="@Stylesheet.css">
 
     <!-- Background arcs -->
-    <Arc fx:id="arc1" fill="#6e85d5" length="180.0" radiusX="361.0" radiusY="308.0"
-         startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND" />
-    <Arc fx:id="arc2" fill="#a6b1f6" length="180.0" radiusX="282.0" radiusY="308.0"
-         startAngle="90.0" stroke="#a6b1f6" strokeType="INSIDE" type="ROUND" />
-    <Arc fx:id="arc3" fill="#e2e4ff" length="180.0" radiusX="180.0" radiusY="308.0"
-         startAngle="90.0" stroke="#e2e4ff" strokeType="INSIDE" type="ROUND" />
+    <Arc fx:id="arc1" fill="#6e85d5" length="180.0" startAngle="90.0" stroke="#6e85d5" strokeType="INSIDE" type="ROUND"/>
+    <Arc fx:id="arc2" fill="#a6b1f6" length="180.0" startAngle="90.0" stroke="#a6b1f6" strokeType="INSIDE" type="ROUND"/>
+    <Arc fx:id="arc3" fill="#e2e4ff" length="180.0" startAngle="90.0" stroke="#e2e4ff" strokeType="INSIDE" type="ROUND"/>
 
     <!-- Register Card -->
     <VBox fx:id="LoginCard"
           spacing="16"
-          alignment="CENTER"
+          alignment="CENTER_LEFT"
           style="-fx-background-color: white; -fx-background-radius: 18;">
         <padding>
             <Insets top="30" right="40" bottom="30" left="40"/>
         </padding>
 
         <Label fx:id="TextAreaRegister" text="Create your StudySpace account"
-               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+               styleClass="welcome-title" />
 
-        <Label text="E-Mail" />
-        <TextField fx:id="RegisterEmailField" promptText="Enter your email" />
+        <Label text="E-Mail" styleClass="form-label"/>
+        <TextField fx:id="RegisterEmailField" promptText="Enter your email" styleClass="text-field"/>
 
-        <Label text="Password" />
-        <PasswordField fx:id="RegisterPassword_1" promptText="Enter password" />
+        <Label text="Password" styleClass="form-label"/>
+        <PasswordField fx:id="RegisterPassword_1" promptText="Enter password" styleClass="password-field"/>
 
-        <Label text="Repeat Password" />
-        <PasswordField fx:id="RegisterPassword_2" promptText="Repeat password" />
+        <Label text="Repeat Password" styleClass="form-label"/>
+        <PasswordField fx:id="RegisterPassword_2" promptText="Repeat password" styleClass="password-field"/>
 
-        <Button fx:id="SubmitRegistrationButton" text="Register"
-                styleClass="button" />
+        <Button fx:id="SubmitRegistrationButton" text="Register" styleClass="button"/>
     </VBox>
 
     <!-- Laptop Image -->
