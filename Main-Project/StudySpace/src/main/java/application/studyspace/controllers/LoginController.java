@@ -2,10 +2,7 @@ package application.studyspace.controllers;
 
 import application.studyspace.MainApp;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import application.studyspace.services.SceneSwitcher;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -106,22 +103,10 @@ public class LoginController extends BaseController {
         linkText.setOnMouseClicked(this::handleRegisterTextClick);
     }
 
+    //switches scene to the register page upon button press
     @FXML
     private void handleRegisterTextClick(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("Register.fxml"));
-            Parent registerView = fxmlLoader.load();
-
-            // Set the current stage
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Set the new scene in the same stage
-            currentStage.setScene(new Scene(registerView));
-            currentStage.setTitle("Register"); // Update the title (optional)
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Could not load Register.fxml: " + e.getMessage());
-        }
+        SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Register.fxml", "Register");
     }
 
 
