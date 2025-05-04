@@ -73,7 +73,8 @@
 
                         <Button fx:id="SubmitLoginButton"
                                 text="Login"
-                                styleClass="button"/>
+                                styleClass="button"
+                                onMouseClicked="#handleSubmitLoginButtonClick"/>
                     </VBox>
                 </StackPane>
 

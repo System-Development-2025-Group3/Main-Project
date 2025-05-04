@@ -20,9 +20,7 @@
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
                 <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../../images/LoginPage03.png"/>
-                    </image>
+                    <Image url="@../../images/LoginPage03.png"/>
                 </ImageView>
                 <MenuBar style="-fx-background-color: white;">
                     <Menu text="Home |"/>
@@ -35,7 +33,7 @@
 
     <!-- Center Content (login + image, vertically centered) -->
     <center>
-        <VBox alignment="CENTER" spacing="0">
+        <VBox alignment="CENTER">
             <!-- Top Spacer -->
             <Region VBox.vgrow="ALWAYS"/>
 
@@ -46,7 +44,6 @@
                 <StackPane maxWidth="480">
                     <VBox fx:id="LoginCard"
                           spacing="15"
-                          alignment="TOP_LEFT"
                           style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;">
                         <Label fx:id="WelcomeTitle"
                                text="Welcome to StudySpace!"
@@ -76,7 +73,8 @@
 
                         <Button fx:id="SubmitLoginButton"
                                 text="Login"
-                                styleClass="button"/>
+                                styleClass="button"
+                                onMouseClicked="#handleSubmitLoginButtonClick"/>
                     </VBox>
                 </StackPane>
 
@@ -84,9 +82,7 @@
                 <ImageView fx:id="Image01"
                            fitHeight="400"
                            preserveRatio="true">
-                    <image>
-                        <Image url="@../../images/LoginPage01.png"/>
-                    </image>
+                    <Image url="@../../images/LoginPage01.png"/>
                 </ImageView>
             </HBox>
 

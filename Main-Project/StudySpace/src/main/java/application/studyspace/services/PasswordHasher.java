@@ -30,23 +30,23 @@ public class PasswordHasher {
     }
 
     // Saves the username, hashed password, and salt in the database
-    public static void saveToDatabase(String username, String password) {
+    public static void saveToDatabase(String email, String password) {
         String salt = generateSalt(); // Generate random salt
         String hashedPassword = hashPassword(password, salt); // Hash password + salt
 
         try {
             Connection connection = new DatabaseConnection().getConnection();
-            String sql = "INSERT INTO user(username, password, salt) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO users(email, password_hash, salt) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, username);        // username
+            statement.setString(1, email);        // username
             statement.setString(2, hashedPassword);  // hashed password
             statement.setString(3, salt);            // salt
 
             int rows = statement.executeUpdate(); // Insert into DB
 
             if (rows > 0) {
-                System.out.println("User saved successfully.");
+                System.out.println("Saving user: " + email + ", Password Hash: " + hashPassword(password, salt));
             } else {
                 System.out.println("Failed to save user.");
             }
