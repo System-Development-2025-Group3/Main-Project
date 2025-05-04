@@ -1,56 +1,66 @@
 package application.studyspace.services;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
+/**
+ * SceneSwitcher handles scene content replacement while preserving fullscreen mode.
+ * Instead of replacing the entire scene, it replaces the root node to avoid fullscreen flicker.
+ */
 public class SceneSwitcher {
 
     /**
-     * Switches to a new FXML scene within the existing Stage,
-     * setting the window to the user's native screen resolution in windowed mode.
+     * Switches scenes from a UI element like a button.
      *
-     * @param eventSource The UI control (like Button or Label) that triggered the scene change.
-     * @param fxmlPath    The path to the target FXML file, e.g., "/application/studyspace/Register.fxml".
-     * @param title       The window title for the new scene.
+     * @param eventSource  the triggering node (e.g. Button)
+     * @param fxmlPath     the path to the FXML file (e.g. "/application/studyspace/Login.fxml")
+     * @param title        the new window title
      */
     public static void switchTo(Object eventSource, String fxmlPath, String title) {
+        Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
+        switchTo(stage, fxmlPath, title);
+    }
+
+    /**
+     * Switches scenes using a given Stage (e.g. on app startup).
+     *
+     * @param stage     the JavaFX stage
+     * @param fxmlPath  the FXML file path (e.g. "/application/studyspace/Login.fxml")
+     * @param title     the window title
+     */
+    public static void switchTo(Stage stage, String fxmlPath, String title) {
         try {
-            // Load the FXML layout for the new scene
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlPath));
-            Parent view = loader.load();
+            URL resource = SceneSwitcher.class.getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("❌ FXML not found: " + fxmlPath);
+                return;
+            }
 
-            // Retrieve the current stage from the triggering UI element
-            Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent newRoot = loader.load();
 
-            // Apply the new scene
-            Scene newScene = new Scene(view);
-            stage.setScene(newScene);
+            if (stage.getScene() == null) {
+                // First-time setup
+                Scene scene = new Scene(newRoot);
+                stage.setScene(scene);
+            } else {
+                // Switch just the root to preserve fullscreen
+                stage.getScene().setRoot(newRoot);
+            }
 
-            // Set window size to native screen resolution
-            Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-            stage.setWidth(screenBounds.getWidth());
-            stage.setHeight(screenBounds.getHeight());
-
-            // Disable fullscreen mode and ensure window is resizable
-            stage.setFullScreen(false);
-            stage.setResizable(true);
-
-            // Optional: Center window on screen
-            stage.centerOnScreen();
-
-            // Update window title and show
             stage.setTitle(title);
-            stage.show();
+            stage.setResizable(true);
+            stage.centerOnScreen(); // optional
+            stage.show(); // safe to call again
 
         } catch (IOException e) {
-            System.err.println("Error switching scene to " + fxmlPath + ": " + e.getMessage());
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
             e.printStackTrace();
         }
     }

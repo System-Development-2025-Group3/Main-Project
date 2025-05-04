@@ -1,32 +1,16 @@
 package application.studyspace;
 
+import application.studyspace.services.SceneSwitcher;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.geometry.Rectangle2D;
-
-import java.io.IOException;
 
 public class MainApp extends Application {
+
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("Login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-
-        // Get the native screen resolution
-        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-        stage.setWidth(screenBounds.getWidth());
-        stage.setHeight(screenBounds.getHeight());
-
-        stage.setTitle("StudySpace Login");
-        stage.setScene(scene);
-
-        // Disable fullscreen and allow resize
-        stage.setFullScreen(false);
-        stage.setResizable(true);
-
+    public void start(Stage stage) {
+        System.out.println("🚀 Starting app...");
+        stage.setFullScreen(true); // Set fullscreen before scene is shown
+        SceneSwitcher.switchTo(stage, "/application/studyspace/Login.fxml", "StudySpace Login");
         stage.show();
     }
 

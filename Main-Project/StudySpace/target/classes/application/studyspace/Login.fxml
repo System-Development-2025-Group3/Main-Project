@@ -1,88 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.Arc?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="application.studyspace.controllers.auth.LoginController"
-            fx:id="AnchorPaneLogin"
-            prefHeight="720.0" prefWidth="1280.0"
             style="-fx-background-color: #ecf1ff;"
             stylesheets="@Stylesheet.css">
 
-    <!-- Background Arcs -->
-    <Arc fx:id="arc1" startAngle="90.0" length="180.0" type="ROUND" stroke="#6e85d5" fill="#6e85d5" strokeType="INSIDE"/>
-    <Arc fx:id="arc2" startAngle="90.0" length="180.0" type="ROUND" stroke="#a6b1f6" fill="#a6b1f6" strokeType="INSIDE"/>
-    <Arc fx:id="arc3" startAngle="90.0" length="180.0" type="ROUND" stroke="#e2e4ff" fill="#e2e4ff" strokeType="INSIDE"/>
+    <!-- Top Menu Bar -->
+    <top>
+        <Pane style="-fx-background-color: white; -fx-background-radius: 20;"
+              prefHeight="60.0" prefWidth="260.0">
+            <HBox spacing="20.0" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../../images/LoginPage03.png"/>
+                    </image>
+                </ImageView>
+                <MenuBar style="-fx-background-color: white;">
+                    <Menu text="Home |"/>
+                    <Menu text="About Us |"/>
+                    <Menu text="Contact"/>
+                </MenuBar>
+            </HBox>
+        </Pane>
+    </top>
 
-    <!-- Login Card -->
-    <VBox fx:id="LoginCard"
-          spacing="12"
-          alignment="CENTER_LEFT"
-          style="-fx-background-color: white; -fx-background-radius: 18;">
-        <padding>
-            <Insets top="15" right="40" bottom="30" left="40"/>
-        </padding>
+    <!-- Center Content (login + image, vertically centered) -->
+    <center>
+        <VBox alignment="CENTER" spacing="0">
+            <!-- Top Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
 
-        <Label fx:id="WelcomeTitle" text="Welcome to StudySpace!"
-               styleClass="welcome-title">
-            <VBox.margin>
-                <Insets top="0"/>
-            </VBox.margin>
-        </Label>
+            <!-- Login + Laptop Image -->
+            <HBox alignment="CENTER" spacing="100">
 
-        <TextFlow fx:id="textFlow" textAlignment="CENTER">
-            <Text text="Do you have an Account or would you like to " />
-            <Text fx:id="linkText" text="register" id="linkText" />
-            <Text text=" for a new user Account on StudyFlow?" />
-        </TextFlow>
+                <!-- Login Box -->
+                <StackPane maxWidth="480">
+                    <VBox fx:id="LoginCard"
+                          spacing="15"
+                          alignment="TOP_LEFT"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;">
+                        <Label fx:id="WelcomeTitle"
+                               text="Welcome to StudySpace!"
+                               styleClass="welcome-title"/>
 
-        <Label text="E-Mail" styleClass="form-label">
-            <VBox.margin>
-                <Insets top="10" bottom="2"/>
-            </VBox.margin>
-        </Label>
-        <TextField fx:id="InputEmailTextfield"
-                   promptText="Please input your email ..."
-                   styleClass="text-field" />
+                        <TextFlow fx:id="textFlow">
+                            <Text text="Do you have an Account or would you like to " />
+                            <Text fx:id="linkText"
+                                  text="register"
+                                  onMouseClicked="#handleRegisterTextClick"/>
+                            <Text text=" for a new user Account on StudyFlow?" />
+                        </TextFlow>
 
-        <Label text="Password" styleClass="form-label">
-            <VBox.margin>
-                <Insets top="10" bottom="2"/>
-            </VBox.margin>
-        </Label>
-        <PasswordField fx:id="InputPassword"
-                       promptText="Please input your Password ..."
-                       styleClass="password-field" />
+                        <Label text="E-Mail" styleClass="form-label"/>
+                        <TextField fx:id="InputEmailTextfield"
+                                   promptText="Please input your email ..."
+                                   styleClass="text-field"/>
 
-        <CheckBox fx:id="StayLoggedInCheckBox"
-                  text="Stay Logged in?" styleClass="custom-checkbox" />
+                        <Label text="Password" styleClass="form-label"/>
+                        <PasswordField fx:id="InputPassword"
+                                       promptText="Please input your Password ..."
+                                       styleClass="password-field"/>
 
-        <Button fx:id="SubmitLoginButton" text="Login"
-                styleClass="button" />
-    </VBox>
+                        <CheckBox fx:id="StayLoggedInCheckBox"
+                                  text="Stay Logged in?"
+                                  styleClass="custom-checkbox"/>
 
-    <!-- Laptop Image -->
-    <ImageView fx:id="Image01" preserveRatio="true">
-        <Image url="@../../images/LoginPage01.png"/>
-    </ImageView>
+                        <Button fx:id="SubmitLoginButton"
+                                text="Login"
+                                styleClass="button"/>
+                    </VBox>
+                </StackPane>
 
-    <!-- Top bar -->
-    <Pane layoutX="20.0" layoutY="20.0"
-          style="-fx-background-color: white; -fx-background-radius: 20;">
-        <MenuBar layoutX="79.0" layoutY="11.0" prefHeight="37.0"
-                 style="-fx-background-color: white;">
-            <Menu text="Home |"/>
-            <Menu text="About Us |"/>
-            <Menu text="Contact"/>
-        </MenuBar>
-        <ImageView fitHeight="53.0" fitWidth="67.0" preserveRatio="true">
-            <Image url="@../../images/LoginPage03.png"/>
-        </ImageView>
-    </Pane>
-</AnchorPane>
+                <!-- Right-side image -->
+                <ImageView fx:id="Image01"
+                           fitHeight="400"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@../../images/LoginPage01.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <!-- Bottom Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+</BorderPane>
