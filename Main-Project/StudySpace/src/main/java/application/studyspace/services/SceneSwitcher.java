@@ -5,28 +5,62 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
 
+import java.io.IOException;
+import java.net.URL;
+
+/**
+ * SceneSwitcher handles scene content replacement while preserving fullscreen mode.
+ * Instead of replacing the entire scene, it replaces the root node to avoid fullscreen flicker.
+ */
 public class SceneSwitcher {
 
     /**
-     * Switches to the specified FXML file within the same Stage.
+     * Switches scenes from a UI element like a button.
      *
-     * @param eventSource The UI node (typically a Button or Label) that triggered the switch.
-     * @param fxmlPath    The path to the FXML file (e.g., "/application/studyspace/Register.fxml").
-     * @param title       The title to set on the new Stage.
+     * @param eventSource  the triggering node (e.g. Button)
+     * @param fxmlPath     the path to the FXML file (e.g. "/application/studyspace/Login.fxml")
+     * @param title        the new window title
      */
     public static void switchTo(Object eventSource, String fxmlPath, String title) {
-        try {
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlPath));
-            Parent view = loader.load();
+        Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
+        switchTo(stage, fxmlPath, title);
+    }
 
-            Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
-            stage.setScene(new Scene(view));
+    /**
+     * Switches scenes using a given Stage (e.g. on app startup).
+     *
+     * @param stage     the JavaFX stage
+     * @param fxmlPath  the FXML file path (e.g. "/application/studyspace/Login.fxml")
+     * @param title     the window title
+     */
+    public static void switchTo(Stage stage, String fxmlPath, String title) {
+        try {
+            URL resource = SceneSwitcher.class.getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("❌ FXML not found: " + fxmlPath);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent newRoot = loader.load();
+
+            if (stage.getScene() == null) {
+                // First-time setup
+                Scene scene = new Scene(newRoot);
+                stage.setScene(scene);
+            } else {
+                // Switch just the root to preserve fullscreen
+                stage.getScene().setRoot(newRoot);
+            }
+
             stage.setTitle(title);
-            stage.show();
+            stage.setResizable(true);
+            stage.centerOnScreen(); // optional
+            stage.show(); // safe to call again
+
         } catch (IOException e) {
-            System.err.println("Error switching scene to " + fxmlPath + ": " + e.getMessage());
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
             e.printStackTrace();
         }
     }
