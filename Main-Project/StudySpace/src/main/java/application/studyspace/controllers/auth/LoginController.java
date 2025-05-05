@@ -34,7 +34,8 @@ public class LoginController {
             alert.showAndWait();
             System.out.println("The user did not enter correct credentials.");
         } else {
-            SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing-Page");
+            //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing-Page");
+            SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/User-Formular-Klausuren.fxml", "Klausur-Input");
         }
     }
 }

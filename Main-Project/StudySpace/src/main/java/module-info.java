@@ -19,4 +19,6 @@ module application.studyspace {
     opens application.studyspace.services to javafx.fxml;
     exports application.studyspace.controllers.landingpage;
     opens application.studyspace.controllers.landingpage to javafx.fxml;
+    exports application.studyspace.controllers.forms;
+    opens application.studyspace.controllers.forms to javafx.fxml;
 }

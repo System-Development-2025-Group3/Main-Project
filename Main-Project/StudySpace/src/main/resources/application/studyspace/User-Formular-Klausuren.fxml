@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="Exam Input" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.controllers.forms.ExamFormController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+         <children>
+            <Label layoutX="10.0" layoutY="13.0" prefHeight="17.0" prefWidth="200.0" text="Which exam do you write?" />
+            <TextField fx:id="examTitle" layoutX="13.0" layoutY="37.0" promptText="Exam name" />
+            <Label layoutX="7.0" layoutY="76.0" prefHeight="17.0" prefWidth="200.0" text="Which type of exam do you write?" />
+            <ComboBox fx:id="examStyle" layoutX="9.0" layoutY="101.0" prefHeight="26.0" prefWidth="165.0" promptText="Exam type" />
+            <Label layoutX="16.0" layoutY="148.0" prefHeight="17.0" prefWidth="200.0" text="When do you write your exam?" />
+            <DatePicker fx:id="examDate" layoutX="14.0" layoutY="174.0" />
+            <TextField fx:id="examPoint" layoutX="9.0" layoutY="247.0" prefHeight="26.0" prefWidth="176.0" />
+            <Label layoutX="10.0" layoutY="220.0" prefHeight="17.0" prefWidth="200.0" text="How many points?" />
+            <ButtonBar layoutX="17.0" layoutY="310.0" prefHeight="40.0" prefWidth="565.0">
+              <buttons>
+                  <Button mnemonicParsing="false" text="Previous exam" />
+                <Button mnemonicParsing="false" text="Next exam" />
+                  <Button fx:id="inputSave" mnemonicParsing="false" onMouseClicked="#handleinputSave" text="Finish" />
+              </buttons>
+            </ButtonBar>
+         </children></AnchorPane>
+  </content>
+</TitledPane>
