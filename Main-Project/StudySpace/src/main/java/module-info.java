@@ -10,6 +10,8 @@ module application.studyspace {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires java.desktop;
+    requires java.net.http;
+    requires org.json;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;

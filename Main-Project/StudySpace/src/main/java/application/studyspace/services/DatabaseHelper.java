@@ -4,10 +4,17 @@ import java.sql.*;
 
 public class DatabaseHelper {
 
-    public static void select(String what, String from, String whereColumn, String whereValue) {
+    public static String select(String what, String from, String whereColumn, String whereValue) {
         Connection connectDB = new DatabaseConnection().getConnection();
 
-        String selectQuery = "SELECT " + what + " FROM " + from + " WHERE " + whereColumn + " = ?";
+        // Escape identifiers for safety
+        String escapedWhat = "`" + what.replace("`", "``") + "`";
+        String escapedFrom = "`" + from.replace("`", "``") + "`";
+        String escapedWhereColumn = "`" + whereColumn.replace("`", "``") + "`";
+
+        // Construct query
+        String selectQuery = "SELECT " + escapedWhat + " FROM " + escapedFrom + " WHERE " + escapedWhereColumn + " = ?";
+        System.out.println("SQL Query: " + selectQuery);
 
         try {
             PreparedStatement preparedStatement = connectDB.prepareStatement(selectQuery);
@@ -18,18 +25,18 @@ public class DatabaseHelper {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
 
+            // Process result set
             while (resultSet.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-
                     System.out.print(resultSet.getString(i) + "\t");
                 }
                 System.out.println();
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         }
+        return selectQuery;
     }
 
 
@@ -50,5 +57,3 @@ public class DatabaseHelper {
         return false;
     }
 }
-
-

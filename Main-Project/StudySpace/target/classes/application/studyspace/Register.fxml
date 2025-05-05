@@ -3,85 +3,117 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.auth.RegisterController"
-            style="-fx-background-color: #ecf1ff;"
-            stylesheets="@Stylesheet.css">
+<StackPane fx:id="stackPane"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="application.studyspace.controllers.auth.RegisterController"
+           style="-fx-background-color: transparent;"
+           stylesheets="@Stylesheet.css">
 
-    <!-- Top Menu -->
-    <top>
-        <Pane style="-fx-background-color: white; -fx-background-radius: 20;" prefHeight="60.0">
-            <HBox spacing="20.0" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
-                </padding>
-                <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
-                    <Image url="@../../images/LoginPage03.png"/>
-                </ImageView>
-                <MenuBar style="-fx-background-color: white;">
-                    <Menu text="Home |"/>
-                    <Menu text="About Us |"/>
-                    <Menu text="Contact"/>
-                </MenuBar>
-            </HBox>
-        </Pane>
-    </top>
+    <!-- Background Image -->
+    <ImageView fx:id="Image03"
+               style="-fx-opacity: 0.5;">
+        <Image url="@../../images/Auth/backgroundarcs.png"/>
+    </ImageView>
 
-    <!-- Center Content -->
-    <center>
-        <VBox alignment="CENTER">
-            <Region VBox.vgrow="ALWAYS"/>
+    <!-- Main UI Content -->
+    <BorderPane style="-fx-background-color: transparent;">
+        
+        <!-- Top Menu -->
+        <top>
+            <Pane style="-fx-background-color: white; -fx-background-radius: 20;" prefHeight="60.0">
+                <HBox spacing="20.0" alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
+                        <Image url="@../../images/Auth/LoginPage03.png"/>
+                    </ImageView>
+                    <MenuBar style="-fx-background-color: white;">
+                        <Menu text="Home |"/>
+                        <Menu text="About Us |"/>
+                        <Menu text="Contact"/>
+                    </MenuBar>
+                </HBox>
+            </Pane>
+        </top>
+        
+        <!-- Center Content -->
+        <center>
+            <VBox alignment="CENTER">
+                <!-- Spacer Above -->
+                <Region VBox.vgrow="ALWAYS"/>
+                
+                <!-- Form and Image -->
+                <HBox alignment="CENTER" spacing="100">
+                    
+                    <!-- Register Form -->
+                    <StackPane maxWidth="480">
+                        <VBox spacing="15"
+                              style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;"
+                              HBox.hgrow="ALWAYS">
 
-            <HBox alignment="CENTER" spacing="100">
-                <!-- Register Card -->
-                <StackPane maxWidth="500">
-                    <VBox spacing="15"
-                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;">
-                        <Label fx:id="TextAreaRegister"
-                               text="Create your StudySpace account"
-                               styleClass="welcome-title"/>
+                            <Label fx:id="TextAreaRegister"
+                                   text="Create your StudySpace account"
+                                   styleClass="welcome-title"/>
 
-                        <Label text="E-Mail" styleClass="form-label"/>
-                        <TextField fx:id="RegisterEmailField"
-                                   promptText="Enter your email"
-                                   styleClass="text-field"/>
+                            <Label text="E-Mail" styleClass="form-label"/>
 
-                        <Label text="Password" styleClass="form-label"/>
-                        <PasswordField fx:id="RegisterPassword_1"
-                                       promptText="Enter password"
-                                       styleClass="password-field"/>
+                            <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
+                                <TextField fx:id="RegisterEmailField"
+                                           promptText="Enter your email"
+                                           styleClass="text-field"
+                                           HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="emailTooltip" text="?" styleClass="circle-label"/>
+                            </HBox>
 
-                        <Label text="Repeat Password" styleClass="form-label"/>
-                        <PasswordField fx:id="RegisterPassword_2"
-                                       promptText="Repeat password"
-                                       styleClass="password-field"/>
+                            <Label text="Password" styleClass="form-label"/>
 
-                        <Button fx:id="SubmitRegistrationButton"
-                                text="Register"
-                                maxWidth="Infinity"
-                                styleClass="button"
-                                onAction="#handleSubmitRegistrationButtonClick"/>
+                            <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
+                                <PasswordField fx:id="RegisterPassword_1"
+                                               promptText="Enter password"
+                                               styleClass="password-field"
+                                               HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="passwordTooltip1" text="?" styleClass="circle-label"/>
+                            </HBox>
 
-                        <!-- Back to login -->
-                        <Hyperlink fx:id="BackToLoginLink"
-                                   text="← Back to Login"
-                                   onAction="#handleBackToLoginClick"
-                                   style="-fx-text-fill: #6e85d5; -fx-font-size: 12px;"/>
-                    </VBox>
-                </StackPane>
+                            <Label text="Repeat Password" styleClass="form-label"/>
 
-                <!-- Laptop Image -->
-                <ImageView fx:id="Image01"
-                           fitHeight="400.0"
-                           preserveRatio="true">
-                    <Image url="@../../images/LoginPage01.png"/>
-                </ImageView>
-            </HBox>
+                            <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
+                                <PasswordField fx:id="RegisterPassword_2"
+                                               promptText="Repeat password"
+                                               styleClass="password-field"
+                                               HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="passwordTooltip2" text="?" styleClass="circle-label"/>
+                            </HBox>
 
-            <Region VBox.vgrow="ALWAYS"/>
-        </VBox>
-    </center>
-</BorderPane>
+                            <Button fx:id="SubmitRegistrationButton"
+                                    text="Register"
+                                    styleClass="button"
+                                    onAction="#handleSubmitRegistrationButtonClick"
+                                    alignment="CENTER"/>
+
+                            <!-- Back to login -->
+                            <Hyperlink fx:id="BackToLoginLink"
+                                       text="← Back to Login"
+                                       onAction="#handleBacktoLoginClick"
+                                       style="-fx-text-fill: #6e85d5; -fx-font-size: 12px;"/>
+                        </VBox>
+                    </StackPane>
+                    
+                    <!-- Right-side Image -->
+                    <ImageView fx:id="Image01"
+                               fitHeight="400"
+                               preserveRatio="true">
+                        <Image url="@../../images/Auth/LoginPage01.png"/>
+                    </ImageView>
+                </HBox>
+                
+                <!-- Spacer Below -->
+                <Region VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </center>
+    </BorderPane>
+
+</StackPane>
