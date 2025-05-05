@@ -68,3 +68,51 @@
 .custom-checkbox .mark {
     -fx-background-color: white;
 }
+.circle-label {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-text-fill: black;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+    -fx-font-size: 14px;
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+}
+
+.tooltip-Label {
+    -fx-background-color: #f6e18f;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 5;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.2, 0, 2); /* Subtle shadow for better visibility */
+}
+
+.tooltip-Label-Error {
+    -fx-background-color: #f68f8f;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 5;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.2, 0, 2); /* Subtle shadow for better visibility */
+}
+
+/* TextField & PasswordField styling */
+.text-field-error, .password-field-error {
+    -fx-background-color: #ffbebe;
+    -fx-border-color: #d63f3f;
+    -fx-border-width: 2px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #888;
+}
