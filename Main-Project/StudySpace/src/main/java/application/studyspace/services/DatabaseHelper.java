@@ -4,56 +4,60 @@ import java.sql.*;
 
 public class DatabaseHelper {
 
-    public static String select(String what, String from, String whereColumn, String whereValue) {
+    /**
+     * Executes a SELECT query on the database using the specified parameters.
+     * Constructs a SQL SELECT statement dynamically by escaping any user inputs,
+     * and optionally includes a WHERE clause. Returns the results as a formatted string.
+     *
+     * @param what the columns to retrieve in the query, e.g., "*" or specific column names
+     * @param from the table name to retrieve data from
+     * @param whereColumn the column name to use in the WHERE clause (optional, can be null or empty)
+     * @param whereValue the value to match in the WHERE clause (only used if whereColumn is provided)
+     * @return a formatted string of the query results, or an empty string in case of an error
+     */
+
+    public static String SELECT(String what, String from, String whereColumn, String whereValue) {
         Connection connectDB = new DatabaseConnection().getConnection();
 
-        // Escape identifiers for safety
         String escapedWhat = "`" + what.replace("`", "``") + "`";
         String escapedFrom = "`" + from.replace("`", "``") + "`";
-        String escapedWhereColumn = "`" + whereColumn.replace("`", "``") + "`";
 
-        // Construct query
-        String selectQuery = "SELECT " + escapedWhat + " FROM " + escapedFrom + " WHERE " + escapedWhereColumn + " = ?";
+        String selectQuery;
+        if (whereColumn != null && !whereColumn.isEmpty()) {
+            String escapedWhereColumn = "`" + whereColumn.replace("`", "``") + "`";
+            selectQuery = "SELECT " + escapedWhat + " FROM " + escapedFrom + " WHERE " + escapedWhereColumn + " = ?";
+        } else {
+            selectQuery = "SELECT " + escapedWhat + " FROM " + escapedFrom;
+        }
+
         System.out.println("SQL Query: " + selectQuery);
 
+        StringBuilder result = new StringBuilder();
+
         try {
-            PreparedStatement preparedStatement = connectDB.prepareStatement(selectQuery);
-            preparedStatement.setString(1, whereValue);
+            PreparedStatement preparedStatement;
+            if (whereColumn != null && !whereColumn.isEmpty()) {
+                preparedStatement = connectDB.prepareStatement(selectQuery);
+                preparedStatement.setString(1, whereValue);
+            } else {
+                preparedStatement = connectDB.prepareStatement(selectQuery);
+            }
 
             ResultSet resultSet = preparedStatement.executeQuery();
-
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Process result set
             while (resultSet.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-                    System.out.print(resultSet.getString(i) + "\t");
+                    result.append(resultSet.getString(i)).append("\t");
                 }
-                System.out.println();
+                result.append("\n");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         }
-        return selectQuery;
-    }
-
-
-    public static boolean userCheck(String username, String password) {
-        Connection connectDB = new DatabaseConnection().getConnection();
-        String selectQuery = "SELECT * FROM users WHERE email = ? AND password_hash = ?";
-        try{
-            PreparedStatement preparedStatement =  connectDB.prepareStatement(selectQuery);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2,password);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
-
-            } catch (SQLException e){
-                e.printStackTrace();
-                System.out.println("Error: "+ e.getMessage());
-            }
-        return false;
+        return result.toString();
     }
 }

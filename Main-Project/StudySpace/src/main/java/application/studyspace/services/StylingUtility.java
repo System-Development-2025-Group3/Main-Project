@@ -10,13 +10,11 @@ public class StylingUtility {
      * @param field The input field (TextField or PasswordField) whose style needs to be reset
      */
     public static void resetFieldStyle(TextField field, String errorStyle, String normalStyle) {
-        if (field.getStyleClass().contains(errorStyle)) {
-            field.getStyleClass().remove(errorStyle);
-            System.out.println("Error Style " + errorStyle + " has been removed from " + field.getId() + ".");
-        }
+        field.getStyleClass().removeAll(errorStyle, normalStyle);
+
         if (!field.getStyleClass().contains(normalStyle)) {
             field.getStyleClass().add(normalStyle);
-            System.out.println("Normal Style" + "normalStyle" + " has been applied to " + field.getId() + ".");
+            System.out.println("Normal Style " + normalStyle + " has been applied to " + field.getId() + ".");
         }
     }
 

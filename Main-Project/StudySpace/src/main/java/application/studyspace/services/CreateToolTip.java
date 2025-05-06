@@ -2,12 +2,18 @@ package application.studyspace.services;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.util.Duration;
-
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class CreateToolTip {
     /**
@@ -39,7 +45,7 @@ public class CreateToolTip {
         targetNode.setOnMouseExited(e -> customTooltip.hide());
     }
 
-    public void showTooltipForDurationX(Node targetNode, String tooltipText, String styleClass, int durationInSeconds) {
+    public void showTooltipForDurationX(Node targetNode, String tooltipText, String styleClass, int durationInSeconds, double offsetY) {
         Label tooltipLabel = new Label(tooltipText);
         tooltipLabel.getStyleClass().add(styleClass);
         tooltipLabel.setWrapText(true);
@@ -51,14 +57,59 @@ public class CreateToolTip {
         customTooltip.setAutoHide(true);
 
         tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/Stylesheet.css")).toExternalForm());
-
+        
         Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
-        customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY());
-
+        customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY() + offsetY);
+        
         PauseTransition delay = new PauseTransition(Duration.seconds(durationInSeconds));
         delay.setOnFinished(e -> customTooltip.hide());
         delay.play();
     }
 
+     public void showAutocorrectPopup(Node targetNode, String tooltipText, String styleClass, double offsetY, Runnable onExecuteAction) {
+         Popup customTooltip = new Popup();
 
+         Label tooltipLabel = new Label(tooltipText);
+         tooltipLabel.getStyleClass().add(styleClass);
+         tooltipLabel.setWrapText(true);
+         tooltipLabel.setMinWidth(200);
+
+         Button executeButton = new Button("Accept");
+         executeButton.getStyleClass().add("execute-button");
+         executeButton.setOnAction(event -> {
+             if (onExecuteAction != null) {
+                 onExecuteAction.run();
+             }
+             customTooltip.hide();
+         });
+
+         Button closeButton = new Button("X");
+         closeButton.getStyleClass().add("close-button");
+         closeButton.setOnAction(event -> customTooltip.hide());
+
+         HBox buttonBox = new HBox(10, executeButton, closeButton);
+         buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+         VBox contentBox = new VBox(10, tooltipLabel, buttonBox);
+         contentBox.setStyle("-fx-background-color: #f68f8f; " +
+                             "-fx-border-color: #bf3d3d; " +
+                             "-fx-border-width: 1; " +
+                             "-fx-border-radius: 10; " +
+                             "-fx-background-radius: 10; " +
+                             "-fx-padding: 15;");
+         contentBox.setAlignment(Pos.CENTER);
+
+         customTooltip.getContent().add(contentBox);
+         customTooltip.setAutoHide(false);
+
+         tooltipLabel.getStylesheets().add(Objects.requireNonNull(
+             getClass().getResource("/application/studyspace/Stylesheet.css")).toExternalForm());
+         executeButton.getStylesheets().add(Objects.requireNonNull(
+             getClass().getResource("/application/studyspace/Stylesheet.css")).toExternalForm());
+         closeButton.getStylesheets().add(Objects.requireNonNull(
+             getClass().getResource("/application/studyspace/Stylesheet.css")).toExternalForm());
+
+         Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
+         customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY() + offsetY);
+     }
 }
