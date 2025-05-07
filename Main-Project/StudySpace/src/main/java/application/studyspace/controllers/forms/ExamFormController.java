@@ -28,6 +28,10 @@ public class ExamFormController implements Initializable {
     @FXML
     private TextField examPoint;
 
+    @FXML
+    private TextField examModule;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         String [] items = {"Exam", "Speech"};
@@ -36,14 +40,15 @@ public class ExamFormController implements Initializable {
 
     public void handleinputSave(MouseEvent event) {
 
-            String title = examTitle.getText();
-            String type = examStyle.getValue();
-            LocalDate date = examDate.getValue();
-            int creditPoints = Integer.parseInt(examPoint.getText());
-            int userID = 234525;
+        String title = examTitle.getText();
+        String module = examModule.getText(); // Modulname
+        String type = examStyle.getValue();
+        LocalDate date = examDate.getValue();
+        int creditPoints = Integer.parseInt(examPoint.getText());
+        int userID = 234525;
 
-            ExamInput examInput = new ExamInput(title, type, date, creditPoints, userID);
-            examInput.saveToDatabase();
+        ExamInput examInput = new ExamInput(title, module, type, date, creditPoints, userID);
+        examInput.saveToDatabase();
         }
 
     }
