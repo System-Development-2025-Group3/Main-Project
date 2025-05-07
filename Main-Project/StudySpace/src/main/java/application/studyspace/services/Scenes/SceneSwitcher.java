@@ -4,7 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,4 +66,35 @@ public class SceneSwitcher {
             e.printStackTrace();
         }
     }
+
+    public static void switchToPopup(Stage ownerStage, String fxmlPath, String title) {
+        try {
+            URL resource = SceneSwitcher.class.getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("❌ FXML not found: " + fxmlPath);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent popupRoot = loader.load();
+
+            Stage popupStage = new Stage();
+            popupStage.setTitle(title);
+
+            Scene popupScene = new Scene(popupRoot);
+            popupStage.setScene(popupScene);
+
+            popupStage.initOwner(ownerStage);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.setResizable(false);
+
+            popupStage.showAndWait();
+
+        } catch (IOException e) {
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
 }

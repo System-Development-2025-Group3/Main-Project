@@ -26,7 +26,7 @@ public class RegisterController {
 
     @FXML
     private void handleBacktoLoginClick(ActionEvent event) {
-        SceneSwitcher.switchTo((Node) event.getSource(), "/application/studyspace/Login.fxml", "Login");
+        SceneSwitcher.switchTo((Node) event.getSource(), "/application/studyspace/auth/Login.fxml", "Login");
     }
 
     private final CreateToolTip toolTipService = new CreateToolTip();

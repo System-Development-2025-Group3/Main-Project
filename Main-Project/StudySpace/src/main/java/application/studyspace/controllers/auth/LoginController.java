@@ -12,10 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import static application.studyspace.services.DataBase.DatabaseHelper.SELECT;
-import static application.studyspace.services.API.DeepSeek.DeepSeekAPI.executeDeepSeekAPI;
+import static application.studyspace.services.API.DeepSeekAPI.executeDeepSeekAPI;
 import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
 import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
 
@@ -26,6 +27,8 @@ public class LoginController {
     @FXML private Label passwordTooltip, emailTooltip;
     @FXML private StackPane stackPane;
     @FXML private ImageView Image03;
+    @FXML private ImageView gearIcon;
+
 
     /**
      * Handles the action when the "Register" text link is clicked.
@@ -36,7 +39,7 @@ public class LoginController {
      */
     @FXML
     private void handleRegisterTextClick(MouseEvent event) {
-        SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Register.fxml", "Register");
+        SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/auth/Register.fxml", "Register");
     }
 
     /**
@@ -177,6 +180,7 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
+        System.out.println("The LoginController has been initialized.");
         String tooltipText = """
             Please enter a password that fulfills the following conditions:
             • At least 12 characters long
@@ -210,10 +214,11 @@ public class LoginController {
         }
     }
 
-
-
-
-
-
+    @FXML
+    private void handleSettingsIconClick(MouseEvent event) {
+        Stage stage = (Stage) stackPane.getScene().getWindow(); // Get the current stage
+        SceneSwitcher.switchToPopup(stage, "/application/studyspace/usermanagement/SettingsPopUp.fxml", "Settings");
+        System.out.println("The user clicked on the Settings icon and navigated to the Settings PopUp.");
+    }
 
 }

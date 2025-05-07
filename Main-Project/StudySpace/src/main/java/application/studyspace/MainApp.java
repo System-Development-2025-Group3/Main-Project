@@ -10,7 +10,7 @@ public class MainApp extends Application {
     public void start(Stage stage) {
         System.out.println("🚀 Starting app...");
         stage.setFullScreen(true); // Set fullscreen before scene is shown
-        SceneSwitcher.switchTo(stage, "/application/studyspace/Login.fxml", "StudySpace Login");
+        SceneSwitcher.switchTo(stage, "/application/studyspace/auth/Login.fxml", "StudySpace Login");
         stage.show();
     }
 

@@ -4,21 +4,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.image.Image?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.landingpage.LandingpageController">
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="application.studyspace.controllers.landingpage.LandingpageController">
 
     <!-- Sidebar -->
     <left>
         <VBox spacing="15" alignment="TOP_CENTER" style="-fx-background-color: #f0f4ff;" prefWidth="150">
             <padding>
-                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
-            <Button text="Calendar" prefWidth="100"/>
-            <Button text="Subjects" prefWidth="100"/>
-            <Button text="Methods" prefWidth="100"/>
-            <Button text="Dashboard" prefWidth="100"/>
+            <Button text="Calendar" prefWidth="100" />
+            <Button text="Subjects" prefWidth="100" />
+            <Button text="Methods" prefWidth="100" />
+            <Button text="Dashboard" prefWidth="100" />
         </VBox>
     </left>
 
@@ -26,52 +25,49 @@
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #f9faff;">
             <padding>
-                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
             </padding>
-
             <!-- Time section -->
             <VBox alignment="CENTER_LEFT">
-                <Label text="Time: 10:15 AM" style="-fx-font-weight: bold;"/>
-                <Label text="Timezone: CET"/>
-                <Label text="Format: 12 Hours"/>
+                <Label text="Time: 10:15 AM" style="-fx-font-weight: bold;" />
+                <Label text="Timezone: CET" />
+                <Label text="Format: 12 Hours" />
             </VBox>
 
             <!-- Spacer -->
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
             <!-- Next session section -->
-            <VBox spacing="5" alignment="CENTER_LEFT"
-                  style="-fx-border-color: lightgray; -fx-border-radius: 8; -fx-background-color: #f9faff; -fx-background-radius: 8;">
+            <VBox spacing="5" alignment="CENTER_LEFT" style="-fx-border-color: lightgray; -fx-border-radius: 8; -fx-background-color: #f9faff; -fx-background-radius: 8;">
                 <padding>
-                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
                 </padding>
                 <HBox spacing="5" alignment="CENTER_LEFT">
-                    <Label text="🔖"/>
-                    <Label text="Next up: Learning Session Math @ 5pm" style="-fx-font-weight: bold;"/>
+                    <Label text="🔖" />
+                    <Label text="Next up: Learning Session Math @ 5pm" style="-fx-font-weight: bold;" />
                 </HBox>
-                <ProgressBar progress="0.78" prefWidth="200"/>
-                <Label text="14 out of 18"/>
+                <ProgressBar progress="0.78" prefWidth="200" />
+                <Label text="14 out of 18" />
             </VBox>
 
-            <!-- View buttons and navigation -->
+            <!-- View and date section -->
             <VBox spacing="5" alignment="CENTER">
                 <HBox spacing="10" alignment="CENTER">
-                    <Label text="View:" style="-fx-font-weight: bold;"/>
-                    <Button text="Month" onAction="#showMonthView"/>
-                    <Button text="Week" onAction="#showWeekView"/>
-                    <Button text="Day" onAction="#showDayView"/>
+                    <Label text="View:" style="-fx-font-weight: bold;" />
+                    <Label text="Daily" style="-fx-background-color: #e7edff; -fx-padding: 4 10 4 10; -fx-background-radius: 8;" />
                 </HBox>
+                <Label text="Date: 25th of May 2025" />
                 <HBox spacing="10">
-                    <Button text="←" onAction="#goToPrevious"/>
-                    <Button text="→" onAction="#goToNext"/>
+                    <Button text="←" />
+                    <Button text="→" />
                 </HBox>
             </VBox>
 
             <!-- New button and settings -->
             <VBox alignment="CENTER_RIGHT" spacing="5">
-                <MenuButton text="NEW"/>
+                <MenuButton text="NEW" />
                 <ImageView fitHeight="20" fitWidth="20">
-                    <Image url="@/images/Landing-Page/gear-icon.png"/>
+                    <Image url="@/images/landing-page/gear-icon.png" />
                 </ImageView>
             </VBox>
         </HBox>
@@ -79,14 +75,11 @@
 
     <!-- Main content area -->
     <center>
-        <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="monthYearLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 5 0 0 0;"/>
-            <StackPane fx:id="calendarContainer"
-                       style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #dce4ff; -fx-border-radius: 10;">
-                <padding>
-                    <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-                </padding>
-            </StackPane>
-        </VBox>
+        <StackPane style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #dce4ff; -fx-border-radius: 10;">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+            </padding>
+            <Label text="Main content area" />
+        </StackPane>
     </center>
 </BorderPane>

@@ -9,12 +9,12 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="application.studyspace.controllers.auth.RegisterController"
            style="-fx-background-color: transparent;"
-           stylesheets="@Stylesheet.css">
+           stylesheets="@../StyleSheets/Stylesheet.css">
 
     <!-- Background Image -->
     <ImageView fx:id="Image03"
                style="-fx-opacity: 0.5;">
-        <Image url="@../../images/Auth/backgroundarcs.png"/>
+        <Image url="@../../../images/auth/backgroundarcs.png"/>
     </ImageView>
 
     <!-- Main UI Content -->
@@ -28,7 +28,7 @@
                         <Insets top="10" right="10" bottom="10" left="10"/>
                     </padding>
                     <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
-                        <Image url="@../../images/Auth/LoginPage03.png"/>
+                        <Image url="@../../../images/auth/LoginPage03.png"/>
                     </ImageView>
                     <MenuBar style="-fx-background-color: white;">
                         <Menu text="Home |"/>
@@ -106,7 +106,7 @@
                     <ImageView fx:id="Image01"
                                fitHeight="400"
                                preserveRatio="true">
-                        <Image url="@../../images/Auth/LoginPage01.png"/>
+                        <Image url="@../../../images/auth/LoginPage01.png"/>
                     </ImageView>
                 </HBox>
                 

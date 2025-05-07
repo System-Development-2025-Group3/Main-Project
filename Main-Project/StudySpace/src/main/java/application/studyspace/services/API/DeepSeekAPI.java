@@ -1,4 +1,4 @@
-package application.studyspace.services.API.DeepSeek;
+package application.studyspace.services.API;
 
 import java.net.URI;
 import java.net.http.HttpClient;
