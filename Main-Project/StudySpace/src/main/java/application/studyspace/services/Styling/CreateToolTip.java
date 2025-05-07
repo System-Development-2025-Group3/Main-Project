@@ -1,19 +1,16 @@
-package application.studyspace.services;
+package application.studyspace.services.Styling;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.util.Duration;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class CreateToolTip {
     /**

@@ -1,6 +1,6 @@
 package application.studyspace;
 
-import application.studyspace.services.SceneSwitcher;
+import application.studyspace.services.Scenes.SceneSwitcher;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

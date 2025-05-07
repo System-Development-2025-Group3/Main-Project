@@ -1,4 +1,4 @@
-package application.studyspace.services;
+package application.studyspace.services.Styling;
 
 import javafx.scene.control.TextField;
 

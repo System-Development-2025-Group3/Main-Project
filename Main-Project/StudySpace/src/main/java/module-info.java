@@ -21,4 +21,18 @@ module application.studyspace {
     opens application.studyspace.services to javafx.fxml;
     exports application.studyspace.controllers.landingpage;
     opens application.studyspace.controllers.landingpage to javafx.fxml;
+    exports application.studyspace.services.API;
+    opens application.studyspace.services.API to javafx.fxml;
+    exports application.studyspace.services.auth;
+    opens application.studyspace.services.auth to javafx.fxml;
+    exports application.studyspace.services.API.DeepSeek;
+    opens application.studyspace.services.API.DeepSeek to javafx.fxml;
+    exports application.studyspace.services.DataBase;
+    opens application.studyspace.services.DataBase to javafx.fxml;
+    exports application.studyspace.services.Styling;
+    opens application.studyspace.services.Styling to javafx.fxml;
+    exports application.studyspace.services.Scenes;
+    opens application.studyspace.services.Scenes to javafx.fxml;
+    exports application.studyspace.services.usermanagement;
+    opens application.studyspace.services.usermanagement to javafx.fxml;
 }

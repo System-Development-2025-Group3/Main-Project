@@ -1,9 +1,9 @@
 package application.studyspace.controllers.auth;
 
-import application.studyspace.services.CreateToolTip;
-import application.studyspace.services.LoginChecker;
-import application.studyspace.services.SceneSwitcher;
-import application.studyspace.services.ValidationUtils;
+import application.studyspace.services.Styling.CreateToolTip;
+import application.studyspace.services.auth.LoginChecker;
+import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,13 +14,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static application.studyspace.services.DatabaseHelper.SELECT;
-import static application.studyspace.services.JavaToNodeBridge.executeDeepSeekAPI;
-import static application.studyspace.services.StylingUtility.applyErrorStyle;
-import static application.studyspace.services.StylingUtility.resetFieldStyle;
+import static application.studyspace.services.DataBase.DatabaseHelper.SELECT;
+import static application.studyspace.services.API.DeepSeek.DeepSeekAPI.executeDeepSeekAPI;
+import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
+import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
 
 public class LoginController {
 

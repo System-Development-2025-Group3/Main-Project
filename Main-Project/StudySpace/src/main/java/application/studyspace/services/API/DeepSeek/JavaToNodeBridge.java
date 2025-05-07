@@ -1,4 +1,4 @@
-package application.studyspace.services;
+package application.studyspace.services.API.DeepSeek;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

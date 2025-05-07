@@ -1,4 +1,4 @@
-package application.studyspace.services;
+package application.studyspace.services.Scenes;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

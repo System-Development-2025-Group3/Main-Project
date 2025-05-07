@@ -1,5 +1,7 @@
 import { InferenceClient } from "@huggingface/inference";
 
+const client = new InferenceClient(process.env.API_KEY);
+
 /**
  * Executes a chat completion request to interact with the AI language model.
  *

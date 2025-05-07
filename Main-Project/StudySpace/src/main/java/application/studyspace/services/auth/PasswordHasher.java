@@ -1,4 +1,6 @@
-package application.studyspace.services;
+package application.studyspace.services.auth;
+
+import application.studyspace.services.DataBase.DatabaseConnection;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;

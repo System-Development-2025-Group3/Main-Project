@@ -1,6 +1,7 @@
 package application.studyspace.controllers.auth;
 
-import application.studyspace.services.*;
+import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.Styling.CreateToolTip;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,11 +10,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import application.studyspace.controllers.auth.LoginController;
 
-import static application.studyspace.services.PasswordHasher.saveToDatabase;
-import static application.studyspace.services.StylingUtility.applyErrorStyle;
-import static application.studyspace.services.StylingUtility.resetFieldStyle;
+import static application.studyspace.services.auth.PasswordHasher.saveToDatabase;
+import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
+import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
 
 public class RegisterController {
 

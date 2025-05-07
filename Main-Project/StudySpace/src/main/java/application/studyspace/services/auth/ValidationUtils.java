@@ -1,4 +1,4 @@
-package application.studyspace.services;
+package application.studyspace.services.auth;
 import java.util.regex.Pattern;
 
 public class ValidationUtils {
