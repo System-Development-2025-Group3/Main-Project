@@ -4,8 +4,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
-
 <?import javafx.scene.image.Image?>
+
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="application.studyspace.controllers.landingpage.LandingpageController">
 
     <!-- Sidebar -->
@@ -75,11 +75,10 @@
 
     <!-- Main content area -->
     <center>
-        <StackPane style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #dce4ff; -fx-border-radius: 10;">
+        <StackPane fx:id="calendarContainer" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #dce4ff; -fx-border-radius: 10;">
             <padding>
                 <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
-            <Label text="Main content area" />
         </StackPane>
     </center>
 </BorderPane>

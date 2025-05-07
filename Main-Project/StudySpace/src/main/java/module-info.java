@@ -17,12 +17,8 @@ module application.studyspace {
     exports application.studyspace;
     exports application.studyspace.controllers.auth;
     opens application.studyspace.controllers.auth to javafx.fxml;
-    exports application.studyspace.services;
-    opens application.studyspace.services to javafx.fxml;
     exports application.studyspace.controllers.landingpage;
     opens application.studyspace.controllers.landingpage to javafx.fxml;
-    exports application.studyspace.services.API;
-    opens application.studyspace.services.API to javafx.fxml;
     exports application.studyspace.services.auth;
     opens application.studyspace.services.auth to javafx.fxml;
     exports application.studyspace.services.API.DeepSeek;
