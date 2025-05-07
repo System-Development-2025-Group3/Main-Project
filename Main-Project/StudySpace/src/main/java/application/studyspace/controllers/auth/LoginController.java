@@ -117,7 +117,7 @@ public class LoginController {
                 });
                 delay.play();
         } else {
-            SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing-Page");
+            SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/User-Formular-Klausuren.fxml", "Landing-Page");
     }
 }
 
