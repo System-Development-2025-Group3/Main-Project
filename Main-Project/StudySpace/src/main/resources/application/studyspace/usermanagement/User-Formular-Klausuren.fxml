@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<TitledPane animated="false" text="📝 Exam Input" prefWidth="800.0" prefHeight="500.0"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.studyspace.controllers.general.ExamFormController"
+            style="-fx-background-color: #f8faff; -fx-font-family: 'Segoe UI', sans-serif; -fx-border-radius: 10; -fx-background-radius: 10;">
+    <content>
+        <AnchorPane>
+            <children>
+                <VBox layoutX="40.0" layoutY="30.0" spacing="20" prefWidth="400.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                    <children>
+                        <Label text="Which exam do you write?" style="-fx-font-size: 14px;" />
+                        <TextField fx:id="examTitle" promptText="Exam name" style="-fx-background-radius: 10; -fx-padding: 10;" />
+
+                        <Label text="Which type of exam do you write?" style="-fx-font-size: 14px;" />
+                        <ComboBox fx:id="examStyle" promptText="Exam type" prefHeight="30" style="-fx-background-radius: 10;" />
+
+                        <Label text="When do you write your exam?" style="-fx-font-size: 14px;" />
+                        <DatePicker fx:id="examDate" style="-fx-background-radius: 10;" />
+
+                        <Label text="How many points?" style="-fx-font-size: 14px;" />
+                        <TextField fx:id="examPoint" prefHeight="26.0" style="-fx-background-radius: 10;" />
+
+                        <ButtonBar prefWidth="300.0" style="-fx-alignment: center; -fx-padding: 20 0 0 0;">
+                            <buttons>
+                                <Button text="Previous exam" style="-fx-background-color: #e0e7ff; -fx-background-radius: 10;" />
+                                <Button text="Next exam" style="-fx-background-color: #e0e7ff; -fx-background-radius: 10;" />
+                                <Button fx:id="inputSave" text="Finish" onMouseClicked="#handleinputSave"
+                                        style="-fx-background-color: #4f46e5; -fx-text-fill: white; -fx-background-radius: 10;" />
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>

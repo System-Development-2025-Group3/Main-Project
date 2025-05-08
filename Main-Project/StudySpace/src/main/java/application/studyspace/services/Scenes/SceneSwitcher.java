@@ -17,6 +17,11 @@ import java.net.URL;
  */
 public class SceneSwitcher {
 
+    @FunctionalInterface
+    public interface ControllerInitializer<T> {
+        void init(T controller);
+    }
+
     /**
      * Switches scenes from a UI element like a button.
      *
@@ -96,5 +101,30 @@ public class SceneSwitcher {
             e.printStackTrace();
         }
     }
+
+    public static <T> void switchToWithData(Object eventSource, String fxmlPath, String title, ControllerInitializer<T> initializer) {
+        Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlPath));
+            Parent root = loader.load();
+
+            T controller = loader.getController();
+            initializer.init(controller); // Hier z. B. setUserUUID()
+
+            if (stage.getScene() == null) {
+                stage.setScene(new Scene(root));
+            } else {
+                stage.getScene().setRoot(root);
+            }
+
+            stage.setTitle(title);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

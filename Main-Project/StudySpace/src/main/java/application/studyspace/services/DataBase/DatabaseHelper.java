@@ -1,6 +1,8 @@
 package application.studyspace.services.DataBase;
 
+import java.nio.ByteBuffer;
 import java.sql.*;
+import java.util.UUID;
 
 public class DatabaseHelper {
 
@@ -60,4 +62,36 @@ public class DatabaseHelper {
         }
         return result.toString();
     }
+
+    public UUID getUserUUIDByEmail(String email) throws SQLException {
+        String query = "SELECT id FROM users WHERE email = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                byte[] uuidBytes = rs.getBytes("id");
+                ByteBuffer byteBuffer = ByteBuffer.wrap(uuidBytes);
+                long high = byteBuffer.getLong();
+                long low = byteBuffer.getLong();
+                return new UUID(high, low);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public byte[] uuidToBytes(UUID uuid) {
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.putLong(uuid.getMostSignificantBits());
+        buffer.putLong(uuid.getLeastSignificantBits());
+        return buffer.array();
+    }
+
+
+
+
+
 }

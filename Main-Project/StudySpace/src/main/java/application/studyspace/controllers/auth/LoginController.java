@@ -1,5 +1,8 @@
 package application.studyspace.controllers.auth;
 
+import application.studyspace.controllers.general.ExamFormController;
+import application.studyspace.services.DataBase.DatabaseConnection;
+import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.Scenes.SceneSwitcher;
@@ -14,6 +17,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
 
 import static application.studyspace.services.DataBase.DatabaseHelper.SELECT;
 import static application.studyspace.services.API.DeepSeekAPI.executeDeepSeekAPI;
@@ -151,7 +160,23 @@ public class LoginController {
     }
 } else {
     // If no validation state exists, proceed with switching the scene
-    SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing-Page");
+        DatabaseHelper db = new DatabaseHelper();
+        final UUID userUUID;
+        try {
+            userUUID = db.getUserUUIDByEmail(InputEmailTextfield.getText());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        SceneSwitcher.switchToWithData(
+                event.getSource(),
+                "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml",
+                "Exam Form",
+                (ExamFormController controller) -> controller.setUserUUID(userUUID)
+        );
+
+        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml", "Landing-Page");
 }
 
     }
