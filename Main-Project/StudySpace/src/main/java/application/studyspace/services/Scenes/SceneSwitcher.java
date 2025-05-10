@@ -1,5 +1,6 @@
 package application.studyspace.services.Scenes;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -126,5 +127,8 @@ public class SceneSwitcher {
         }
     }
 
-
-}
+    public static void closeWindowFrom(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+}}

@@ -7,17 +7,52 @@ import java.util.UUID;
 public class DatabaseHelper {
 
     /**
-     * Executes a SELECT query on the database using the specified parameters.
-     * Constructs a SQL SELECT statement dynamically by escaping any user inputs,
-     * and optionally includes a WHERE clause. Returns the results as a formatted string.
-     *
-     * @param what the columns to retrieve in the query, e.g., "*" or specific column names
-     * @param from the table name to retrieve data from
-     * @param whereColumn the column name to use in the WHERE clause (optional, can be null or empty)
-     * @param whereValue the value to match in the WHERE clause (only used if whereColumn is provided)
-     * @return a formatted string of the query results, or an empty string in case of an error
+     * Converts a UUID to a 16-byte array for storing in a BINARY(16) database field.
+     * @param uuid the UUID to convert
+     * @return byte array representing the UUID
      */
+    public byte[] uuidToBytes(UUID uuid) {
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.putLong(uuid.getMostSignificantBits());
+        buffer.putLong(uuid.getLeastSignificantBits());
+        return buffer.array();
+    }
 
+    /**
+     * Retrieves a UUID from the database using an email address.
+     * Assumes that the UUID is stored as BINARY(16) in the "id" column.
+     * @param email the user's email address
+     * @return the user's UUID if found, null otherwise
+     * @throws SQLException if a database error occurs
+     */
+    public UUID getUserUUIDByEmail(String email) throws SQLException {
+        String query = "SELECT id FROM users WHERE email = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                byte[] uuidBytes = rs.getBytes("id");
+                ByteBuffer byteBuffer = ByteBuffer.wrap(uuidBytes);
+                long high = byteBuffer.getLong();
+                long low = byteBuffer.getLong();
+                return new UUID(high, low);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Executes a SELECT query with optional WHERE clause and returns formatted results.
+     * @param what columns to select (e.g. "*", or "email")
+     * @param from table name
+     * @param whereColumn optional column name for filtering
+     * @param whereValue value to match for filtering (if whereColumn is provided)
+     * @return string of formatted results or empty string if failed
+     */
     public static String SELECT(String what, String from, String whereColumn, String whereValue) {
         Connection connectDB = new DatabaseConnection().getConnection();
 
@@ -60,38 +95,7 @@ public class DatabaseHelper {
             e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         }
+
         return result.toString();
     }
-
-    public UUID getUserUUIDByEmail(String email) throws SQLException {
-        String query = "SELECT id FROM users WHERE email = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                byte[] uuidBytes = rs.getBytes("id");
-                ByteBuffer byteBuffer = ByteBuffer.wrap(uuidBytes);
-                long high = byteBuffer.getLong();
-                long low = byteBuffer.getLong();
-                return new UUID(high, low);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public byte[] uuidToBytes(UUID uuid) {
-        ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putLong(uuid.getMostSignificantBits());
-        buffer.putLong(uuid.getLeastSignificantBits());
-        return buffer.array();
-    }
-
-
-
-
-
 }

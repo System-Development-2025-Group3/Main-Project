@@ -1,6 +1,5 @@
 package application.studyspace.controllers.general;
 
-import application.studyspace.controllers.auth.LoginController;
 import application.studyspace.services.form.ExamInput;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import javafx.fxml.FXML;
@@ -12,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -35,10 +33,9 @@ public class ExamFormController implements Initializable {
 
     private UUID userUUID;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        String [] items = {"Exam", "Speech"};
+        String[] items = {"Exam", "Speech"};
         examStyle.getItems().addAll(items);
     }
 
@@ -47,15 +44,29 @@ public class ExamFormController implements Initializable {
     }
 
     public void handleinputSave(MouseEvent event) {
+        System.out.println("Finish-Button wurde geklickt");
 
-        String title = examTitle.getText();
-        String type = examStyle.getValue();
-        LocalDate date = examDate.getValue();
-        int creditPoints = Integer.parseInt(examPoint.getText());
+        try {
+            String title = examTitle.getText();
+            String type = examStyle.getValue();
+            LocalDate date = examDate.getValue();
+            int creditPoints = Integer.parseInt(examPoint.getText());
 
-        ExamInput examInput = new ExamInput(title, type, date, creditPoints, userUUID);
-        examInput.saveToDatabase();
+            ExamInput examInput = new ExamInput(title, type, date, creditPoints, userUUID);
+            if (examInput.saveToDatabase()) {
+                System.out.println("Exam saved. change to StudyDays-Eingabe.");
+                SceneSwitcher.switchToWithData(
+                        event.getSource(),
+                        "/application/studyspace/usermanagement/User-Formular-study-days.fxml", // ✅ korrigiert
+                        "Study Preferences",
+                        (StudyDaysFormController controller) -> controller.setUserUUID(userUUID)
+                );
+            } else {
+                System.err.println("Speichern fehlgeschlagen.");
+            }
+        } catch (Exception e) {
+            System.err.println("Fehler in handleinputSave: " + e.getMessage());
+            e.printStackTrace();
         }
-
     }
-
+}
