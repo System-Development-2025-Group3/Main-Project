@@ -2,12 +2,16 @@ package application.studyspace.controllers.general;
 
 import application.studyspace.services.form.ExamInput;
 import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.controllers.general.StudyDaysFormController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -44,8 +48,6 @@ public class ExamFormController implements Initializable {
     }
 
     public void handleinputSave(MouseEvent event) {
-        System.out.println("Finish-Button wurde geklickt");
-
         try {
             String title = examTitle.getText();
             String type = examStyle.getValue();
@@ -54,19 +56,34 @@ public class ExamFormController implements Initializable {
 
             ExamInput examInput = new ExamInput(title, type, date, creditPoints, userUUID);
             if (examInput.saveToDatabase()) {
-                System.out.println("Exam saved. change to StudyDays-Eingabe.");
-                SceneSwitcher.switchToWithData(
-                        event.getSource(),
-                        "/application/studyspace/usermanagement/User-Formular-study-days.fxml",
-                        "Study Preferences",
-                        (StudyDaysFormController controller) -> controller.setUserUUID(userUUID)
-                );
+                System.out.println("✅ Exam saved. Opening StudyDays popup...");
+
+                Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Stage landingPageStage = (Stage) popupStage.getOwner();
+
+                // ✅ Close current popup
+                popupStage.close();
+
+                // ✅ Wait until current event cycle finishes, then open next popup
+                Platform.runLater(() -> {
+                    SceneSwitcher.<StudyDaysFormController>switchToPopupWithData(
+                            landingPageStage,
+                            "/application/studyspace/usermanagement/User-Formular-study-days.fxml",
+                            "Study Preferences",
+                            controller -> controller.setUserUUID(userUUID)
+                    );
+                });
+
             } else {
-                System.err.println("Speichern fehlgeschlagen.");
+                System.err.println("❌ Saving exam failed.");
             }
         } catch (Exception e) {
-            System.err.println("Fehler in handleinputSave: " + e.getMessage());
+            System.err.println("❌ Error in handleinputSave: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+
+
+
 }

@@ -3,53 +3,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
-<TitledPane xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="application.studyspace.controllers.general.StudyDaysFormController"
-            text="📚 Study Preferences"
-            expanded="true"
-            prefWidth="800.0" prefHeight="500.0"
-            style="-fx-background-color: #f8faff; -fx-font-family: 'Segoe UI', sans-serif; -fx-border-radius: 10; -fx-background-radius: 10;">
-    <content>
-        <AnchorPane>
-            <children>
-                <VBox layoutX="40.0" layoutY="30.0" spacing="15" prefWidth="400.0"
-                      style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);">
-                    <children>
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="application.studyspace.controllers.general.StudyDaysFormController"
+           style="-fx-background-color: transparent;"
+           prefWidth="600.0" prefHeight="600.0">
 
-                        <Label text="Preferred study time:" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="preferredTimeBox" promptText="e.g. Evening"/>
+    <VBox spacing="15"
+          alignment="TOP_CENTER"
+          maxWidth="450"
+          style="-fx-background-color: white;
+                 -fx-padding: 30;
+                 -fx-background-radius: 15;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
 
-                        <Label text="Max study hours per day:" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="dailyLimitBox" promptText="e.g. 4"/>
+        <Label text="Preferred study time:" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="preferredTimeBox" promptText="e.g. Evening"/>
 
-                        <Label text="Study session length (min):" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="sessionLimitBox" promptText="e.g. 45"/>
+        <Label text="Max study hours per day:" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="dailyLimitBox" promptText="e.g. 4"/>
 
-                        <Label text="Break length (min):" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="breakLengthBox" promptText="e.g. 10"/>
+        <Label text="Study session length (min):" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="sessionLimitBox" promptText="e.g. 45"/>
 
-                        <Label text="Focus hours:" style="-fx-font-size: 14px;" />
-                        <TextField fx:id="focusTimeField" promptText="e.g. 9–11am" />
+        <Label text="Break length (min):" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="breakLengthBox" promptText="e.g. 10"/>
 
-                        <Label text="Unavailable days:" style="-fx-font-size: 14px;" />
-                        <TextField fx:id="unavailableDaysField" promptText="e.g. Saturday" />
+        <Label text="Focus hours:" style="-fx-font-size: 14px;" />
+        <TextField fx:id="focusTimeField" promptText="e.g. 9–11am" />
 
-                        <Label text="Free days:" style="-fx-font-size: 14px;" />
-                        <TextField fx:id="freeDaysField" promptText="e.g. Sunday" />
+        <Label text="Unavailable days:" style="-fx-font-size: 14px;" />
+        <TextField fx:id="unavailableDaysField" promptText="e.g. Saturday" />
 
-                        <Label text="Most focused during:" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="concentrationTimeBox" promptText="e.g. Morning"/>
+        <Label text="Free days:" style="-fx-font-size: 14px;" />
+        <TextField fx:id="freeDaysField" promptText="e.g. Sunday" />
 
-                        <Label text="Study method:" style="-fx-font-size: 14px;" />
-                        <ComboBox fx:id="sessionTypeBox" promptText="e.g. Pomodoro"/>
+        <Label text="Most focused during:" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="concentrationTimeBox" promptText="e.g. Morning"/>
 
-                        <Button fx:id="saveButton" text="Save" onAction="#handleSave"
-                                style="-fx-background-color: #4f46e5; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 8 16 8 16;"/>
-                    </children>
-                </VBox>
-            </children>
-        </AnchorPane>
-    </content>
-</TitledPane>
+        <Label text="Study method:" style="-fx-font-size: 14px;" />
+        <ComboBox fx:id="sessionTypeBox" promptText="e.g. Pomodoro"/>
+
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave"
+                style="-fx-background-color: #4f46e5; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 8 16 8 16;"/>
+    </VBox>
+</StackPane>

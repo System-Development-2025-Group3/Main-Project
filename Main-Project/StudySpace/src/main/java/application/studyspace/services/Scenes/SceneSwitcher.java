@@ -154,7 +154,7 @@ public class SceneSwitcher {
             popupStage.initModality(Modality.WINDOW_MODAL);
             popupStage.initStyle(StageStyle.TRANSPARENT);
             popupStage.setResizable(false);
-            popupStage.setAlwaysOnTop(false);
+            popupStage.setAlwaysOnTop(true);
             popupStage.setScene(scene);
 
             popupStage.showAndWait();
@@ -165,11 +165,13 @@ public class SceneSwitcher {
         }
     }
 
+    public static void closePopup(Node sourceNode) {
+        if (sourceNode != null && sourceNode.getScene() != null) {
+            Stage stage = (Stage) sourceNode.getScene().getWindow();
+            stage.close();
+        } else {
+            System.err.println("❌ Cannot close popup: source node is not attached to a scene.");
+        }
+    }
+}
 
-
-
-    public static void closeWindowFrom(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-}}
