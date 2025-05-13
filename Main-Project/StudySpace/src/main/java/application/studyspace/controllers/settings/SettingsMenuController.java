@@ -1,4 +1,4 @@
-package application.studyspace.controllers.general;
+package application.studyspace.controllers.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class Settingscontroller {
+public class SettingsMenuController {
 
     public Button ButtonSettingsAccount;
     public BorderPane BorderpaneSettings;

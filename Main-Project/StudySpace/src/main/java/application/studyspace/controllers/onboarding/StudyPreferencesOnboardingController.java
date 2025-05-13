@@ -1,4 +1,4 @@
-package application.studyspace.controllers.general;
+package application.studyspace.controllers.onboarding;
 
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.form.InputStudyDays;
@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 
 import java.util.UUID;
 
-public class StudyDaysFormController {
+public class StudyPreferencesOnboardingController {
 
     @FXML private ComboBox<String> preferredTimeBox;
     @FXML private ComboBox<String> dailyLimitBox;

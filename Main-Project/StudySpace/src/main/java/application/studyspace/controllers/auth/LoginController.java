@@ -1,14 +1,12 @@
 package application.studyspace.controllers.auth;
 
-import application.studyspace.controllers.general.ExamFormController;
-import application.studyspace.services.DataBase.DatabaseConnection;
+import application.studyspace.controllers.onboarding.ExamsOnboardingController;
 import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -20,9 +18,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -170,22 +165,22 @@ public class LoginController {
             throw new RuntimeException(e);
         }
 
-        // Get the stage *before* switching scenes
+        // Get the stage before switching scenes
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         // Switch to the landing page
-        SceneSwitcher.switchTo(stage, "/application/studyspace/Landing-Page.fxml", "Landing Page");
+        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Landing-Page.fxml", "Landing Page");
 
         // Immediately show the popup
         SceneSwitcher.switchToPopupWithData(
                 stage,
-                "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml",
+                "/application/studyspace/onboarding/ExamOnboardingPopUp.fxml",
                 "Exam Form",
-                (ExamFormController controller) -> controller.setUserUUID(userUUID)
+                (ExamsOnboardingController controller) -> controller.setUserUUID(userUUID)
         );
 
 
-        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml", "Landing-Page");
+        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/ExamOnboardingPopUp.fxml", "Landing-Page");
 }
 
     }
@@ -251,7 +246,7 @@ public class LoginController {
     @FXML
     private void handleSettingsIconClick(MouseEvent event) {
         Stage stage = (Stage) stackPane.getScene().getWindow(); // Get the current stage
-        SceneSwitcher.switchToPopup(stage, "/application/studyspace/usermanagement/SettingsPopUp.fxml", "Settings");
+        SceneSwitcher.switchToPopup(stage, "/application/studyspace/settings/SettingsPopUp.fxml", "Settings");
         System.out.println("The user clicked on the Settings icon and navigated to the Settings PopUp.");
     }
 

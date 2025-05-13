@@ -85,7 +85,7 @@ public class RegisterController {
             saveToDatabase(RegisterEmailField.getText(), RegisterPassword_1.getText());
 
             try {
-                SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing Page");
+                SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/landingpage/Landing-Page.fxml", "Landing Page");
 
             } catch (Exception e) {
                 e.printStackTrace();

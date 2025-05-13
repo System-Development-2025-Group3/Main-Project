@@ -1,8 +1,7 @@
-package application.studyspace.controllers.general;
+package application.studyspace.controllers.onboarding;
 
 import application.studyspace.services.form.ExamInput;
 import application.studyspace.services.Scenes.SceneSwitcher;
-import application.studyspace.controllers.general.StudyDaysFormController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +17,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-public class ExamFormController implements Initializable {
+public class ExamsOnboardingController implements Initializable {
 
     @FXML
     private TextField examTitle;
@@ -66,9 +65,9 @@ public class ExamFormController implements Initializable {
 
                 // ✅ Wait until current event cycle finishes, then open next popup
                 Platform.runLater(() -> {
-                    SceneSwitcher.<StudyDaysFormController>switchToPopupWithData(
+                    SceneSwitcher.<StudyPreferencesOnboardingController>switchToPopupWithData(
                             landingPageStage,
-                            "/application/studyspace/usermanagement/User-Formular-study-days.fxml",
+                            "/application/studyspace/onboarding/StudyPreferencesOnboardingPopUp.fxml",
                             "Study Preferences",
                             controller -> controller.setUserUUID(userUUID)
                     );

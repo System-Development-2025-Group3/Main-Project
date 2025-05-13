@@ -71,7 +71,7 @@
             <VBox alignment="CENTER_RIGHT" spacing="5">
                 <MenuButton text="NEW"/>
                 <ImageView fitHeight="20" fitWidth="20">
-                    <Image url="@/gear-icon.png"/>
+                    <Image url="@/KEEP_IN_ROOT_DIR!!_buggedgearicon.png"/>
                 </ImageView>
             </VBox>
         </HBox>

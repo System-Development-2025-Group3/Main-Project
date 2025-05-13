@@ -120,7 +120,7 @@
         <StackPane.margin>
             <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
         </StackPane.margin>
-        <Image url="@../../../gear-icon.png"/>
+        <Image url="@../../../KEEP_IN_ROOT_DIR!!_buggedgearicon.png"/>
     </ImageView>
 
 </StackPane>
