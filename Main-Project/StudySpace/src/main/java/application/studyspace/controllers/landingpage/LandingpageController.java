@@ -1,11 +1,15 @@
 package application.studyspace.controllers.landingpage;
 
+import application.studyspace.controllers.general.ExamFormController;
+import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.calendar.SimpleCalendarView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.DayOfWeek;
@@ -13,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class LandingpageController implements Initializable {
 
@@ -23,6 +28,7 @@ public class LandingpageController implements Initializable {
     private Label monthYearLabel;
 
     private LocalDate currentDate = LocalDate.now();
+
 
     private enum ViewMode {
         MONTH, WEEK, DAY
@@ -113,4 +119,6 @@ public class LandingpageController implements Initializable {
 
         monthYearLabel.setText(labelText);
     }
+
+
 }

@@ -8,7 +8,9 @@ import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -168,13 +170,20 @@ public class LoginController {
             throw new RuntimeException(e);
         }
 
+        // Get the stage *before* switching scenes
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        SceneSwitcher.switchToWithData(
-                event.getSource(),
+        // Switch to the landing page
+        SceneSwitcher.switchTo(stage, "/application/studyspace/Landing-Page.fxml", "Landing Page");
+
+        // Immediately show the popup
+        SceneSwitcher.switchToPopupWithData(
+                stage,
                 "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml",
                 "Exam Form",
                 (ExamFormController controller) -> controller.setUserUUID(userUUID)
         );
+
 
         //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/User-Formular-Klausuren.fxml", "Landing-Page");
 }

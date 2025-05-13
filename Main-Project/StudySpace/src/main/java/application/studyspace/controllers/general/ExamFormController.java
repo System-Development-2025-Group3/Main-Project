@@ -57,7 +57,7 @@ public class ExamFormController implements Initializable {
                 System.out.println("Exam saved. change to StudyDays-Eingabe.");
                 SceneSwitcher.switchToWithData(
                         event.getSource(),
-                        "/application/studyspace/usermanagement/User-Formular-study-days.fxml", // ✅ korrigiert
+                        "/application/studyspace/usermanagement/User-Formular-study-days.fxml",
                         "Study Preferences",
                         (StudyDaysFormController controller) -> controller.setUserUUID(userUUID)
                 );

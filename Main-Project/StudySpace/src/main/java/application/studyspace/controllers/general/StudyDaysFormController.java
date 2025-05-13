@@ -1,5 +1,6 @@
 package application.studyspace.controllers.general;
 
+import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.form.InputStudyDays;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -55,6 +56,8 @@ public class StudyDaysFormController {
         boolean success = studyData.saveToDatabase();
         if (success) {
             System.out.println("Study preferences saved.");
+            // ✅ Switch to Landingpage
+            SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/Landing-Page.fxml", "Landing Page");
         } else {
             System.err.println("Saving study preferences failed.");
         }

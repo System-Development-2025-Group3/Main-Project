@@ -22,19 +22,19 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>21</version>
+      <version>23.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>21</version>
+      <version>23.0.1</version>
     </dependency>
 
   <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
-    <version>20230227</version>
+    <version>20231013</version>
   </dependency>
 
     <dependency>

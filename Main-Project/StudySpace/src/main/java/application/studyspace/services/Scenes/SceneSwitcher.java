@@ -1,13 +1,16 @@
 package application.studyspace.services.Scenes;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.paint.Color; // at the top of the file
 
 import java.io.IOException;
 import java.net.URL;
@@ -126,6 +129,44 @@ public class SceneSwitcher {
             e.printStackTrace();
         }
     }
+
+    public static <T> void switchToPopupWithData(Stage ownerStage, String fxmlPath, String title, ControllerInitializer<T> initializer) {
+        try {
+            URL resource = SceneSwitcher.class.getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("❌ FXML not found: " + fxmlPath);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent popupRoot = loader.load();
+
+            T controller = loader.getController();
+            initializer.init(controller);
+
+            // ✅ Create transparent scene
+            Scene scene = new Scene(popupRoot);
+            scene.setFill(Color.TRANSPARENT);
+
+            Stage popupStage = new Stage();
+            popupStage.setTitle(title);
+            popupStage.initOwner(ownerStage);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+            popupStage.setResizable(false);
+            popupStage.setAlwaysOnTop(false);
+            popupStage.setScene(scene);
+
+            popupStage.showAndWait();
+
+        } catch (IOException e) {
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public static void closeWindowFrom(ActionEvent event) {
         Node source = (Node) event.getSource();

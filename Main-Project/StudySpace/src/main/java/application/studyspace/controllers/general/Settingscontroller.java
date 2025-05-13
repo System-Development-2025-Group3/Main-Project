@@ -3,10 +3,19 @@ package application.studyspace.controllers.general;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Settingscontroller {
 
+    public Button ButtonSettingsAccount;
+    public BorderPane BorderpaneSettings;
+    public Button ButtonSettingsAppearance;
+    public Button ButtonSettingsNotifications;
+    public Button ButtonSettingsLanguage;
+    public Button ButtonSettingsTracking;
+    public StackPane contentPane;
     @FXML
     private Button closePopupButton; // Matches the fx:id in SettingsPopUp.fxml
 
