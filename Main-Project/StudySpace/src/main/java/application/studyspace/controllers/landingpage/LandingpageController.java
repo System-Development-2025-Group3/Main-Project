@@ -1,5 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
+import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,8 @@ public class LandingpageController implements Initializable {
     }
 
     private ViewMode currentView = ViewMode.MONTH;
+
+    private final List<CalendarEvent> events = CalendarEvent.getAllEvents();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -91,9 +95,9 @@ public class LandingpageController implements Initializable {
     private void updateCalendarView() {
         Node view;
         switch (currentView) {
-            case WEEK -> view = CalendarView.buildWeekView(currentDate);
-            case DAY -> view = CalendarView.buildDayView(currentDate);
-            default -> view = CalendarView.buildMonthView(currentDate);
+            case WEEK -> view = CalendarView.buildWeekView(currentDate, events);
+            case DAY -> view = CalendarView.buildDayView(currentDate, events);
+            default -> view = CalendarView.buildMonthView(currentDate, events);
         }
 
         calendarContainer.getChildren().clear();
