@@ -1,0 +1,86 @@
+/* === GLOBAL ROOT BACKGROUND === */
+.root {
+    -fx-background-color: #f5f7ff;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+    -fx-background-color: #f0f4ff;
+    -fx-padding: 20;
+}
+.sidebar > .button {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #1f3a93;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.sidebar > .button:hover {
+    -fx-background-color: #cdd8ff;
+}
+
+/* === TOPBAR === */
+.top-bar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0.2, 0, 2);
+}
+
+/* === TOPBAR LABELS === */
+.topbar-bold {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e1e1e;
+}
+
+/* === CALENDAR CONTAINER === */
+.calendar-wrapper {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dce4ff;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+/* === CALENDAR TITLE (Month/Week/Day label) === */
+.calendar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e2a39;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+    -fx-padding: 16 0 10 0;
+    -fx-alignment: center;
+}
+
+/* === VIEW/NAV BUTTONS === */
+.button {
+    -fx-background-color: #e7ecff;
+    -fx-background-radius: 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f3a93;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #d0dbff;
+}
+
+/* === SESSION PANEL === */
+.session-panel {
+    -fx-background-color: #f9faff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+/* === SETTINGS ICON === */
+.settings-icon {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 3, 0.2, 0, 1);
+}
+
+/* === MENU BUTTON === */
+.menu-button {
+    -fx-background-color: #ecf1ff;
+    -fx-background-radius: 8;
+}

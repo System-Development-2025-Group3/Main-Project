@@ -10,7 +10,7 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="application.studyspace.controllers.auth.LoginController"
            style="-fx-background-color: transparent; -fx-padding: 0"
-           stylesheets="@../StyleSheets/Stylesheet.css"
+           stylesheets="@../styles/Stylesheet.css"
            pickOnBounds="false">
 
     <!-- Background Image -->

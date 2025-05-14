@@ -1,9 +1,11 @@
 package application.studyspace.controllers.landingpage;
 
-import application.studyspace.services.calendar.SimpleCalendarView;
+import application.studyspace.services.calendar.CalendarView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
@@ -24,7 +26,6 @@ public class LandingpageController implements Initializable {
 
     private LocalDate currentDate = LocalDate.now();
 
-
     private enum ViewMode {
         MONTH, WEEK, DAY
     }
@@ -34,6 +35,19 @@ public class LandingpageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showMonthView(); // Default view
+
+        // Attach stylesheets safely via Java
+        Platform.runLater(() -> {
+            Scene scene = calendarContainer.getScene();
+            if (scene != null) {
+                scene.getStylesheets().add(
+                        getClass().getResource("/application/studyspace/styles/LandingPageStylesheet.css").toExternalForm()
+                );
+                scene.getStylesheets().add(
+                        getClass().getResource("/application/studyspace/styles/calendar.css").toExternalForm()
+                );
+            }
+        });
     }
 
     @FXML
@@ -77,14 +91,13 @@ public class LandingpageController implements Initializable {
     private void updateCalendarView() {
         Node view;
         switch (currentView) {
-            case WEEK -> view = SimpleCalendarView.buildWeekView(currentDate);
-            case DAY -> view = SimpleCalendarView.buildDayView(currentDate);
-            default -> view = SimpleCalendarView.buildMonthView(currentDate);
+            case WEEK -> view = CalendarView.buildWeekView(currentDate);
+            case DAY -> view = CalendarView.buildDayView(currentDate);
+            default -> view = CalendarView.buildMonthView(currentDate);
         }
 
         calendarContainer.getChildren().clear();
         calendarContainer.getChildren().add(view);
-
         updateHeaderLabel();
     }
 
@@ -114,6 +127,4 @@ public class LandingpageController implements Initializable {
 
         monthYearLabel.setText(labelText);
     }
-
-
 }

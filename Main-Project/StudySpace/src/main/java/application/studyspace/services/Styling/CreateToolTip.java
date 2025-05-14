@@ -32,7 +32,7 @@ public class CreateToolTip {
         customTooltip.getContent().add(tooltipLabel);
         customTooltip.setAutoHide(true);
 
-        tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/StyleSheets/Stylesheet.css")).toExternalForm());
+        tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
 
         targetNode.setOnMouseEntered(e -> {
             Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
@@ -53,7 +53,7 @@ public class CreateToolTip {
         customTooltip.getContent().add(tooltipLabel);
         customTooltip.setAutoHide(true);
 
-        tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/StyleSheets/Stylesheet.css")).toExternalForm());
+        tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
         
         Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
         customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY() + offsetY);
@@ -100,11 +100,11 @@ public class CreateToolTip {
          customTooltip.setAutoHide(false);
 
          tooltipLabel.getStylesheets().add(Objects.requireNonNull(
-             getClass().getResource("/application/studyspace/StyleSheets/Stylesheet.css")).toExternalForm());
+             getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
          executeButton.getStylesheets().add(Objects.requireNonNull(
-             getClass().getResource("/application/studyspace/StyleSheets/Stylesheet.css")).toExternalForm());
+             getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
          closeButton.getStylesheets().add(Objects.requireNonNull(
-             getClass().getResource("/application/studyspace/StyleSheets/Stylesheet.css")).toExternalForm());
+             getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
 
          Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
          customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY() + offsetY);
