@@ -6,6 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -144,7 +147,6 @@ public class SceneSwitcher {
             T controller = loader.getController();
             initializer.init(controller);
 
-            // ✅ Create transparent scene
             Scene scene = new Scene(popupRoot);
             scene.setFill(Color.TRANSPARENT);
 
@@ -157,7 +159,23 @@ public class SceneSwitcher {
             popupStage.setAlwaysOnTop(true);
             popupStage.setScene(scene);
 
+            // ✅ Add dim effect to owner
+            StackPane ownerRoot = (StackPane) ownerStage.getScene().getRoot();
+
+            Region dimPane = new Region();
+            dimPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+            dimPane.setPrefSize(ownerRoot.getWidth(), ownerRoot.getHeight());
+            dimPane.setMouseTransparent(true);
+
+            ownerRoot.getChildren().add(dimPane);
+            ownerRoot.setEffect(new GaussianBlur(10));
+
+            // ✅ Show popup
             popupStage.showAndWait();
+
+            // ✅ Clean up after popup closes
+            ownerRoot.getChildren().remove(dimPane);
+            ownerRoot.setEffect(null);
 
         } catch (IOException e) {
             System.err.println("❌ Error loading FXML: " + fxmlPath);

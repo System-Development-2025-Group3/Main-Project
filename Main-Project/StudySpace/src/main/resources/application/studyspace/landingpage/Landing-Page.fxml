@@ -6,71 +6,77 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.Image?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
-            styleClass="root">
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
+           styleClass="root">
 
-    <left>
-        <VBox spacing="15" alignment="TOP_CENTER" prefWidth="160" styleClass="sidebar">
-            <padding>
-                <Insets top="20" left="10" right="10" bottom="20"/>
-            </padding>
-            <Button text="Calendar" prefWidth="120"/>
-            <Button text="Subjects" prefWidth="120"/>
-            <Button text="Methods" prefWidth="120"/>
-            <Button text="Dashboard" prefWidth="120"/>
-        </VBox>
-    </left>
+    <BorderPane fx:id="mainBorder"
+                styleClass="root">
 
-    <top>
-        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="top-bar">
-            <!-- Time Info -->
-            <VBox spacing="2">
-                <Label text="Time: 10:15 AM" styleClass="topbar-bold"/>
-                <Label text="Timezone: CET"/>
-                <Label text="Format: 12 Hours"/>
+        <left>
+            <VBox spacing="15" alignment="TOP_CENTER" prefWidth="160" styleClass="sidebar">
+                <padding>
+                    <Insets top="20" left="10" right="10" bottom="20"/>
+                </padding>
+                <Button text="Calendar" prefWidth="120"/>
+                <Button text="Subjects" prefWidth="120"/>
+                <Button text="Methods" prefWidth="120"/>
+                <Button text="Dashboard" prefWidth="120"/>
             </VBox>
+        </left>
 
-            <Region HBox.hgrow="ALWAYS"/>
+        <top>
+            <HBox spacing="20" alignment="CENTER_LEFT" styleClass="top-bar">
+                <!-- Time Info -->
+                <VBox spacing="2">
+                    <Label text="Time: 10:15 AM" styleClass="topbar-bold"/>
+                    <Label text="Timezone: CET"/>
+                    <Label text="Format: 12 Hours"/>
+                </VBox>
 
-            <!-- Next Session -->
-            <VBox spacing="5" alignment="CENTER_LEFT" styleClass="session-panel">
-                <HBox spacing="5" alignment="CENTER_LEFT">
-                    <Label text="🔖"/>
-                    <Label text="Next up: Learning Session Math @ 5pm" styleClass="topbar-bold"/>
-                </HBox>
-                <ProgressBar progress="0.78" prefWidth="200"/>
-                <Label text="14 out of 18"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Next Session -->
+                <VBox spacing="5" alignment="CENTER_LEFT" styleClass="session-panel">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="🔖"/>
+                        <Label text="Next up: Learning Session Math @ 5pm" styleClass="topbar-bold"/>
+                    </HBox>
+                    <ProgressBar progress="0.78" prefWidth="200"/>
+                    <Label text="14 out of 18"/>
+                </VBox>
+
+                <!-- View Buttons -->
+                <VBox spacing="5" alignment="CENTER">
+                    <HBox spacing="10">
+                        <Label text="View:" styleClass="topbar-bold"/>
+                        <Button text="Month" onAction="#showMonthView"/>
+                        <Button text="Week" onAction="#showWeekView"/>
+                        <Button text="Day" onAction="#showDayView"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button text="←" onAction="#goToPrevious"/>
+                        <Button text="→" onAction="#goToNext"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Settings -->
+                <VBox alignment="CENTER_RIGHT" spacing="5">
+                    <MenuButton text="NEW" styleClass="menu-button"/>
+                    <ImageView fitHeight="20" fitWidth="20" styleClass="settings-icon">
+                        <Image url="@/KEEP_IN_ROOT_DIR!!_buggedgearicon.png"/>
+                    </ImageView>
+                </VBox>
+            </HBox>
+        </top>
+
+        <center>
+            <VBox spacing="20" alignment="TOP_CENTER">
+                <Label fx:id="monthYearLabel" styleClass="calendar-title"/>
+                <StackPane fx:id="calendarContainer" styleClass="calendar-wrapper"/>
             </VBox>
+        </center>
 
-            <!-- View Buttons -->
-            <VBox spacing="5" alignment="CENTER">
-                <HBox spacing="10">
-                    <Label text="View:" styleClass="topbar-bold"/>
-                    <Button text="Month" onAction="#showMonthView"/>
-                    <Button text="Week" onAction="#showWeekView"/>
-                    <Button text="Day" onAction="#showDayView"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Button text="←" onAction="#goToPrevious"/>
-                    <Button text="→" onAction="#goToNext"/>
-                </HBox>
-            </VBox>
+    </BorderPane>
 
-            <!-- Settings -->
-            <VBox alignment="CENTER_RIGHT" spacing="5">
-                <MenuButton text="NEW" styleClass="menu-button"/>
-                <ImageView fitHeight="20" fitWidth="20" styleClass="settings-icon">
-                    <Image url="@/KEEP_IN_ROOT_DIR!!_buggedgearicon.png"/>
-                </ImageView>
-            </VBox>
-        </HBox>
-    </top>
-
-    <center>
-        <VBox spacing="20" alignment="TOP_CENTER">
-            <Label fx:id="monthYearLabel" styleClass="calendar-title"/>
-            <StackPane fx:id="calendarContainer" styleClass="calendar-wrapper"/>
-        </VBox>
-    </center>
-</BorderPane>
+</StackPane>
