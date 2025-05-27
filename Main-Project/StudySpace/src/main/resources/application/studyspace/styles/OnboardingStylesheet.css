@@ -1,0 +1,62 @@
+/* ====== COMBOBOX ====== */
+.styled-combo {
+  -fx-background-color: white;
+  -fx-border-color: #e0e0e0;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-padding: 4 8;
+}
+
+/* ====== FIELD LABELS ====== */
+.field-label {
+  -fx-font-size: 13px;
+  -fx-text-fill: #121417;
+  -fx-padding: 0 4 0 0;
+}
+.field-label-bold {
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #121417;
+}
+
+/* ====== SLIDER ====== */
+.styled-slider {
+  -fx-pref-width: 300;
+}
+.styled-slider .track {
+  -fx-background-color: #f1f2f4;
+  -fx-background-radius: 4;
+  -fx-pref-height: 4;
+}
+.styled-slider .range {
+  -fx-background-color: #121417;
+  -fx-background-radius: 4;
+}
+.styled-slider .thumb {
+  -fx-background-color: #121417;
+  -fx-background-radius: 50%;
+  -fx-pref-width: 14;
+  -fx-pref-height: 14;
+}
+
+/* ====== SLIDER VALUE LABEL ====== */
+.slider-value {
+  -fx-font-size: 12px;
+  -fx-text-fill: #677583;
+  -fx-padding: 0 0 0 4;
+}
+
+/* ====== PAGINATION BUTTONS ====== */
+.page-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #677583;
+  -fx-font-size: 14px;
+  -fx-padding: 4;
+}
+.page-button-selected {
+  -fx-background-color: #e0e7ff;
+  -fx-text-fill: #121417;
+  -fx-background-radius: 50%;
+  -fx-font-size: 14px;
+  -fx-padding: 4;
+}

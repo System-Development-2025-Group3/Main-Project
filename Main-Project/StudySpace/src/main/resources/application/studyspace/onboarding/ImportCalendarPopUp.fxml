@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="application.studyspace.controllers.onboarding.OnboardingPage2Controller"
+           style="-fx-background-color: transparent;"
+           prefWidth="800" prefHeight="600">
+
+    <VBox spacing="25"
+          alignment="TOP_CENTER"
+          maxWidth="600"
+          style="-fx-background-color: white;
+                 -fx-padding: 40;
+                 -fx-background-radius: 15;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);">
+
+        <Label text="Import Calendar"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+        <Label text="(This section will be filled later)"
+               style="-fx-font-size: 14px; -fx-text-fill: #888;" />
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="1"
+                    onAction="#handlePage1"
+                    style="-fx-background-color: transparent; -fx-font-size: 14px;" />
+            <Button text="2"
+                    onAction="#handlePage2"
+                    style="-fx-background-color: #e0e7ff; -fx-background-radius: 50%; -fx-font-size: 14px;" />
+            <Button text="3"
+                    onAction="#handlePage3"
+                    style="-fx-background-color: transparent; -fx-font-size: 14px;" />
+        </HBox>
+
+    </VBox>
+</StackPane>

@@ -1,4 +1,4 @@
-package application.studyspace.services.form;
+package application.studyspace.services.onboarding;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.DatabaseHelper;
@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class InputStudyDays {
+
     private final UUID userUUID;
     private final String preferredTime;
     private final String dailyLimit;
@@ -22,24 +23,19 @@ public class InputStudyDays {
 
     public InputStudyDays(UUID userUUID,
                           String preferredTime,
-                          String dailyLimit,
-                          String sessionLimit,
+                          String sessionLength,
                           String breakLength,
-                          String focusTime,
-                          String unavailableDays,
-                          String freeDays,
-                          String concentrationTime,
-                          String sessionType) {
+                          String blockedDays) {
         this.userUUID = userUUID;
         this.preferredTime = preferredTime;
-        this.dailyLimit = dailyLimit;
-        this.sessionLimit = sessionLimit;
+        this.dailyLimit = null;
+        this.sessionLimit = sessionLength;
         this.breakLength = breakLength;
-        this.focusTime = focusTime;
-        this.unavailableDays = unavailableDays;
-        this.freeDays = freeDays;
-        this.concentrationTime = concentrationTime;
-        this.sessionType = sessionType;
+        this.focusTime = null;
+        this.unavailableDays = blockedDays;
+        this.freeDays = null;
+        this.concentrationTime = null;
+        this.sessionType = null;
     }
 
     public boolean saveToDatabase() {

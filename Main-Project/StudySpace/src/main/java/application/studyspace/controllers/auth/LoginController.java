@@ -1,6 +1,6 @@
 package application.studyspace.controllers.auth;
 
-import application.studyspace.controllers.onboarding.ExamsOnboardingController;
+import application.studyspace.controllers.onboarding.OnboardingPage1Controller;
 import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.auth.LoginChecker;
@@ -174,9 +174,9 @@ public class LoginController {
         // Immediately show the popup
         SceneSwitcher.switchToPopupWithData(
                 stage,
-                "/application/studyspace/onboarding/ExamOnboardingPopUp.fxml",
-                "Exam Form",
-                (ExamsOnboardingController controller) -> controller.setUserUUID(userUUID)
+                "/application/studyspace/onboarding/StudyPreferencesOnboardingPopUp.fxml",
+                "Planify Onboarding",
+                (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
         );
 
 

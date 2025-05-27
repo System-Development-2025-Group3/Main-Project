@@ -1,9 +1,7 @@
-package application.studyspace.services.form;
+package application.studyspace.services.onboarding;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.DatabaseHelper;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 
 import java.sql.Connection;
 import java.sql.Date;

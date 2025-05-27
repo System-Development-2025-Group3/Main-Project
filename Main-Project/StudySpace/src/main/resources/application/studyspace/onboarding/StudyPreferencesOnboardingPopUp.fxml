@@ -1,52 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="application.studyspace.controllers.onboarding.StudyPreferencesOnboardingController"
+           fx:controller="application.studyspace.controllers.onboarding.OnboardingPage1Controller"
+           stylesheets="@../styles/OnboardingStylesheet.css"
            style="-fx-background-color: transparent;"
-           prefWidth="600.0" prefHeight="600.0">
+           prefWidth="800" prefHeight="600">
 
-    <VBox spacing="15"
+    <!-- pagination ToggleGroup (non-visual) -->
+    <fx:define>
+        <ToggleGroup fx:id="paginationGroup"/>
+    </fx:define>
+
+    <!-- main white card -->
+    <VBox spacing="20"
           alignment="TOP_CENTER"
-          maxWidth="450"
+          maxWidth="700"
           style="-fx-background-color: white;
-                 -fx-padding: 30;
-                 -fx-background-radius: 15;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+               -fx-padding: 30;
+               -fx-background-radius: 15;
+               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);">
 
-        <Label text="Preferred study time:" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="preferredTimeBox" promptText="e.g. Evening"/>
+        <!-- top bar with “▾ Planify” -->
+        <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+            <Label text="▾" style="-fx-font-size:14px; -fx-text-fill:#121417;"/>
+            <Label text="Planify" style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#121417;"/>
+        </HBox>
 
-        <Label text="Max study hours per day:" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="dailyLimitBox" promptText="e.g. 4"/>
+        <!-- Title -->
+        <Label text="Welcome to Planify"
+               style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#121417;"/>
 
-        <Label text="Study session length (min):" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="sessionLimitBox" promptText="e.g. 45"/>
+        <!-- Preferred time -->
+        <ComboBox fx:id="preferredTimeBox"
+                  promptText="Select your preferred study time"
+                  prefWidth="350"
+                  styleClass="styled-combo"/>
 
-        <Label text="Break length (min):" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="breakLengthBox" promptText="e.g. 10"/>
+        <!-- Session length slider -->
+        <HBox spacing="16" alignment="CENTER_LEFT">
+            <Label text="Study session length" styleClass="field-label"/>
+            <Slider fx:id="sessionLengthSlider"
+                    min="10" max="180" value="30"
+                    styleClass="styled-slider"/>
+            <Label fx:id="sessionLengthLabel"
+                   text="30 min"
+                   styleClass="slider-value"/>
+        </HBox>
 
-        <Label text="Focus hours:" style="-fx-font-size: 14px;" />
-        <TextField fx:id="focusTimeField" promptText="e.g. 9–11am" />
+        <!-- Break length slider -->
+        <HBox spacing="16" alignment="CENTER_LEFT">
+            <Label text="Break length" styleClass="field-label"/>
+            <Slider fx:id="breakLengthSlider"
+                    min="5" max="60" value="10"
+                    styleClass="styled-slider"/>
+            <Label fx:id="breakLengthLabel"
+                   text="10 min"
+                   styleClass="slider-value"/>
+        </HBox>
 
-        <Label text="Unavailable days:" style="-fx-font-size: 14px;" />
-        <TextField fx:id="unavailableDaysField" promptText="e.g. Saturday" />
+        <!-- Blocked days checkboxes -->
+        <VBox spacing="4" alignment="TOP_LEFT" style="-fx-padding:0 0 0 20;">
+            <Label text="Blocked days" styleClass="field-label-bold"/>
+            <CheckBox fx:id="mondayCheck" text="Monday"/>
+            <CheckBox fx:id="tuesdayCheck" text="Tuesday"/>
+            <CheckBox fx:id="wednesdayCheck" text="Wednesday"/>
+            <CheckBox fx:id="thursdayCheck" text="Thursday"/>
+            <CheckBox fx:id="fridayCheck" text="Friday"/>
+            <CheckBox fx:id="saturdayCheck" text="Saturday"/>
+            <CheckBox fx:id="sundayCheck" text="Sunday"/>
+        </VBox>
 
-        <Label text="Free days:" style="-fx-font-size: 14px;" />
-        <TextField fx:id="freeDaysField" promptText="e.g. Sunday" />
+        <!-- Pager buttons (1, 2, 3) -->
+        <HBox spacing="12" alignment="CENTER" style="-fx-padding:20 0 0 0;">
+            <Button text="1"
+                    fx:id="page1Btn"
+                    styleClass="page-button-selected"
+                    onAction="#handlePage1"/>
+            <Button text="2"
+                    fx:id="page2Btn"
+                    styleClass="page-button"
+                    onAction="#handlePage2"/>
+            <Button text="3"
+                    fx:id="page3Btn"
+                    styleClass="page-button"
+                    onAction="#handlePage3"/>
+        </HBox>
 
-        <Label text="Most focused during:" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="concentrationTimeBox" promptText="e.g. Morning"/>
-
-        <Label text="Study method:" style="-fx-font-size: 14px;" />
-        <ComboBox fx:id="sessionTypeBox" promptText="e.g. Pomodoro"/>
-
-        <Button fx:id="saveButton" text="Save" onAction="#handleSave"
-                style="-fx-background-color: #4f46e5; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 8 16 8 16;"/>
     </VBox>
 </StackPane>

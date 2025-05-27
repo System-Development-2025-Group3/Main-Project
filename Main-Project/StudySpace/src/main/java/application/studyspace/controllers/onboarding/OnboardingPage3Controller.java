@@ -1,8 +1,6 @@
 package application.studyspace.controllers.onboarding;
 
-import application.studyspace.services.form.ExamInput;
-import application.studyspace.services.Scenes.SceneSwitcher;
-import javafx.application.Platform;
+import application.studyspace.services.onboarding.ExamInput;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -17,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-public class ExamsOnboardingController implements Initializable {
+public class OnboardingPage3Controller implements Initializable {
 
     @FXML
     private TextField examTitle;
@@ -31,9 +29,6 @@ public class ExamsOnboardingController implements Initializable {
     @FXML
     private TextField examPoint;
 
-    @FXML
-    private TextField examModule;
-
     private UUID userUUID;
 
     @Override
@@ -46,7 +41,8 @@ public class ExamsOnboardingController implements Initializable {
         this.userUUID = uuid;
     }
 
-    public void handleinputSave(MouseEvent event) {
+    @FXML
+    public void handleInputSave(MouseEvent event) {
         try {
             String title = examTitle.getText();
             String type = examStyle.getValue();
@@ -55,34 +51,19 @@ public class ExamsOnboardingController implements Initializable {
 
             ExamInput examInput = new ExamInput(title, type, date, creditPoints, userUUID);
             if (examInput.saveToDatabase()) {
-                System.out.println("✅ Exam saved. Opening StudyDays popup...");
+                System.out.println("✅ Exam saved. Closing onboarding popup.");
 
                 Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Stage landingPageStage = (Stage) popupStage.getOwner();
 
-                // ✅ Close current popup
+                // ✅ Just close the popup, no reopening of Page 1
                 popupStage.close();
-
-                // ✅ Wait until current event cycle finishes, then open next popup
-                Platform.runLater(() -> {
-                    SceneSwitcher.<StudyPreferencesOnboardingController>switchToPopupWithData(
-                            landingPageStage,
-                            "/application/studyspace/onboarding/StudyPreferencesOnboardingPopUp.fxml",
-                            "Study Preferences",
-                            controller -> controller.setUserUUID(userUUID)
-                    );
-                });
 
             } else {
                 System.err.println("❌ Saving exam failed.");
             }
         } catch (Exception e) {
-            System.err.println("❌ Error in handleinputSave: " + e.getMessage());
+            System.err.println("❌ Error in handleInputSave: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
-
-
-
 }
