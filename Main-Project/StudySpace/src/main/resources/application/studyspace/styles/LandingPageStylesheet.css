@@ -1,86 +1,123 @@
-/* === GLOBAL ROOT BACKGROUND === */
+/* ==== GLOBAL ROOT ==== */
 .root {
-    -fx-background-color: #f5f7ff;
+    -fx-background-color: white;
 }
 
-/* === SIDEBAR === */
+/* ==== SIDEBAR ==== */
 .sidebar {
-    -fx-background-color: #f0f4ff;
-    -fx-padding: 20;
+    -fx-background-color: #f1f2f4;
+    -fx-padding: 24;
 }
-.sidebar > .button {
-    -fx-background-color: #e0e7ff;
-    -fx-text-fill: #1f3a93;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
+.sidebar-title {
+    -fx-text-fill: #121417;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 0 0 8 0;
+}
+.sidebar-button {
+    -fx-alignment: CENTER_LEFT;
+    -fx-graphic-text-gap: 10;
+    -fx-padding: 8 12;
+    -fx-background-radius: 999;
+    -fx-background-color: transparent;
+    -fx-text-fill: #121417;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
     -fx-cursor: hand;
 }
-.sidebar > .button:hover {
-    -fx-background-color: #cdd8ff;
+.sidebar-button:selected {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
 }
 
-/* === TOPBAR === */
-.top-bar {
-    -fx-background-color: #ffffff;
-    -fx-padding: 15 20;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0.2, 0, 2);
+/* ==== MAIN CONTENT ==== */
+.content-root {
+    -fx-padding: 24;
 }
-
-/* === TOPBAR LABELS === */
-.topbar-bold {
+.header-box {
+    /* no extra styling needed */
+}
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #121417;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+.nav-button:hover {
+    -fx-background-color: #f1f2f4;
+    -fx-background-radius: 4;
+}
+.content-title {
+    -fx-text-fill: #121417;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-text-fill: #1e1e1e;
 }
 
-/* === CALENDAR CONTAINER === */
-.calendar-wrapper {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dce4ff;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-padding: 20;
-}
-
-/* === CALENDAR TITLE (Month/Week/Day label) === */
-.calendar-title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e2a39;
-    -fx-font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-    -fx-padding: 16 0 10 0;
+/* ==== VIEW TOGGLE ==== */
+.view-toggle {
+    -fx-background-color: #f1f2f4;
+    -fx-padding: 4;
+    -fx-background-radius: 999;
     -fx-alignment: center;
 }
-
-/* === VIEW/NAV BUTTONS === */
-.button {
-    -fx-background-color: #e7ecff;
-    -fx-background-radius: 8;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1f3a93;
+.view-toggle .view-button {
+    -fx-background-radius: 999;
+    -fx-background-color: transparent;
+    -fx-text-fill: #677583;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-padding: 6 14;
     -fx-cursor: hand;
 }
-.button:hover {
-    -fx-background-color: #d0dbff;
+.view-toggle .view-button:selected {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-text-fill: #121417;
 }
 
-/* === SESSION PANEL === */
-.session-panel {
-    -fx-background-color: #f9faff;
+/* ==== CALENDAR WRAPPER & GRID ==== */
+.calendar-wrapper {
+    -fx-background-color: white;
     -fx-border-color: #e0e0e0;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 10;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+    -fx-alignment: center;   /* center the grid */
 }
 
-/* === SETTINGS ICON === */
-.settings-icon {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 3, 0.2, 0, 1);
+/* constrain the grid to 7×120px + gaps = ~880px */
+.calendar-wrapper .calendar-grid {
+    -fx-pref-width: 880px;
+    -fx-max-width: 880px;
 }
 
-/* === MENU BUTTON === */
-.menu-button {
-    -fx-background-color: #ecf1ff;
+/* each day‐cell gets its own border & padding */
+.calendar-wrapper .calendar-day-box {
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-padding: 8;
+}
+
+/* ==== YOUR EXISTING CALENDAR STYLES ==== */
+/* (drop in your original definitions for these classes) */
+.calendar-day-header {
+    /* e.g. -fx-font-weight: bold; -fx-text-fill: #1e2a39; … */
+}
+
+.calendar-day-number {
+    /* e.g. -fx-font-size: 12px; -fx-text-fill: #121417; … */
+}
+
+.calendar-event {
+    /* e.g. -fx-padding: 2 4; -fx-background-radius: 4; -fx-font-size: 11px; … */
+}
+
+.calendar-hour-cell {
+    /* e.g. -fx-border-color: #e0e0e0; -fx-min-height: 40px; … */
+}
+
+.calendar-hour-label {
+    /* e.g. -fx-font-size: 10px; -fx-text-fill: #677583; … */
 }

@@ -1,5 +1,6 @@
 package application.studyspace.services.calendar;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -19,38 +20,45 @@ public class CalendarView {
         int firstDayOfWeek = firstOfMonth.getDayOfWeek().getValue(); // 1 = Monday
 
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_CENTER);
         grid.getStyleClass().add("calendar-grid");
-        grid.setMaxWidth(1000);
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(8);
+        grid.setVgap(8);
 
-        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-        for (int i = 0; i < days.length; i++) {
-            Label dayLabel = new Label(days[i]);
-            dayLabel.getStyleClass().add("calendar-day-header");
-            dayLabel.setMaxWidth(Double.MAX_VALUE);
-            dayLabel.setAlignment(Pos.CENTER);
-            GridPane.setHgrow(dayLabel, Priority.ALWAYS);
-            grid.add(dayLabel, i, 0);
+        // Give each of the 7 columns a 120px pref width & center their content
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPrefWidth(120);
+            cc.setHalignment(HPos.CENTER);
+            grid.getColumnConstraints().add(cc);
         }
 
-        int row = 1;
-        int col = firstDayOfWeek - 1;
+        // Day‐of‐week headers
+        String[] days = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+        for (int col = 0; col < days.length; col++) {
+            Label lbl = new Label(days[col]);
+            lbl.getStyleClass().add("calendar-day-header");
+            lbl.setMaxWidth(Double.MAX_VALUE);
+            lbl.setAlignment(Pos.CENTER);
+            grid.add(lbl, col, 0);
+        }
 
+        // Fill in day‐cells
+        int row = 1, col = firstDayOfWeek - 1;
         for (int day = 1; day <= daysInMonth; day++) {
             LocalDate currentDay = yearMonth.atDay(day);
             VBox box = createDayBox(String.valueOf(day));
 
-            for (CalendarEvent event : events) {
-                if (event.getStart().toLocalDate().equals(currentDay)) {
-                    Label eventLabel = new Label(event.getTitle());
+            // Add any events
+            for (CalendarEvent ev : events) {
+                if (ev.getStart().toLocalDate().equals(currentDay)) {
+                    Label eventLabel = new Label(ev.getTitle());
                     eventLabel.getStyleClass().add("calendar-event");
-                    eventLabel.setStyle("-fx-background-color: " + event.getColor() + ";");
+                    eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
                     box.getChildren().add(eventLabel);
                 }
             }
 
-            GridPane.setHgrow(box, Priority.ALWAYS);
-            GridPane.setVgrow(box, Priority.ALWAYS);
             grid.add(box, col, row);
             col++;
             if (col > 6) {
@@ -69,44 +77,45 @@ public class CalendarView {
         grid.setVgap(1);
         grid.setPrefWidth(1000);
 
-        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        // Day headers
+        String[] days = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
         LocalDate monday = referenceDate.with(DayOfWeek.MONDAY);
-
-        for (int col = 0; col < days.length; col++) {
-            Label dayLabel = new Label(days[col]);
-            dayLabel.getStyleClass().add("calendar-day-header");
-            dayLabel.setAlignment(Pos.CENTER);
-            dayLabel.setMaxWidth(Double.MAX_VALUE);
-            GridPane.setHgrow(dayLabel, Priority.ALWAYS);
-            grid.add(dayLabel, col + 1, 0);
+        for (int c = 0; c < days.length; c++) {
+            Label lbl = new Label(days[c]);
+            lbl.getStyleClass().add("calendar-day-header");
+            lbl.setAlignment(Pos.CENTER);
+            lbl.setMaxWidth(Double.MAX_VALUE);
+            GridPane.setHgrow(lbl, Priority.ALWAYS);
+            grid.add(lbl, c + 1, 0);
         }
 
+        // Hour rows
         for (int hour = 0; hour < 24; hour++) {
-            Label hourLabel = new Label(String.format("%02d:00", hour));
-            hourLabel.getStyleClass().add("calendar-hour-label");
-            hourLabel.setMinWidth(50);
-            hourLabel.setAlignment(Pos.CENTER_RIGHT);
-            grid.add(hourLabel, 0, hour + 1);
+            Label hourLbl = new Label(String.format("%02d:00", hour));
+            hourLbl.getStyleClass().add("calendar-hour-label");
+            hourLbl.setMinWidth(50);
+            hourLbl.setAlignment(Pos.CENTER_RIGHT);
+            grid.add(hourLbl, 0, hour + 1);
 
-            for (int col = 0; col < 7; col++) {
+            for (int c = 0; c < 7; c++) {
                 VBox cell = new VBox();
                 cell.getStyleClass().add("calendar-hour-cell");
                 cell.setPrefHeight(40);
                 cell.setAlignment(Pos.TOP_LEFT);
 
-                LocalDateTime cellStart = monday.plusDays(col).atTime(hour, 0);
-                for (CalendarEvent event : events) {
-                    if (event.getStart().getHour() == hour &&
-                            event.getStart().toLocalDate().equals(cellStart.toLocalDate())) {
-                        Label eventLabel = new Label(event.getTitle());
+                LocalDateTime slotStart = monday.plusDays(c).atTime(hour, 0);
+                for (CalendarEvent ev : events) {
+                    if (ev.getStart().toLocalDate().equals(slotStart.toLocalDate())
+                            && ev.getStart().getHour() == hour) {
+                        Label eventLabel = new Label(ev.getTitle());
                         eventLabel.getStyleClass().add("calendar-event");
-                        eventLabel.setStyle("-fx-background-color: " + event.getColor() + ";");
+                        eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
                         cell.getChildren().add(eventLabel);
                     }
                 }
 
                 GridPane.setHgrow(cell, Priority.ALWAYS);
-                grid.add(cell, col + 1, hour + 1);
+                grid.add(cell, c + 1, hour + 1);
             }
         }
 
@@ -127,12 +136,12 @@ public class CalendarView {
             timeLabel.setPrefWidth(60);
             row.getChildren().add(timeLabel);
 
-            for (CalendarEvent event : events) {
-                if (event.getStart().getHour() == hour &&
-                        event.getStart().toLocalDate().equals(date)) {
-                    Label eventLabel = new Label(event.getTitle());
+            for (CalendarEvent ev : events) {
+                if (ev.getStart().toLocalDate().equals(date)
+                        && ev.getStart().getHour() == hour) {
+                    Label eventLabel = new Label(ev.getTitle());
                     eventLabel.getStyleClass().add("calendar-event");
-                    eventLabel.setStyle("-fx-background-color: " + event.getColor() + ";");
+                    eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
                     row.getChildren().add(eventLabel);
                 }
             }
@@ -148,8 +157,6 @@ public class CalendarView {
         box.getStyleClass().add("calendar-day-box");
         box.setAlignment(Pos.TOP_LEFT);
         box.setPrefSize(120, 100);
-        box.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-        box.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         Label dayNum = new Label(dayNumber);
         dayNum.getStyleClass().add("calendar-day-number");

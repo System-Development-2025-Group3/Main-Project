@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LandingpageController implements Initializable {
@@ -45,10 +46,10 @@ public class LandingpageController implements Initializable {
             Scene scene = calendarContainer.getScene();
             if (scene != null) {
                 scene.getStylesheets().add(
-                        getClass().getResource("/application/studyspace/styles/LandingPageStylesheet.css").toExternalForm()
+                        Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/LandingPageStylesheet.css")).toExternalForm()
                 );
                 scene.getStylesheets().add(
-                        getClass().getResource("/application/studyspace/styles/calendar.css").toExternalForm()
+                        Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/calendar.css")).toExternalForm()
                 );
             }
         });
