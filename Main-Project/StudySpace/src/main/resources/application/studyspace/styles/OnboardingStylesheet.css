@@ -46,17 +46,27 @@
   -fx-padding: 0 0 0 4;
 }
 
-/* ====== PAGINATION BUTTONS ====== */
+/* ====== PAGINATION BUTTONS (REFINED) ====== */
 .page-button {
   -fx-background-color: transparent;
   -fx-text-fill: #677583;
   -fx-font-size: 14px;
-  -fx-padding: 4;
+  -fx-padding: 6 14;                /* more vertical & horizontal padding */
+  -fx-background-radius: 999;       /* full pill shape */
+  -fx-min-width: 32px;              /* ensure circular or pill shape */
+  -fx-min-height: 32px;
 }
+
+.page-button:hover {
+  -fx-background-color: #f1f2f4;     /* subtle hover feedback */
+}
+
 .page-button-selected {
   -fx-background-color: #e0e7ff;
   -fx-text-fill: #121417;
-  -fx-background-radius: 50%;
+  -fx-background-radius: 999;
   -fx-font-size: 14px;
-  -fx-padding: 4;
+  -fx-padding: 6 14;
+  -fx-min-width: 32px;
+  -fx-min-height: 32px;
 }

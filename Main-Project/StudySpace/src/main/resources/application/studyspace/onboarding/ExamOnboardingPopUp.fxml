@@ -37,7 +37,7 @@
             <buttons>
                 <Button text="Previous exam" style="-fx-background-color: #e0e7ff; -fx-background-radius: 10;" />
                 <Button text="Next exam" style="-fx-background-color: #e0e7ff; -fx-background-radius: 10;" />
-                <Button fx:id="inputSave" text="Next Step" onMouseClicked="#handleinputSave"
+                <Button fx:id="inputSave" text="Next Step" onMouseClicked="#handleInputSave"
                         style="-fx-background-color: #4f46e5; -fx-text-fill: white; -fx-background-radius: 10;" />
             </buttons>
         </ButtonBar>

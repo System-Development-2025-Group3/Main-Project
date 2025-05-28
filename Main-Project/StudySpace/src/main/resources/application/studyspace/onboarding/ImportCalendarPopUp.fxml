@@ -1,38 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="application.studyspace.controllers.onboarding.OnboardingPage2Controller"
+           stylesheets="@../styles/OnboardingStylesheet.css"
            style="-fx-background-color: transparent;"
-           prefWidth="800" prefHeight="600">
+           prefWidth="800" prefHeight="650">
 
-    <VBox spacing="25"
+    <VBox spacing="20"
           alignment="TOP_CENTER"
-          maxWidth="600"
+          maxWidth="700"
           style="-fx-background-color: white;
-                 -fx-padding: 40;
-                 -fx-background-radius: 15;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);">
+               -fx-padding: 40;
+               -fx-background-radius: 15;
+               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12,0,0,4);">
 
-        <Label text="Import Calendar"
-               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+        <!-- Header -->
+        <Label text="Import your schedule"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
 
-        <Label text="(This section will be filled later)"
-               style="-fx-font-size: 14px; -fx-text-fill: #888;" />
+        <Label text="Upload a CSV file to import your existing schedule. Make sure the file is formatted correctly."
+               wrapText="true"
+               style="-fx-font-size: 14px; -fx-text-fill: #555;"
+               maxWidth="600"/>
 
+        <!-- Drag & Drop area -->
+        <AnchorPane fx:id="dropArea"
+                    style="-fx-border-color: #ccc; -fx-border-style: dashed; -fx-border-radius: 8; -fx-background-radius: 8;"
+                    prefWidth="600" prefHeight="200">
+            <children>
+                <VBox alignment="CENTER" spacing="8"
+                      AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                    <Label text="Drag and drop a CSV file here"
+                           style="-fx-font-size: 16px; -fx-text-fill: #333;"/>
+                    <Label text="Or browse files"
+                           style="-fx-font-size: 12px; -fx-text-fill: #777;"/>
+                    <Button text="Upload CSV"
+                            onAction="#handleUploadCSV"
+                            style="-fx-background-color: #f1f2f4; -fx-background-radius: 8; -fx-padding: 8 16;"/>
+                </VBox>
+            </children>
+        </AnchorPane>
+
+        <!-- Preview label -->
+        <Label text="Preview"
+               style="-fx-font-size: 16px; -fx-font-weight: bold;"
+               alignment="CENTER_LEFT"/>
+
+        <!-- Calendar nav -->
         <HBox spacing="10" alignment="CENTER">
+            <Button text="◀" onAction="#goToPrevious" styleClass="page-button"/>
+            <Label fx:id="monthYearLabel"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <Button text="▶" onAction="#goToNext" styleClass="page-button"/>
+        </HBox>
+
+        <!-- Calendar grid -->
+        <StackPane fx:id="calendarContainer"
+                   styleClass="calendar-wrapper"
+                   VBox.vgrow="ALWAYS"/>
+
+        <!-- Bottom pager: steps 1 & 2 (buttons, like Page 1) -->
+        <HBox spacing="12" alignment="CENTER" style="-fx-padding:20 0 0 0;">
             <Button text="1"
                     onAction="#handlePage1"
-                    style="-fx-background-color: transparent; -fx-font-size: 14px;" />
+                    fx:id="page1Btn"
+                    styleClass="page-button"/>
             <Button text="2"
                     onAction="#handlePage2"
-                    style="-fx-background-color: #e0e7ff; -fx-background-radius: 50%; -fx-font-size: 14px;" />
+                    fx:id="page2Btn"
+                    styleClass="page-button-selected"/>
             <Button text="3"
                     onAction="#handlePage3"
-                    style="-fx-background-color: transparent; -fx-font-size: 14px;" />
+                    fx:id="page3Btn"
+                    styleClass="page-button"/>
         </HBox>
 
     </VBox>
