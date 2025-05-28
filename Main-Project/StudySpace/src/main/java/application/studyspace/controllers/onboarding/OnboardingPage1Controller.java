@@ -40,13 +40,16 @@ public class OnboardingPage1Controller {
         preferredTimeBox.getItems().addAll("Morning", "Afternoon", "Evening");
 
         sessionLengthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            sessionLengthLabel.setText((int) newVal.doubleValue() + " min");
+            int rounded = (int) (Math.round(newVal.doubleValue() / 5) * 5);
+            sessionLengthSlider.setValue(rounded);                 // snap thumb
+            sessionLengthLabel.setText(rounded + " min");
         });
 
         breakLengthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            breakLengthLabel.setText((int) newVal.doubleValue() + " min");
-        });
-    }
+            int rounded = (int) (Math.round(newVal.doubleValue() / 5) * 5);
+            breakLengthSlider.setValue(rounded);
+            breakLengthLabel.setText(rounded + " min");
+        });    }
 
     @FXML private void handlePage1(ActionEvent event) {
         // already on page 1, do nothing or reset form

@@ -52,19 +52,27 @@
 
         <!-- ========== MODULE 2: Length adjustment ========== -->
         <HBox spacing="16" alignment="TOP_CENTER">
-            <VBox spacing="8" alignment="TOP_LEFT" styleClass="card-box" prefWidth="320">
+            <VBox spacing="8" styleClass="card-box" prefWidth="320">
                 <Label text="Study session length" styleClass="field-label"/>
                 <Slider fx:id="sessionLengthSlider"
                         min="10" max="180" value="30"
+                        majorTickUnit="5"
+                        minorTickCount="0"
+                        blockIncrement="5"
+                        snapToTicks="true"
                         styleClass="styled-slider"/>
                 <Label fx:id="sessionLengthLabel"
                        text="30 min"
                        styleClass="slider-value"/>
             </VBox>
-            <VBox spacing="8" alignment="TOP_LEFT" styleClass="card-box" prefWidth="320">
+            <VBox spacing="8" styleClass="card-box" prefWidth="320">
                 <Label text="Break length" styleClass="field-label"/>
                 <Slider fx:id="breakLengthSlider"
                         min="5" max="60" value="10"
+                        majorTickUnit="5"
+                        minorTickCount="0"
+                        blockIncrement="5"
+                        snapToTicks="true"
                         styleClass="styled-slider"/>
                 <Label fx:id="breakLengthLabel"
                        text="10 min"

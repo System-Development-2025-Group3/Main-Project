@@ -142,3 +142,24 @@
   -fx-text-fill: #ffffff;
 }
 
+/* ====== UPLOAD CSV BUTTON ====== */
+.upload-button {
+  -fx-background-color: #f1f2f4;
+  -fx-text-fill: #121417;
+  -fx-font-size: 14px;
+  -fx-font-weight: 500;
+  -fx-background-radius: 8;
+  -fx-padding: 8 20;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+}
+
+.upload-button:hover {
+  -fx-background-color: #e0e2e7;
+}
+
+.upload-button:pressed {
+  -fx-background-color: #d2d5d9;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
+}
+
