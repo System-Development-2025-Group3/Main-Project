@@ -3,12 +3,14 @@ package application.studyspace.controllers.landingpage;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.DayOfWeek;
@@ -131,5 +133,15 @@ public class LandingpageController implements Initializable {
         }
 
         monthYearLabel.setText(labelText);
+    }
+
+    @FXML
+    private void handleClose(ActionEvent event) {
+        // if this is a standalone window:
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.close();
+
+        // if you want to terminate the whole JVM:
+        // Platform.exit();
     }
 }

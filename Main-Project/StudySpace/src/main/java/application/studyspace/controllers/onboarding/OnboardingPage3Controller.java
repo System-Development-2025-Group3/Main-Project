@@ -116,28 +116,28 @@ public class OnboardingPage3Controller implements Initializable {
     @FXML
     private void handleSave(ActionEvent event) {
         //temporary solution
-        Stage popup = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage popup = (Stage) ((Node) event.getSource()).getScene().getWindow();
         popup.close();
-        //temp solution end
-        String title = examNameField.getText();
-        String desc  = descriptionArea.getText();
-        int hours    = Integer.parseInt(estimatedHoursField.getText());
-        String type  = typeCombo.getValue();
-        String color = ((ToggleButton) colorGroup.getSelectedToggle())
-                .getId()
-                .replace("color", "")
-                .toLowerCase();
+        /** String title = examNameField.getText();
+         String desc  = descriptionArea.getText();
+         int hours    = Integer.parseInt(estimatedHoursField.getText());
+         String type  = typeCombo.getValue();
+         String color = ((ToggleButton) colorGroup.getSelectedToggle())
+         .getId()
+         .replace("color", "")
+         .toLowerCase();
 
-        OnboardingEventInput input = new OnboardingEventInput(
-                userUUID, title, desc, hours, type, color
-        );
+         OnboardingEventInput input = new OnboardingEventInput(
+         userUUID, title, desc, hours, type, color
+         );
 
-        if (input.saveToDatabase()) {
-            // Stage popup = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            //popup.close();
-            // proceed…
-        } else {
-            // show error to user…
-        }
+         if (input.saveToDatabase()) {
+         // Stage popup = (Stage) ((Node)event.getSource()).getScene().getWindow();
+         //popup.close();
+         // proceed…
+         } else {
+         // show error to user…
+         }
+         **/
     }
 }
