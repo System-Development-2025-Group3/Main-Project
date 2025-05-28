@@ -163,3 +163,49 @@
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }
 
+/* === CARD BOX (used on all inner cards) === */
+.card-box {
+  -fx-background-color: white;
+  -fx-padding: 16;
+  -fx-background-radius: 12;
+  -fx-border-color: #000000;     /* slim black outline */
+  -fx-border-width: 1;
+  -fx-border-radius: 12;         /* match background radius */
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 2);
+}
+
+/* === FORM FIELDS === */
+.styled-text-field, .styled-text-area {
+  -fx-background-color: #f1f2f4;
+  -fx-background-radius: 8;
+  -fx-font-size: 13px;
+  -fx-padding: 8 12;
+}
+
+/* === TYPE COMBO === */
+.styled-combo {
+  -fx-background-color: white;
+  -fx-border-color: #e0e0e0;
+  -fx-background-radius: 8;
+  -fx-border-radius: 8;
+  -fx-padding: 4 8;
+}
+
+/* === COLOR BUTTONS === */
+.color-button {
+  -fx-background-color: #d1d5db;
+  -fx-background-radius: 50%;
+  -fx-pref-width: 24;
+  -fx-pref-height: 24;
+  -fx-cursor: hand;
+}
+.color-button:selected {
+  -fx-border-color: #121417;
+  -fx-border-width: 2;
+}
+#colorRed    { -fx-background-color: #ef4444; }
+#colorBlue   { -fx-background-color: #3b82f6; }
+#colorGreen  { -fx-background-color: #10b981; }
+#colorYellow { -fx-background-color: #facc15; }
+#colorPurple { -fx-background-color: #d946ef; }
+

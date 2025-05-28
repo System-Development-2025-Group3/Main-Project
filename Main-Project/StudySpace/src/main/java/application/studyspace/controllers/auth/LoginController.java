@@ -250,12 +250,4 @@ public class LoginController {
             System.out.println("The corrected email is now valid.");
         }
     }
-
-    @FXML
-    private void handleSettingsIconClick(MouseEvent event) {
-        Stage stage = (Stage) stackPane.getScene().getWindow(); // Get the current stage
-        SceneSwitcher.switchToPopup(stage, "/application/studyspace/settings/SettingsPopUp.fxml", "Settings");
-        System.out.println("The user clicked on the Settings icon and navigated to the Settings PopUp.");
-    }
-
 }

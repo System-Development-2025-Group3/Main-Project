@@ -8,7 +8,7 @@
            fx:controller="application.studyspace.controllers.onboarding.OnboardingPage2Controller"
            stylesheets="@../styles/OnboardingStylesheet.css"
            style="-fx-background-color: transparent; -fx-padding: 40;"
-           prefWidth="800" prefHeight="650">
+           prefWidth="1320" prefHeight="900">
 
     <!-- outer card -->
     <VBox spacing="20"
