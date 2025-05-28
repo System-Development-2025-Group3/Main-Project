@@ -1,7 +1,5 @@
 package application.studyspace.services.Scenes;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Pane;        // <-- changed from StackPane
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;

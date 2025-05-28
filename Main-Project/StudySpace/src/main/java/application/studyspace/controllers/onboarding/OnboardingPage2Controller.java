@@ -3,7 +3,6 @@ package application.studyspace.controllers.onboarding;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarView;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -86,7 +85,7 @@ public class OnboardingPage2Controller implements Initializable {
     @FXML private void onDragDropped(DragEvent e) {
         List<File> files = e.getDragboard().getFiles();
         if (!files.isEmpty()) {
-            System.out.println("Dropped: " + files.get(0).getAbsolutePath());
+            System.out.println("Dropped: " + files.getFirst().getAbsolutePath());
             // TODO: parse CSV → events, then renderCalendar()
         }
         e.setDropCompleted(true);

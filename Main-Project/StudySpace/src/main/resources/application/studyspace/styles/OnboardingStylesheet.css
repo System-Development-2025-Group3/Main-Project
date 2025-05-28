@@ -1,3 +1,21 @@
+/* ====== TITLE CONTAINER ====== */
+.title-container {
+  -fx-padding: 0 0 20 0;      /* space below before the first card */
+}
+
+/* ====== MAIN TITLE ====== */
+.main-title {
+  -fx-font-size: 26px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #121417;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);
+}
+
+/* ====== SUBTITLE ====== */
+.subtitle {
+  -fx-font-size: 14px;
+  -fx-text-fill: #677583;
+}
 /* ====== COMBOBOX ====== */
 .styled-combo {
   -fx-background-color: white;
@@ -19,24 +37,69 @@
   -fx-text-fill: #121417;
 }
 
-/* ====== SLIDER ====== */
+/* ====== CARD MODULES ====== */
+.card-box {
+  -fx-background-color: white;
+  -fx-padding: 16;
+  -fx-background-radius: 12;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+/* ====== DAY-SQUARE PICKER ====== */
+.day-square {
+  -fx-background-color: #f1f2f4;
+  -fx-text-fill: #121417;
+  -fx-font-size: 12px;
+  -fx-background-radius: 4;
+  -fx-border-radius: 4;
+  -fx-pref-width: 36px;
+  -fx-pref-height: 36px;
+  -fx-alignment: center;
+  -fx-cursor: hand;
+}
+.day-square:selected {
+  -fx-background-color: #121417;
+  -fx-text-fill: white;
+}
+.day-square:selected:hover {
+  -fx-background-color: #121417;   /* re-apply your selected color */
+  -fx-text-fill: white;            /* keep the text white */
+}
+.day-square:hover {
+  -fx-background-color: #e0e2e7;
+}
+
+/* ====== SHADCN-STYLE SLIDER ====== */
 .styled-slider {
   -fx-pref-width: 300;
+  -fx-padding: 6 0;
 }
 .styled-slider .track {
-  -fx-background-color: #f1f2f4;
+  -fx-background-color: #121417;
   -fx-background-radius: 4;
-  -fx-pref-height: 4;
+  -fx-pref-height: 6;
 }
 .styled-slider .range {
-  -fx-background-color: #121417;
+  -fx-background-color: #ffffff;
   -fx-background-radius: 4;
 }
 .styled-slider .thumb {
-  -fx-background-color: #121417;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #121417;
+  -fx-border-width: 2;
   -fx-background-radius: 50%;
-  -fx-pref-width: 14;
-  -fx-pref-height: 14;
+  -fx-border-radius: 50%;
+  -fx-pref-width: 16;
+  -fx-pref-height: 16;
+  -fx-cursor: hand;
+  -fx-translate-y: -1; /* align thumb to center of 6px track */
+}
+.styled-slider .thumb:hover {
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+.styled-slider .thumb:pressed {
+  -fx-scale-x: 1.1;
+  -fx-scale-y: 1.1;
 }
 
 /* ====== SLIDER VALUE LABEL ====== */
@@ -46,27 +109,36 @@
   -fx-padding: 0 0 0 4;
 }
 
-/* ====== PAGINATION BUTTONS (REFINED) ====== */
+/* ====== PAGINATION BUTTONS ====== */
 .page-button {
   -fx-background-color: transparent;
   -fx-text-fill: #677583;
   -fx-font-size: 14px;
-  -fx-padding: 6 14;                /* more vertical & horizontal padding */
-  -fx-background-radius: 999;       /* full pill shape */
-  -fx-min-width: 32px;              /* ensure circular or pill shape */
+  -fx-padding: 6 14;
+  -fx-background-radius: 999;
+  -fx-min-width: 32px;
   -fx-min-height: 32px;
 }
 
+/* unselected button hover → gray */
 .page-button:hover {
-  -fx-background-color: #f1f2f4;     /* subtle hover feedback */
+  -fx-background-color: #f1f2f4;
+  -fx-text-fill: #121417;
 }
 
 .page-button-selected {
-  -fx-background-color: #e0e7ff;
-  -fx-text-fill: #121417;
+  /* selected → black always */
+  -fx-background-color: #000000;
+  -fx-text-fill: #ffffff;
   -fx-background-radius: 999;
-  -fx-font-size: 14px;
   -fx-padding: 6 14;
   -fx-min-width: 32px;
   -fx-min-height: 32px;
 }
+
+/* selected hover stays black */
+.page-button-selected:hover {
+  -fx-background-color: #000000;
+  -fx-text-fill: #ffffff;
+}
+

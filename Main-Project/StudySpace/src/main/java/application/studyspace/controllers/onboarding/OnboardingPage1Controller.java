@@ -2,7 +2,6 @@ package application.studyspace.controllers.onboarding;
 
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.onboarding.InputStudyDays;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -22,13 +21,13 @@ public class OnboardingPage1Controller {
     @FXML private Slider breakLengthSlider;
     @FXML private Label breakLengthLabel;
 
-    @FXML private CheckBox mondayCheck;
-    @FXML private CheckBox tuesdayCheck;
-    @FXML private CheckBox wednesdayCheck;
-    @FXML private CheckBox thursdayCheck;
-    @FXML private CheckBox fridayCheck;
-    @FXML private CheckBox saturdayCheck;
-    @FXML private CheckBox sundayCheck;
+    @FXML private ToggleButton monBtn;
+    @FXML private ToggleButton tueBtn;
+    @FXML private ToggleButton wedBtn;
+    @FXML private ToggleButton thuBtn;
+    @FXML private ToggleButton friBtn;
+    @FXML private ToggleButton satBtn;
+    @FXML private ToggleButton sunBtn;
 
     private UUID userUUID;
 
@@ -81,13 +80,14 @@ public class OnboardingPage1Controller {
     @FXML
     private void handleSave(ActionEvent event) {
         String blockedDays = "";
-        if (mondayCheck.isSelected()) blockedDays += "Monday ";
-        if (tuesdayCheck.isSelected()) blockedDays += "Tuesday ";
-        if (wednesdayCheck.isSelected()) blockedDays += "Wednesday ";
-        if (thursdayCheck.isSelected()) blockedDays += "Thursday ";
-        if (fridayCheck.isSelected()) blockedDays += "Friday ";
-        if (saturdayCheck.isSelected()) blockedDays += "Saturday ";
-        if (sundayCheck.isSelected()) blockedDays += "Sunday ";
+        if (monBtn.isSelected()) blockedDays += "Monday ";
+        if (tueBtn.isSelected()) blockedDays += "Tuesday ";
+        if (wedBtn.isSelected()) blockedDays += "Wednesday ";
+        if (thuBtn.isSelected()) blockedDays += "Thursday ";
+        if (friBtn.isSelected()) blockedDays += "Friday ";
+        if (satBtn.isSelected()) blockedDays += "Saturday ";
+        if (sunBtn.isSelected()) blockedDays += "Sunday ";
+        blockedDays = blockedDays.trim();
 
         InputStudyDays studyData = new InputStudyDays(
                 userUUID,

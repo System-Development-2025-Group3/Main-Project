@@ -4,6 +4,7 @@ import application.studyspace.services.onboarding.ExamInput;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 public class OnboardingPage3Controller implements Initializable {
 
+    public Button inputSave;
     @FXML
     private TextField examTitle;
 

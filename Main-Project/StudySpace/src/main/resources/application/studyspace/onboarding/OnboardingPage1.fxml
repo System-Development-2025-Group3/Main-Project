@@ -11,12 +11,12 @@
            style="-fx-background-color: transparent; -fx-padding: 40;"
            prefWidth="800" prefHeight="600">
 
-    <!-- pagination ToggleGroup (non-visual) -->
+    <!-- non-visual toggle group for pager -->
     <fx:define>
         <ToggleGroup fx:id="paginationGroup"/>
     </fx:define>
 
-    <!-- main white card -->
+    <!-- main pop-up card -->
     <VBox spacing="20"
           alignment="TOP_CENTER"
           maxWidth="700"
@@ -25,57 +25,68 @@
                -fx-background-radius: 15;
                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);">
 
-        <!-- top bar with “▾ Planify” -->
+        <!-- top bar -->
         <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
             <Label text="▾" style="-fx-font-size:14px; -fx-text-fill:#121417;"/>
-            <Label text="Planify" style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#121417;"/>
+            <Label text="Planify"
+                   style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#121417;"/>
         </HBox>
 
-        <!-- Title -->
-        <Label text="Welcome to Planify"
-               style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#121417;"/>
-
-        <!-- Preferred time -->
-        <ComboBox fx:id="preferredTimeBox"
-                  promptText="Select your preferred study time"
-                  prefWidth="350"
-                  styleClass="styled-combo"/>
-
-        <!-- Session length slider -->
-        <HBox spacing="16" alignment="CENTER_LEFT">
-            <Label text="Study session length" styleClass="field-label"/>
-            <Slider fx:id="sessionLengthSlider"
-                    min="10" max="180" value="30"
-                    styleClass="styled-slider"/>
-            <Label fx:id="sessionLengthLabel"
-                   text="30 min"
-                   styleClass="slider-value"/>
-        </HBox>
-
-        <!-- Break length slider -->
-        <HBox spacing="16" alignment="CENTER_LEFT">
-            <Label text="Break length" styleClass="field-label"/>
-            <Slider fx:id="breakLengthSlider"
-                    min="5" max="60" value="10"
-                    styleClass="styled-slider"/>
-            <Label fx:id="breakLengthLabel"
-                   text="10 min"
-                   styleClass="slider-value"/>
-        </HBox>
-
-        <!-- Blocked days checkboxes -->
-        <VBox spacing="4" style="-fx-padding:0 0 0 20;">
-            <Label text="Blocked days" styleClass="field-label-bold"/>
-            <CheckBox fx:id="mondayCheck" text="Monday"/>
-            <CheckBox fx:id="tuesdayCheck" text="Tuesday"/>
-            <CheckBox fx:id="wednesdayCheck" text="Wednesday"/>
-            <CheckBox fx:id="thursdayCheck" text="Thursday"/>
-            <CheckBox fx:id="fridayCheck" text="Friday"/>
-            <CheckBox fx:id="saturdayCheck" text="Saturday"/>
-            <CheckBox fx:id="sundayCheck" text="Sunday"/>
+        <!-- Title & subtitle container -->
+        <VBox fx:id="titleContainer"
+              styleClass="title-container"
+              alignment="CENTER"
+              spacing="4">
+            <Label text="Welcome to Planify" styleClass="main-title"/>
+            <Label text="Let us know your study preferences" styleClass="subtitle"/>
         </VBox>
 
-        <!-- Pager buttons (1, 2, 3) -->
+        <!-- ========== MODULE 1: Preferred study time ========== -->
+        <VBox spacing="8" alignment="TOP_LEFT" styleClass="card-box" prefWidth="350">
+            <Label text="Preferred study time" styleClass="field-label-bold"/>
+            <ComboBox fx:id="preferredTimeBox"
+                      promptText="e.g. Evening"
+                      styleClass="styled-combo"
+                      prefWidth="350"/>
+        </VBox>
+
+        <!-- ========== MODULE 2: Length adjustment ========== -->
+        <HBox spacing="16" alignment="TOP_CENTER">
+            <VBox spacing="8" alignment="TOP_LEFT" styleClass="card-box" prefWidth="320">
+                <Label text="Study session length" styleClass="field-label"/>
+                <Slider fx:id="sessionLengthSlider"
+                        min="10" max="180" value="30"
+                        styleClass="styled-slider"/>
+                <Label fx:id="sessionLengthLabel"
+                       text="30 min"
+                       styleClass="slider-value"/>
+            </VBox>
+            <VBox spacing="8" alignment="TOP_LEFT" styleClass="card-box" prefWidth="320">
+                <Label text="Break length" styleClass="field-label"/>
+                <Slider fx:id="breakLengthSlider"
+                        min="5" max="60" value="10"
+                        styleClass="styled-slider"/>
+                <Label fx:id="breakLengthLabel"
+                       text="10 min"
+                       styleClass="slider-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- ========== MODULE 3: Blocked days ========== -->
+        <VBox spacing="12" alignment="TOP_LEFT" styleClass="card-box" prefWidth="350">
+            <Label text="Blocked days" styleClass="field-label-bold"/>
+            <HBox spacing="6">
+                <ToggleButton fx:id="monBtn" text="Mo" styleClass="day-square"/>
+                <ToggleButton fx:id="tueBtn" text="Tu" styleClass="day-square"/>
+                <ToggleButton fx:id="wedBtn" text="We" styleClass="day-square"/>
+                <ToggleButton fx:id="thuBtn" text="Th" styleClass="day-square"/>
+                <ToggleButton fx:id="friBtn" text="Fr" styleClass="day-square"/>
+                <ToggleButton fx:id="satBtn" text="Sa" styleClass="day-square"/>
+                <ToggleButton fx:id="sunBtn" text="Su" styleClass="day-square"/>
+            </HBox>
+        </VBox>
+
+        <!-- pager -->
         <HBox spacing="12" alignment="CENTER" style="-fx-padding:20 0 0 0;">
             <Button text="1"
                     fx:id="page1Btn"
