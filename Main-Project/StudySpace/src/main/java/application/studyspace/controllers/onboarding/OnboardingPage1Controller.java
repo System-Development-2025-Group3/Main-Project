@@ -5,10 +5,7 @@ import application.studyspace.services.onboarding.InputStudyDays;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 
@@ -16,6 +13,9 @@ import java.util.UUID;
 
 public class OnboardingPage1Controller {
 
+    public Button page1Btn;
+    public Button page2Btn;
+    public Button page3Btn;
     @FXML private ComboBox<String> preferredTimeBox;
     @FXML private Slider sessionLengthSlider;
     @FXML private Label sessionLengthLabel;
@@ -56,34 +56,27 @@ public class OnboardingPage1Controller {
     @FXML
     private void handlePage2(ActionEvent event) {
         Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Stage landingPageStage = (Stage) popupStage.getOwner();
-        popupStage.close();
 
-        Platform.runLater(() -> {
-            SceneSwitcher.<OnboardingPage2Controller>switchToPopupWithData(
-                    landingPageStage,
-                    "/application/studyspace/onboarding/ImportCalendarPopUp.fxml",
-                    "Import Calendar",
-                    controller -> controller.setUserUUID(userUUID)
-            );
-        });
+        SceneSwitcher.<OnboardingPage2Controller>switchPopupContent(
+                popupStage,
+                "/application/studyspace/onboarding/OnboardingPage2.fxml",
+                "Onboarding Page 2",
+                controller -> controller.setUserUUID(userUUID)
+        );
     }
 
     @FXML
     private void handlePage3(ActionEvent event) {
         Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Stage landingPageStage = (Stage) popupStage.getOwner();
-        popupStage.close();
 
-        Platform.runLater(() -> {
-            SceneSwitcher.<OnboardingPage3Controller>switchToPopupWithData(
-                    landingPageStage,
-                    "/application/studyspace/onboarding/ExamOnboardingPopUp.fxml",
-                    "Import Calendar",
-                    controller -> controller.setUserUUID(userUUID)
-            );
-        });
+        SceneSwitcher.<OnboardingPage3Controller>switchPopupContent(
+                popupStage,
+                "/application/studyspace/onboarding/OnboardingPage3.fxml",
+                "Onboarding Page 3",
+                controller -> controller.setUserUUID(userUUID)
+        );
     }
+
 
     @FXML
     private void handleSave(ActionEvent event) {

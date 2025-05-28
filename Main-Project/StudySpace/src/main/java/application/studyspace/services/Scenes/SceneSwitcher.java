@@ -92,26 +92,19 @@ public class SceneSwitcher {
         }
     }
 
-    public static <T> void switchToWithData(Object eventSource, String fxmlPath, String title, ControllerInitializer<T> initializer) {
-        Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
-
+    public static <T> void switchPopupContent(Stage popupStage, String fxmlPath, String title, ControllerInitializer<T> initializer) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlPath));
-            Parent root = loader.load();
+            Parent newRoot = loader.load();
 
             T controller = loader.getController();
             initializer.init(controller);
 
-            if (stage.getScene() == null) {
-                stage.setScene(new Scene(root));
-            } else {
-                stage.getScene().setRoot(root);
-            }
-
-            stage.setTitle(title);
-            stage.show();
+            popupStage.getScene().setRoot(newRoot);
+            popupStage.setTitle(title);
 
         } catch (IOException e) {
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
             e.printStackTrace();
         }
     }

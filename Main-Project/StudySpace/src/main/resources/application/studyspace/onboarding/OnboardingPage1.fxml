@@ -8,7 +8,7 @@
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="application.studyspace.controllers.onboarding.OnboardingPage1Controller"
            stylesheets="@../styles/OnboardingStylesheet.css"
-           style="-fx-background-color: transparent;"
+           style="-fx-background-color: transparent; -fx-padding: 40;"
            prefWidth="800" prefHeight="600">
 
     <!-- pagination ToggleGroup (non-visual) -->
@@ -64,7 +64,7 @@
         </HBox>
 
         <!-- Blocked days checkboxes -->
-        <VBox spacing="4" alignment="TOP_LEFT" style="-fx-padding:0 0 0 20;">
+        <VBox spacing="4" style="-fx-padding:0 0 0 20;">
             <Label text="Blocked days" styleClass="field-label-bold"/>
             <CheckBox fx:id="mondayCheck" text="Monday"/>
             <CheckBox fx:id="tuesdayCheck" text="Tuesday"/>

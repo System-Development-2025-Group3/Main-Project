@@ -29,9 +29,9 @@ public class ValidationUtils {
      */
     public static boolean isValidEmail(String email) {
         if (email == null || email.isEmpty()) {
-            return false; // Null or empty strings are invalid
+            return true; // Null or empty strings are invalid
         }
-        return Pattern.compile(EMAIL_PATTERN).matcher(email).matches();
+        return !Pattern.compile(EMAIL_PATTERN).matcher(email).matches();
     }
 }
 

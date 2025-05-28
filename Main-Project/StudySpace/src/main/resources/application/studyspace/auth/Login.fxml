@@ -82,10 +82,6 @@
                                 <Label fx:id="passwordTooltip" text="?" styleClass="circle-label"/>
                             </HBox>
 
-                            <CheckBox fx:id="StayLoggedInCheckBox"
-                                      text="Stay Logged in?"
-                                      styleClass="custom-checkbox"/>
-
                             <Button fx:id="SubmitLoginButton"
                                     text="Login"
                                     styleClass="button"
@@ -107,20 +103,4 @@
             </VBox>
         </center>
     </BorderPane>
-
-    <ImageView fx:id="gearIcon"
-               fitHeight="20.0"
-               fitWidth="20.0"
-               preserveRatio="true"
-               layoutX="10"
-               layoutY="10"
-               StackPane.alignment="TOP_RIGHT"
-               onMouseClicked="#handleSettingsIconClick"
-               pickOnBounds="true">
-        <StackPane.margin>
-            <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
-        </StackPane.margin>
-        <Image url="@../../../KEEP_IN_ROOT_DIR!!_buggedgearicon.png"/>
-    </ImageView>
-
 </StackPane>

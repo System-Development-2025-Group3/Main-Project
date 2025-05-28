@@ -12,6 +12,7 @@ module application.studyspace {
     requires java.desktop;
     requires java.net.http;
     requires org.json;
+    requires org.mariadb.jdbc;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;

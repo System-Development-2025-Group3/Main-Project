@@ -15,6 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,6 +31,12 @@ import static application.studyspace.services.Styling.StylingUtility.resetFieldS
 
 public class LoginController {
 
+    public VBox LoginCard;
+    public Label WelcomeTitle;
+    public Button SubmitLoginButton;
+    public TextFlow textFlow;
+    public Text linkText;
+    public ImageView Image01;
     @FXML private TextField InputEmailTextfield;
     @FXML private PasswordField InputPassword;
     @FXML private Label passwordTooltip, emailTooltip;
@@ -56,7 +65,6 @@ public class LoginController {
      * 3. Displays an error alert if fields are empty or credentials are invalid.
      * 4. Switches to the landing page if the login is successful.
      *
-     * @param event the MouseEvent triggered when the login button is clicked
      */
     private final CreateToolTip toolTipService = new CreateToolTip();
 
@@ -68,7 +76,7 @@ public class LoginController {
     if (InputEmailTextfield.getText().isEmpty()) {
         validationState= "EMPTY_EMAIL";
     }
-    if (!ValidationUtils.isValidEmail(InputEmailTextfield.getText())) {
+    if (ValidationUtils.isValidEmail(InputEmailTextfield.getText())) {
         validationState = "INVALID_EMAIL";
     }
     if (InputPassword.getText().isEmpty()) {
@@ -174,13 +182,13 @@ public class LoginController {
         // Immediately show the popup
         SceneSwitcher.switchToPopupWithData(
                 stage,
-                "/application/studyspace/onboarding/StudyPreferencesOnboardingPopUp.fxml",
+                "/application/studyspace/onboarding/OnboardingPage1.fxml",
                 "Planify Onboarding",
                 (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
         );
 
 
-        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/ExamOnboardingPopUp.fxml", "Landing-Page");
+        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/OnboardingPage3.fxml", "Landing-Page");
 }
 
     }
@@ -236,7 +244,7 @@ public class LoginController {
         applyErrorStyle(InputEmailTextfield, "text-field-correct");
         System.out.println("The user accepted our correction for the E-Mail input.");
 
-        if (!ValidationUtils.isValidEmail(email)) {
+        if (ValidationUtils.isValidEmail(email)) {
             System.out.println("The corrected email is still invalid.");
         } else {
             System.out.println("The corrected email is now valid.");

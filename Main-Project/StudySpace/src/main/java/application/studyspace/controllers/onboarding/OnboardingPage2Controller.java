@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -27,6 +28,10 @@ import java.util.UUID;
 
 public class OnboardingPage2Controller implements Initializable {
 
+    public Button page1Btn;
+    public Button page2Btn;
+    public Button page3Btn;
+    public AnchorPane dropArea;
     @FXML private StackPane calendarContainer;
     @FXML private Label monthYearLabel;
     @FXML private Button handleUploadCSV;
@@ -103,37 +108,30 @@ public class OnboardingPage2Controller implements Initializable {
     @FXML
     private void handlePage1(ActionEvent event) {
         Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Stage landingPageStage = (Stage) popupStage.getOwner();
-        popupStage.close();
 
-        Platform.runLater(() -> {
-            SceneSwitcher.<OnboardingPage1Controller>switchToPopupWithData(
-                    landingPageStage,
-                    "/application/studyspace/onboarding/StudyPreferencesOnboardingPopUp.fxml",
-                    "Onboarding Page 1",
-                    controller -> controller.setUserUUID(userUUID)
-            );
-        });
+        SceneSwitcher.<OnboardingPage1Controller>switchPopupContent(
+                popupStage,
+                "/application/studyspace/onboarding/OnboardingPage1.fxml",
+                "Onboarding Page 1",
+                controller -> controller.setUserUUID(userUUID)
+        );
     }
 
     @FXML
     private void handlePage2(ActionEvent event) {
-        //already on page 2
+        // Already on page 2, do nothing or optionally refresh
     }
 
     @FXML
     private void handlePage3(ActionEvent event) {
         Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Stage landingPageStage = (Stage) popupStage.getOwner();
-        popupStage.close();
 
-        Platform.runLater(() -> {
-            SceneSwitcher.<OnboardingPage3Controller>switchToPopupWithData(
-                    landingPageStage,
-                    "/application/studyspace/onboarding/ExamOnboardingPopUp.fxml",
-                    "Exam Setup",
-                    controller -> controller.setUserUUID(userUUID)
-            );
-        });
+        SceneSwitcher.<OnboardingPage3Controller>switchPopupContent(
+                popupStage,
+                "/application/studyspace/onboarding/OnboardingPage3.fxml",
+                "Onboarding Page 3",
+                controller -> controller.setUserUUID(userUUID)
+        );
     }
+
 }
