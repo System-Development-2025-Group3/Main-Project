@@ -175,12 +175,30 @@
 }
 
 /* === FORM FIELDS === */
-.styled-text-field, .styled-text-area {
+.styled-text-field{
   -fx-background-color: #f1f2f4;
   -fx-background-radius: 8;
   -fx-font-size: 13px;
   -fx-padding: 8 12;
 }
+.styled-text-area {
+  -fx-background-color: #f1f2f4;
+  -fx-background-radius: 8;
+  -fx-font-size: 13px;
+  -fx-padding: 8 12;
+  -fx-border-color: transparent;
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+}
+
+.styled-text-area .content {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+  -fx-border-color: transparent;
+}
+
+
 
 /* === TYPE COMBO === */
 .styled-combo {
@@ -209,3 +227,70 @@
 #colorYellow { -fx-background-color: #facc15; }
 #colorPurple { -fx-background-color: #d946ef; }
 
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #f4f4f4;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-background-color: transparent;
+
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #000000;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-pref-width: 6;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #000000;
+    -fx-background-radius: 6;
+    -fx-pref-width: 8;
+    -fx-pref-height: 30;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-shape: null;
+}
+
+.calendar-wrapper {
+    -fx-background-color: white;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+    -fx-border-color: #eeeeee;
+    -fx-border-width: 1;
+}
