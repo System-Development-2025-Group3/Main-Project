@@ -15,6 +15,14 @@ import static application.studyspace.services.auth.PasswordHasher.saveToDatabase
 import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
 import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
 
+/**
+ * The RegisterController class manages the registration view in the application. It handles
+ * user interactions during the registration process, including input validation, showing appropriate
+ * feedback, and transitioning between scenes.
+ *
+ * This controller is linked to an FXML file, and its methods are annotated with @FXML to allow
+ * integration with JavaFX elements.
+ */
 public class RegisterController {
 
     @FXML private TextField RegisterEmailField;
@@ -24,6 +32,13 @@ public class RegisterController {
     @FXML private StackPane stackPane;
     @FXML private ImageView Image03;
 
+    /**
+     * Handles the click event triggered by the "Back to Login" action. This method switches
+     * the application's current scene to the login screen.
+     *
+     * @param event The ActionEvent triggered by clicking the "Back to Login" button.
+     *              It provides the source of the event required for scene switching.
+     */
     @FXML
     private void handleBacktoLoginClick(ActionEvent event) {
         SceneSwitcher.switchTo((Node) event.getSource(), "/application/studyspace/auth/Login.fxml", "Login");
@@ -31,6 +46,22 @@ public class RegisterController {
 
     private final CreateToolTip toolTipService = new CreateToolTip();
 
+    /**
+     * Handles the click event of the "Submit Registration" button. Validates the input fields
+     * for email and passwords, provides appropriate feedback through tooltips if validation
+     * fails, and either applies styling to fields with errors or saves the data and transitions
+     * to the landing page when all inputs are valid.
+     *
+     * Validation logic includes:
+     * - Checking if the email field is empty and displaying an error tooltip if true.
+     * - Checking if the password fields are empty and displaying an error tooltip if true.
+     * - Ensuring the passwords entered in both fields match and providing feedback if they do not.
+     *
+     * If all validations pass, the method saves the email and password to the database,
+     * and switches to the landing page scene.
+     *
+     * @param event The ActionEvent triggered by clicking the "Submit Registration" button.
+     */
     @FXML
     private void handleSubmitRegistrationButtonClick(ActionEvent event) {
         if (RegisterEmailField.getText().isEmpty()) {
@@ -94,6 +125,17 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Initializes the UI components and sets up tooltips and bindings for certain elements
+     * in the RegisterController. This method is automatically invoked when the controller
+     * is loaded and its associated FXML file is initialized.
+     *
+     * The method configures:
+     * - Custom tooltips for password and email input fields with specific helper text
+     *   detailing the required formats and conditions for valid entries.
+     * - Binding for an image's size properties to the dimensions of its container, ensuring
+     *   dynamic resizing.
+     */
     @FXML
     private void initialize() {
         String tooltipText = """

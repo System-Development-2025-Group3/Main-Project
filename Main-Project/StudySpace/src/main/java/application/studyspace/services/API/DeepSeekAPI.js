@@ -1,11 +1,20 @@
 import { InferenceClient } from "@huggingface/inference";
 
+/**
+ * Represents an instance of the `InferenceClient` used to interact with an external API.
+ *
+ * The client is initialized with an API key retrieved from environment variables.
+ * This key is used to authenticate with the API and access its services.
+ *
+ * @type {InferenceClient}
+ */
 const client = new InferenceClient(process.env.API_KEY);
 
 /**
- * Executes a chat completion request to interact with the AI language model.
+ * Sends a user-provided input to the DeepSeek API and retrieves a response from the AI model.
  *
- * @param {string} userContent - The dynamic input content for the AI model.
+ * @param {string} userContent - The content or message provided by the user to be processed by the AI model.
+ * @return {Promise<string>} A promise that resolves to the AI's response as a string. If no response is received, returns "No response from AI". If an error occurs, logs the error and does not return a value.
  */
 async function DeepSeekAPI(userContent) {
   try {

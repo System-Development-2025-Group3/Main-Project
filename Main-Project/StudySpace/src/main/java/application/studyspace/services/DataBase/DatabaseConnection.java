@@ -2,9 +2,21 @@ package application.studyspace.services.DataBase;
 
 import java.sql.*;
 
+/**
+ * The DatabaseConnection class provides functionality to establish and manage
+ * a connection to a MariaDB database using JDBC. The connection is configured
+ * with specific database credentials and URL details.
+ */
 public class DatabaseConnection {
     public Connection databaseLink;
 
+    /**
+     * Establishes and returns a connection to a MariaDB database using JDBC.
+     * The connection is configured with predefined database credentials and URL.
+     *
+     * @return a Connection object representing the database connection
+     * @throws RuntimeException if the JDBC driver is not found or if the connection fails
+     */
     public Connection getConnection() {
         String databaseName = "systemdevelopment2025_maindatabase";
         String databaseUser = "408880";

@@ -193,6 +193,19 @@ public class LoginController {
 
     }
 
+    /**
+     * Performs email autocorrection by analyzing the user-provided email input
+     * and suggesting the most likely intended email address from the database.
+     *
+     * The method uses the `executeDeepSeekAPI` to call an external AI-based service
+     * to analyze and correct the email input. It includes the following steps:
+     * 1. Constructs a dynamic input request string containing the user-provided email,
+     *    and a list of potential email options fetched from the database using `SELECT`.
+     * 2. Executes the AI-based autocorrection via the `executeDeepSeekAPI`.
+     * 3. Displays a tooltip popup with the suggested correction using the `toolTipService`.
+     *    The user can choose to accept the correction, which updates the input email field
+     *    by invoking the `setInputEmail` method.
+     */
     private void mailAutocorrect() {
         String dynamicInput = "You are an E-Mail Autocorrector. The following E-Mail has been provided: "
                 + InputEmailTextfield.getText();
@@ -239,6 +252,12 @@ public class LoginController {
 
     }
 
+    /**
+     * Sets the input email in the email text field, applies a correction style,
+     * and logs validation status after the correction.
+     *
+     * @param email The email address to set and validate.
+     */
     public void setInputEmail(String email) {
         InputEmailTextfield.setText(email);
         applyErrorStyle(InputEmailTextfield, "text-field-correct");

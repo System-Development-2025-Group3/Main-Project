@@ -27,6 +27,15 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+/**
+ * Controller class responsible for managing functionality and interactions
+ * on the third page of the onboarding sequence. This includes UI component
+ * initialization, navigation to other onboarding pages, updating the calendar
+ * preview, and handling user inputs.
+ *
+ * Implements the {@code Initializable} interface, allowing custom setup and
+ * initialization logic for this controller.
+ */
 public class OnboardingPage3Controller implements Initializable {
 
     public Button page1Btn;
@@ -57,6 +66,26 @@ public class OnboardingPage3Controller implements Initializable {
         this.userUUID = uuid;
     }
 
+    /**
+     * Updates the calendar preview component to display the week view for the current
+     * preview date and sets the corresponding label displaying the range of dates.
+     *
+     * The method does the following:
+     * 1. Calculates the start and end dates of the week based on the {@code previewDate}.
+     * 2. Builds a week view using the {@code CalendarView.buildWeekView} method, populating it with events.
+     * 3. Updates the {@code calendarPreviewContainer} with the newly built week view.
+     * 4. Generates a textual representation of the week’s date range in the format
+     *    "StartMonth StartDay – EndMonth EndDay, Year" and sets it on the {@code previewMonthLabel}.
+     *
+     * Dependencies:
+     * - The method uses the {@code previewDate} field as the reference date.
+     * - The list of events is accessed through the {@code events} field.
+     * - The visual calendar view is updated in the {@code calendarPreviewContainer}.
+     * - The label displaying the date range is updated through the {@code previewMonthLabel}.
+     *
+     * This method assumes that {@code previewDate} has already been set and represents
+     * the starting date for the week view to be generated.
+     */
     private void updatePreview() {
         // build a week view and update label to "MonDay – SunDay, Year"
         LocalDate start = previewDate;
@@ -77,11 +106,34 @@ public class OnboardingPage3Controller implements Initializable {
         );
     }
 
+    /**
+     * Advances the preview date by one week and updates the calendar preview.
+     *
+     * This method increments the current `previewDate` by 7 days, effectively
+     * shifting the displayed weekly calendar view forward by one week.
+     * After updating the preview date, the method invokes `updatePreview()`
+     * to refresh the UI components, including updating the label to reflect
+     * the new date range and rebuilding the weekly calendar view.
+     *
+     * Note: This method is triggered by a UI event handler, typically when
+     * the user interacts with a specific control (e.g., a "Next" button).
+     */
     @FXML private void goToNextPreview() {
         previewDate = previewDate.plusDays(7);
         updatePreview();
     }
 
+    /**
+     * Navigates to the previous week in the calendar preview.
+     *
+     * This method modifies the `previewDate` field by subtracting 7 days, effectively moving
+     * the displayed preview week backward by one week. After updating the date, it calls
+     * the `updatePreview` method to refresh the calendar preview and update the associated label
+     * to reflect the new date range.
+     *
+     * The operation is triggered by a user interaction in the interface, typically linked
+     * to a button or other UI element.
+     */
     @FXML private void goToPreviousPreview() {
         previewDate = previewDate.minusDays(7);
         updatePreview();

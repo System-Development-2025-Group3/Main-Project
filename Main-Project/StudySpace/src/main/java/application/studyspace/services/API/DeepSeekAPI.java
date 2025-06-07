@@ -6,6 +6,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import org.json.JSONObject;
 
+/**
+ * The DeepSeekAPI class provides a method to interact with the DeepSeek AI model
+ * by making HTTP requests to the specified API endpoint, sending user prompts,
+ * and retrieving AI-generated responses.
+ *
+ * This class encapsulates the API communication logic, including payload construction,
+ * HTTP request handling, and response parsing. It supports sending dynamic input
+ * directly to the AI model and handles any errors that may occur during the process.
+ */
 public class DeepSeekAPI {
 
     private static final String API_URL = "https://api.fireworks.ai/inference/v1/chat/completions";

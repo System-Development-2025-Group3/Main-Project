@@ -11,8 +11,27 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 
+/**
+ * The CalendarView class provides methods for constructing calendar views including
+ * month, week, and day layouts. These views are rendered using JavaFX components and
+ * are structured to display dates, times, and events in an organized grid-based format.
+ *
+ * It supports embedding date-based events with customization options, such as colors and
+ * titles, to represent various calendar events visually. The views make use of specific
+ * JavaFX style classes to allow further customization via stylesheets.
+ */
 public class CalendarView {
 
+    /**
+     * Builds a monthly calendar view based on the provided date and associated events.
+     * The calendar includes headers for days of the week and individual cells for each day
+     * of the month. Each day cell can display events that occur on that specific date.
+     *
+     * @param date   the date from which the desired month is derived
+     * @param events a list of calendar events, each containing details such as title,
+     *               start time, end time, and associated color
+     * @return a Node representing the structured calendar grid for the specified month
+     */
     public static Node buildMonthView(LocalDate date, List<CalendarEvent> events) {
         YearMonth yearMonth = YearMonth.from(date);
         LocalDate firstOfMonth = yearMonth.atDay(1);
@@ -70,6 +89,20 @@ public class CalendarView {
         return grid;
     }
 
+    /**
+     * Builds a weekly calendar view based on the given reference date and list of events.
+     * The calendar displays a grid with days of the week as columns and hourly time slots
+     * as rows. Events that match a specific day and time are displayed within the corresponding
+     * cell of the grid.
+     *
+     * @param referenceDate the date from which the week starts; the grid aligns days beginning
+     *                      from the Monday of the week containing this date
+     * @param events        a list of calendar events, each containing details such as title,
+     *                      start time, end time, and associated color; events are matched to
+     *                      time slots based on their start times
+     * @return a Node representing the weekly calendar grid with structured day and hour cells,
+     *         displaying events in the appropriate slots
+     */
     public static Node buildWeekView(LocalDate referenceDate, List<CalendarEvent> events) {
         GridPane grid = new GridPane();
         grid.getStyleClass().add("calendar-grid");
@@ -122,6 +155,19 @@ public class CalendarView {
         return grid;
     }
 
+    /**
+     * Builds a view representing a single day in the calendar, showing hourly time slots
+     * and any events that occur on the specified date.
+     *
+     * Each hour of the day is displayed as a row, with events represented as labeled elements
+     * appearing in the corresponding hourly row.
+     *
+     * @param date   the date for which the day view is to be constructed
+     * @param events a list of calendar events, each containing details such as title,
+     *               start time, and associated color
+     * @return a Node containing the day's view, structured with an hourly breakdown
+     *         and populated with events for the provided date
+     */
     public static Node buildDayView(LocalDate date, List<CalendarEvent> events) {
         VBox vbox = new VBox(5);
 
@@ -152,6 +198,13 @@ public class CalendarView {
         return vbox;
     }
 
+    /**
+     * Creates a VBox representing a single day in the calendar. The VBox includes
+     * a label to display the day's number and is styled and sized for a calendar view.
+     *
+     * @param dayNumber the number of the day to be displayed in the VBox
+     * @return a VBox styled as a day box, containing the day's number
+     */
     private static VBox createDayBox(String dayNumber) {
         VBox box = new VBox();
         box.getStyleClass().add("calendar-day-box");

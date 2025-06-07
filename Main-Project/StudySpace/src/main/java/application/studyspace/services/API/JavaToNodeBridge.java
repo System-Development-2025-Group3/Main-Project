@@ -3,6 +3,20 @@ package application.studyspace.services.API;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+/**
+ * JavaToNodeBridge class provides a method to execute a Node.js script to interact
+ * with the DeepSeekAPI.js file. This demonstrates the integration between Java and
+ * a Node.js script using the external system process.
+ *
+ * The primary use case is to take dynamic input, pass it to the Node.js script
+ * DeepSeekAPI.js, and retrieve the result or output from the executed script.
+ *
+ * The class facilitates bridging between Java and Node.js, where the Node.js script
+ * handles complex API interactions like communicating with the DeepSeek API externally.
+ *
+ * Error handling is included to manage scenarios such as script execution failure or
+ * incorrect inputs.
+ */
 public class JavaToNodeBridge {
 
     public static String executeDeepSeekAPI(String dynamicInput) {

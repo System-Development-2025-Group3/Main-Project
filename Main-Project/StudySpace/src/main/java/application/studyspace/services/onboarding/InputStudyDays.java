@@ -38,6 +38,12 @@ public class InputStudyDays {
         this.sessionType = null;
     }
 
+    /**
+     * Saves the user study preferences to the database.
+     * Inserts the user's UUID and other study-related preferences into the `Study_Preferences` table.
+     *
+     * @return true if the data was successfully inserted into the database, false otherwise
+     */
     public boolean saveToDatabase() {
         String insertQuery = """
             INSERT INTO Study_Preferences (
