@@ -26,7 +26,7 @@ public class DatabaseHelper {
      * @throws SQLException if a database error occurs
      */
     public UUID getUserUUIDByEmail(String email) throws SQLException {
-        String query = "SELECT id FROM users WHERE email = ?";
+        String query = "SELECT user_id FROM users WHERE email = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -34,7 +34,7 @@ public class DatabaseHelper {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                byte[] uuidBytes = rs.getBytes("id");
+                byte[] uuidBytes = rs.getBytes("user_id");
                 ByteBuffer byteBuffer = ByteBuffer.wrap(uuidBytes);
                 long high = byteBuffer.getLong();
                 long low = byteBuffer.getLong();

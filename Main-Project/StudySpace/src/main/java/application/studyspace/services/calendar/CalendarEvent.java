@@ -9,13 +9,15 @@ public class CalendarEvent {
     private LocalDateTime start;
     private LocalDateTime end;
     private String color;
+    private String tag;
 
-    public CalendarEvent(String title, String description, LocalDateTime start, LocalDateTime end, String color) {
+    public CalendarEvent(String title, String description, LocalDateTime start, LocalDateTime end, String color, String tag) {
         this.title = title;
         this.description = description;
         this.start = start;
         this.end = end;
         this.color = color;
+        this.tag = tag;
     }
 
     public String getTitle() { return title; }
@@ -23,9 +25,9 @@ public class CalendarEvent {
     public LocalDateTime getStart() { return start; }
     public LocalDateTime getEnd() { return end; }
     public String getColor() { return color; }
+    public String getTag() { return tag; }
 
-    // For demo/testing — pulls from CalendarTestEventProvider
     public static List<CalendarEvent> getAllEvents() {
-        return CalendarTestEventProvider.getTestEvents();
+        return CalendarEventProvider.getEvents();
     }
 }

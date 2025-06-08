@@ -44,7 +44,6 @@ public class CalendarView {
         grid.setHgap(8);
         grid.setVgap(8);
 
-        // Give each of the 7 columns a 120px pref width & center their content
         for (int i = 0; i < 7; i++) {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setPrefWidth(120);
@@ -52,7 +51,6 @@ public class CalendarView {
             grid.getColumnConstraints().add(cc);
         }
 
-        // Day‐of‐week headers
         String[] days = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
         for (int col = 0; col < days.length; col++) {
             Label lbl = new Label(days[col]);
@@ -62,13 +60,12 @@ public class CalendarView {
             grid.add(lbl, col, 0);
         }
 
-        // Fill in day‐cells
         int row = 1, col = firstDayOfWeek - 1;
         for (int day = 1; day <= daysInMonth; day++) {
             LocalDate currentDay = yearMonth.atDay(day);
             VBox box = createDayBox(String.valueOf(day));
 
-            // Add any events
+
             for (CalendarEvent ev : events) {
                 if (ev.getStart().toLocalDate().equals(currentDay)) {
                     Label eventLabel = new Label(ev.getTitle());

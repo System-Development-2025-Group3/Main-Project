@@ -42,8 +42,6 @@ public class LoginController {
     @FXML private Label passwordTooltip, emailTooltip;
     @FXML private StackPane stackPane;
     @FXML private ImageView Image03;
-    @FXML private ImageView gearIcon;
-
 
     /**
      * Handles the action when the "Register" text link is clicked.
