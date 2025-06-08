@@ -1,14 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.calendar.CreateNewEventController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="application.studyspace.controllers.calendar.CreateNewEventController"
+           stylesheets="@../styles/OnboardingStylesheet.css"
+           style="-fx-background-color: transparent; -fx-padding: 40;"
+           prefWidth="600" prefHeight="700">
 
-</AnchorPane>
+    <fx:define>
+        <ToggleGroup fx:id="paginationGroup"/>
+        <ToggleGroup fx:id="colorGroup"/>
+    </fx:define>
+
+    <VBox spacing="20"
+          alignment="CENTER"
+          style="-fx-background-color: white;
+                 -fx-padding: 30;
+                 -fx-background-radius: 15;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
+          minWidth="480">
+
+        <!-- Top bar with close button -->
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 8 0 0;">
+            <Button fx:id="closeBtn"
+                    text="✕"
+                    styleClass="nav-button"
+                    onAction="#handleClickClosePopupButton"/>
+        </HBox>
+
+        <!-- Input form layout -->
+        <HBox spacing="30" alignment="TOP_CENTER">
+            <VBox spacing="20"
+                  styleClass="card-box"
+                  maxWidth="600"
+                  alignment="TOP_LEFT">
+
+                <Label text="Add a new Calendar Event"
+                       style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+                <Label text="Title" styleClass="field-label"/>
+                <TextField fx:id="EventTitleField"
+                           promptText="e.g. Gym Session"
+                           styleClass="styled-text-field"/>
+
+                <Label text="Description" styleClass="field-label"/>
+                <TextArea fx:id="descriptionArea"
+                          promptText="e.g. Push/Pull/Legs"
+                          prefRowCount="4"
+                          styleClass="styled-text-area"/>
+
+                <!-- Start Time -->
+                <Label text="Start Time" styleClass="field-label"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <!-- Hours Field -->
+                    <TextField fx:id="hourFieldstart"
+                               promptText="HH"
+                               prefWidth="50"
+                               style="-fx-alignment: center; -fx-background-radius: 6;">
+                    </TextField>
+
+                    <Label text=":" styleClass="time-separator"/>
+
+                    <!-- Minutes Field -->
+                    <TextField fx:id="minuteFieldstart"
+                               promptText="MM"
+                               prefWidth="50"
+                               style="-fx-alignment: center; -fx-background-radius: 6;">
+                    </TextField>
+
+                    <!-- AM/PM Dropdown -->
+                    <ComboBox fx:id="amPmDropdownstart"
+                              prefWidth="100"
+                              promptText="AM/PM"
+                              styleClass="styled-combo">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="AM"/>
+                                <String fx:value="PM"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </HBox>
+
+                <!-- End Time -->
+                <Label text="End Time" styleClass="field-label"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <!-- Hours Field -->
+                    <TextField fx:id="hourFieldend"
+                               promptText="HH"
+                               prefWidth="50"
+                               style="-fx-alignment: center; -fx-background-radius: 6;"
+                               onMouseClicked="#showSmartSelectionDropdown"
+                               onKeyReleased="#showSmartSelectionDropdown"/>
+                    <Label text=":" styleClass="time-separator"/>
+
+                    <!-- Minutes Field -->
+                    <TextField fx:id="minuteFieldend"
+                               promptText="MM"
+                               prefWidth="50"
+                               style="-fx-alignment: center; -fx-background-radius: 6;"
+                               onMouseClicked="#showSmartSelectionDropdown"
+                               onKeyReleased="#showSmartSelectionDropdown"/>
+                    <!-- AM/PM Dropdown -->
+                    <ComboBox fx:id="amPmDropdownend"
+                              prefWidth="100"
+                              promptText="AM/PM"
+                              styleClass="styled-combo">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="AM"/>
+                                <String fx:value="PM"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </HBox>
+
+                <Label text="Type" styleClass="field-label"/>
+                <ComboBox fx:id="typeCombo"
+                          promptText="Select…"
+                          styleClass="styled-combo"/>
+
+                <Label text="Color" styleClass="field-label"/>
+                <HBox spacing="8">
+                    <ToggleButton fx:id="colorRed"    toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorBlue"   toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorGreen"  toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorYellow" toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorPurple" toggleGroup="$colorGroup" styleClass="color-button"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Bottom pager + Finish -->
+        <HBox spacing="12" alignment="CENTER">
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Create"
+                    fx:id="CreateBtn"
+                    styleClass="page-button-selected"
+                    onAction="#handleClickClosePopupButton"/>
+        </HBox>
+
+    </VBox>
+</StackPane>

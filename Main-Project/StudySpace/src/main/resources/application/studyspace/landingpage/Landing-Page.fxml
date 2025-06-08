@@ -11,6 +11,8 @@
         <ToggleGroup fx:id="navGroup"/>
         <ToggleGroup fx:id="viewGroup"/>
     </fx:define>
+
+
     <!-- Top bar with close button -->
     <top>
         <HBox alignment="CENTER_RIGHT" style="-fx-padding: 8 16 0 16;">
@@ -20,6 +22,8 @@
                     onAction="#handleClose"/>
         </HBox>
     </top>
+
+
     <!-- Navigation Menu (left side)-->
     <left>
         <VBox styleClass="sidebar" spacing="12">
@@ -68,7 +72,8 @@
 
     <Region HBox.hgrow="ALWAYS" />
 
-    <Button text="+" onAction="#showMonthView"
+    <!-- Button for Adding a new Calendar Event -->
+    <Button text="+" onAction="#handleCreateNewEvent"
             styleClass="create-event-button"/>
 </HBox>
 

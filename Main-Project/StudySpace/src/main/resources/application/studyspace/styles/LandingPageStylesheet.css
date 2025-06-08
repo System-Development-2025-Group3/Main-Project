@@ -123,7 +123,7 @@
 }
 
 .create-event-button {
-    -fx-background-color: light #90affa;
+    -fx-background-color: #90affa;
     -fx-text-fill: #121417;
     -fx-font-size: 14px;
     -fx-padding: 4 8;

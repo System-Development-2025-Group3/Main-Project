@@ -1,5 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
+import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarView;
 import javafx.application.Platform;
@@ -232,11 +233,26 @@ public class LandingpageController implements Initializable {
      */
     @FXML
     private void handleClose(ActionEvent event) {
-        // if this is a standalone window:
+        //standalone window:
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();
 
         // if you want to terminate the whole JVM:
         // Platform.exit();
+    }
+
+    @FXML
+    private void handleCreateNewEvent() {
+        // Get the current stage (owner stage)
+        Stage ownerStage = (Stage) calendarContainer.getScene().getWindow();
+
+        // Load CreateNewEvent.fxml as a popup
+        SceneSwitcher.switchToPopupWithData(
+                ownerStage,
+                "/application/studyspace/calendar/CreateNewEvent.fxml",
+                "Create New Event",
+                controller -> {
+                }
+        );
     }
 }
