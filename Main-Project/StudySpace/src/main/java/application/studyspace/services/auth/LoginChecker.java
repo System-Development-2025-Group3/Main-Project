@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static application.studyspace.services.DataBase.UUIDHelper.BytesToUUID;
+
 public class LoginChecker {
 
     private static UUID loggedInUserUUID;
@@ -41,7 +43,7 @@ public class LoginChecker {
 
                 if (newHash.equals(savedHash)) {
                     byte[] uuidBytes = result.getBytes("user_id");
-                    loggedInUserUUID = convertBytesToUUID(uuidBytes);
+                    loggedInUserUUID = BytesToUUID(uuidBytes);
                     System.out.println("Login successful!");
                     return true;
                 } else {
@@ -74,19 +76,5 @@ public class LoginChecker {
         }
         return loggedInUserUUID;
     }
-
-    /**
-     * Converts a byte array (BINARY(16) format) into a UUID.
-     *
-     * @param bytes the byte array representing the UUID
-     * @return the UUID object
-     */
-    private static UUID convertBytesToUUID(byte[] bytes) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        long high = byteBuffer.getLong();
-        long low = byteBuffer.getLong();
-        return new UUID(high, low);
-    }
-
 
 }

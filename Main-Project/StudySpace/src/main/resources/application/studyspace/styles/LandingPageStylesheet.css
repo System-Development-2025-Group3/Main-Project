@@ -121,3 +121,16 @@
 .calendar-hour-label {
     /* e.g. -fx-font-size: 10px; -fx-text-fill: #677583; … */
 }
+
+.create-event-button {
+    -fx-background-color: light #90affa;
+    -fx-text-fill: #121417;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+.create-event-button:hover {
+    -fx-background-color: #6e85d5;
+    -fx-background-radius: 4;
+}
+

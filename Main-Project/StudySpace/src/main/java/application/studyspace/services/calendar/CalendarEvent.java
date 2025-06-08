@@ -10,8 +10,9 @@ public class CalendarEvent {
     private LocalDateTime end;
     private String color;
     private String tag;
+    String colorHex;
 
-    public CalendarEvent(String title, String description, LocalDateTime start, LocalDateTime end, String color, String tag) {
+    public CalendarEvent(String title, String description, LocalDateTime start, LocalDateTime end, String color, String tag, String colorHex) {
         this.title = title;
         this.description = description;
         this.start = start;
@@ -26,6 +27,7 @@ public class CalendarEvent {
     public LocalDateTime getEnd() { return end; }
     public String getColor() { return color; }
     public String getTag() { return tag; }
+    public String getColorHex() { return colorHex; }
 
     public static List<CalendarEvent> getAllEvents() {
         return CalendarEventProvider.getEvents();

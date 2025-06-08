@@ -65,7 +65,12 @@
                               toggleGroup="$viewGroup"
                               selected="true"
                               onAction="#showMonthView"/>
-            </HBox>
+
+    <Region HBox.hgrow="ALWAYS" />
+
+    <Button text="+" onAction="#showMonthView"
+            styleClass="create-event-button"/>
+</HBox>
 
             <StackPane fx:id="calendarContainer"
                        styleClass="calendar-wrapper"
