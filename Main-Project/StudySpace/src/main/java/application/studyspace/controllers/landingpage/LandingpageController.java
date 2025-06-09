@@ -40,7 +40,7 @@ public class LandingpageController implements Initializable {
         // Draw the default view
         showMonthView();
 
-        // Attach stylesheets
+        // Attach stylesheets and hook up auto-refresh on window focus
         Platform.runLater(() -> {
             Scene scene = calendarContainer.getScene();
             if (scene != null) {
@@ -54,9 +54,18 @@ public class LandingpageController implements Initializable {
                                 getClass().getResource("/application/studyspace/styles/calendar.css")
                         ).toExternalForm()
                 );
+
+                // When the main window regains focus, re-fetch & redraw the calendar
+                Stage stage = (Stage) scene.getWindow();
+                stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                    if (isNowFocused) {
+                        updateCalendarView();
+                    }
+                });
             }
         });
     }
+
 
     @FXML
     public void showMonthView() {
