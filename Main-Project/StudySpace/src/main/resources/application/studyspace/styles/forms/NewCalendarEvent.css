@@ -1,0 +1,240 @@
+/*=== Calendar Dates Menu ===*/
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 0, 2);
+}
+.context-menu .menu-item {
+    -fx-font-size: 14px;
+    -fx-padding: 4 10;
+}
+.context-menu .menu-item:hover {
+    -fx-background-color: #448aff; /* Add hover effect */
+    -fx-text-fill: white;
+}
+
+/*=== FORM FIELDS === */
+.styled-text-field{
+    -fx-background-color: #f1f2f4;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+}
+.styled-text-area {
+    -fx-background-color: #f1f2f4;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.styled-text-area .content {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+
+
+/* === TYPE COMBO === */
+/* Ensure the ComboBox text is fully visible */
+.styled-combo {
+    -fx-font-size: 14px;         /* Ensure font is appropriate */
+    -fx-padding: 4 10 4 10;     /* Add enough padding for text visibility */
+    -fx-max-width: 150px;       /* Ensure ComboBox has sufficient width */
+    -fx-alignment: center-left; /* Align text properly inside the ComboBox */
+}
+
+/* Handle focus and hover states (optional) */
+.styled-combo:focused {
+    -fx-border-color: #448aff; /* Highlight the ComboBox border on focus */
+}
+.styled-combo .list-cell {
+    -fx-padding: 5 8;          /* Reduce default padding in dropdown cells */
+}
+.styled-combo .list-cell:hover {
+    -fx-background-color: #e0f2ff; /* Hover effect for dropdown options */
+}
+
+/* === COLOR BUTTONS === */
+.color-button {
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 24;
+    -fx-pref-height: 24;
+    -fx-cursor: hand;
+}
+.color-button:selected {
+    -fx-border-color: #121417;
+    -fx-border-width: 2;
+}
+#colorRed    { -fx-background-color: #ef4444; }
+#colorBlue   { -fx-background-color: #3b82f6; }
+#colorGreen  { -fx-background-color: #10b981; }
+#colorYellow { -fx-background-color: #facc15; }
+#colorPurple { -fx-background-color: #d946ef; }
+
+/* === DatePicker Styling === */
+.styled-date-picker {
+    -fx-background-color: #f1f2f4; /* Light background similar to text fields */
+    -fx-border-color: lightgray;  /* Subtle border */
+    -fx-border-radius: 8;        /* Rounded corners for consistency */
+    -fx-background-radius: 8;    /* Same as above */
+    -fx-font-size: 14px;         /* Readable font size */
+    -fx-text-fill: #1f2937;      /* Darker text for better contrast */
+    -fx-padding: 6;             /* Add padding for space inside the component */
+}
+
+/* Focused state of the DatePicker */
+.styled-date-picker:focused {
+    -fx-border-color: #448aff; /* Highlighted border when focused */
+}
+
+/* Popup calendar styling */
+.date-picker-popup {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0, 0, 3);
+}
+
+.date-picker-popup .day-cell {
+    -fx-font-size: 13px;
+    -fx-alignment: center;
+    -fx-padding: 4 6;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #e0f7fa; /* Light hover effect */
+    -fx-text-fill: #004d40;       /* Slightly darker text */
+}
+
+.date-picker-popup .day-cell:focused {
+    -fx-border-color: #448aff;    /* Highlight border when focused */
+    -fx-border-width: 1;
+}
+
+/* Disabled day cells */
+.date-picker-popup .day-cell:disabled {
+    -fx-opacity: 0.4;
+    -fx-cursor: not-allowed;
+}
+
+/* Selected day cell */
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #448aff; /* Highlight selected date */
+    -fx-text-fill: white;          /* White text on selected day */
+}
+
+/* Header styling (month/year) */
+.date-picker-popup .month-year-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: #1f2937;
+}
+
+/* Navigation arrows (prev/next month) */
+.date-picker-popup .arrow-button {
+    -fx-background-color: #f1f2f4;
+    -fx-border-radius: 50%;
+    -fx-border-color: lightgray;
+    -fx-pref-width: 22px;
+    -fx-pref-height: 22px;
+}
+.date-picker-popup .arrow-button:hover {
+    -fx-background-color: #e0f2ff;
+}
+
+/* today label */
+.date-picker-popup .today-label {
+    -fx-text-fill: #448aff;
+    -fx-font-weight: bold;
+}
+
+/* === Time Separator Styling === */
+.time-separator {
+    -fx-font-size: 16px;       /* Ensure a readable size */
+    -fx-font-weight: bold;     /* Make the separator visually distinct */
+    -fx-text-fill: #374151;    /* Dark gray color for better contrast */
+    -fx-alignment: center;     /* Align the colon properly in the center */
+    -fx-padding: 0 5;          /* Add some spacing on both sides */
+}
+
+.chip {
+    -fx-background-color: #e0e6ed;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8 4 8;
+    -fx-spacing: 4;
+    -fx-alignment: center;
+}
+.chip-label { -fx-font-size: 13px; }
+.chip-remove {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b53a3a;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+.tags-container {
+    -fx-background-color: transparent;
+    -fx-spacing: 5;
+    -fx-padding: 6;
+}
+
+/* === Autocomplete Dropdown Styling === */
+.autocomplete-list {
+    -fx-background-color: #ffffff; /* White background for dropdown */
+    -fx-border-color: #e5e7eb;     /* Light gray border */
+    -fx-border-width: 1;
+    -fx-border-radius: 8;         /* Rounded corners for modern look */
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 4); /* Subtle shadow for depth */
+    -fx-padding: 5;              /* Padding inside dropdown */
+    -fx-pref-width: 280;         /* Default width for dropdown */
+    -fx-max-height: 200;         /* Max height for scrolling */
+    -fx-overflow-y: auto;        /* Allow scrolling for overflow */
+}
+
+/* Item Styling */
+.autocomplete-list .list-cell {
+    -fx-font-size: 14px;          /* Easy-to-read font size */
+    -fx-text-fill: #374151;       /* Dark gray text color */
+    -fx-padding: 10 14;           /* Comfortable padding around items */
+    -fx-alignment: center-left;   /* Align text to the left */
+    -fx-background-color: white;  /* Background matches dropdown container */
+}
+
+/* Hover Effect for Items */
+.autocomplete-list .list-cell:hover {
+    -fx-background-color: #f3f4f6; /* Light gray background on hover */
+    -fx-text-fill: #2563eb;        /* Light blue text when hovered */
+    -fx-cursor: hand;             /* Show pointer cursor for hover */
+}
+
+/* Selected Item Style */
+.autocomplete-list .list-cell:selected {
+    -fx-background-color: #2563eb; /* Blue background for selected item */
+    -fx-text-fill: #ffffff;        /* White text for contrast */
+    -fx-font-weight: bold;         /* Bold text for emphasis */
+}
+
+/* Scrollbar Styling */
+.autocomplete-list .scroll-bar {
+    -fx-background-color: transparent; /* Transparent scrollbar by default */
+}
+
+.autocomplete-list .scroll-bar:vertical .thumb {
+    -fx-background-color: #d1d5db; /* Light gray scrollbar thumb */
+    -fx-background-radius: 8;      /* Rounded corners for modern look */
+}
+
+.autocomplete-list .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9ca3af; /* Darker gray when hovered */
+}
+

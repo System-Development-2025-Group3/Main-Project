@@ -68,7 +68,7 @@ public class LandingpageController implements Initializable {
                         Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/LandingPageStylesheet.css")).toExternalForm()
                 );
                 scene.getStylesheets().add(
-                        Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/calendar.css")).toExternalForm()
+                        Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/calendar/calendar.css")).toExternalForm()
                 );
             }
         });

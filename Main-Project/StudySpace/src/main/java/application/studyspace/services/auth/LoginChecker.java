@@ -44,7 +44,9 @@ public class LoginChecker {
                 if (newHash.equals(savedHash)) {
                     byte[] uuidBytes = result.getBytes("user_id");
                     loggedInUserUUID = BytesToUUID(uuidBytes);
-                    System.out.println("Login successful!");
+
+                    SessionManager.getInstance().setLoggedInUserId(loggedInUserUUID);
+                    System.out.println("Login successful! Session for user " + loggedInUserUUID + " created.");
                     return true;
                 } else {
                     System.out.println("Wrong password.");

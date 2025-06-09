@@ -7,7 +7,7 @@
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="application.studyspace.controllers.calendar.CreateNewEventController"
-           stylesheets="@../styles/OnboardingStylesheet.css"
+           stylesheets="@../styles/forms/NewCalendarEvent.css"
            style="-fx-background-color: transparent; -fx-padding: 40;"
            prefWidth="600" prefHeight="700">
 
@@ -36,8 +36,7 @@
         <HBox spacing="30" alignment="TOP_CENTER">
             <VBox spacing="20"
                   styleClass="card-box"
-                  maxWidth="600"
-                  alignment="TOP_LEFT">
+                  maxWidth="600">
 
                 <Label text="Add a new Calendar Event"
                        style="-fx-font-size:22px; -fx-font-weight:bold;"/>
@@ -48,10 +47,22 @@
                            styleClass="styled-text-field"/>
 
                 <Label text="Description" styleClass="field-label"/>
-                <TextArea fx:id="descriptionArea"
+                <TextArea fx:id="descritpionArea"
                           promptText="e.g. Push/Pull/Legs"
                           prefRowCount="4"
                           styleClass="styled-text-area"/>
+
+                <!-- Start Date -->
+                <Label text="Start Date" styleClass="field-label"/>
+                <DatePicker fx:id="startDatePicker"
+                            promptText="Select start date"
+                            styleClass="styled-date-picker"/>
+
+                <!-- End Date -->
+                <Label text="End Date" styleClass="field-label"/>
+                <DatePicker fx:id="endDatePicker"
+                            promptText="Select end date"
+                            styleClass="styled-date-picker"/>
 
                 <!-- Start Time -->
                 <Label text="Start Time" styleClass="field-label"/>
@@ -105,6 +116,7 @@
                                style="-fx-alignment: center; -fx-background-radius: 6;"
                                onMouseClicked="#showSmartSelectionDropdown"
                                onKeyReleased="#showSmartSelectionDropdown"/>
+
                     <!-- AM/PM Dropdown -->
                     <ComboBox fx:id="amPmDropdownend"
                               prefWidth="100"
@@ -119,10 +131,11 @@
                     </ComboBox>
                 </HBox>
 
-                <Label text="Type" styleClass="field-label"/>
-                <ComboBox fx:id="typeCombo"
-                          promptText="Select…"
-                          styleClass="styled-combo"/>
+                <Label text="Tags" styleClass="field-label"/>
+                <FlowPane hgap="5" styleClass="tags-container" fx:id="tagsContainer">
+                    <!-- Chips (tags) will be added here dynamically -->
+                    <TextField fx:id="tagInputField" promptText="Type to search or add tag…"/>
+                </FlowPane>
 
                 <Label text="Color" styleClass="field-label"/>
                 <HBox spacing="8">
@@ -145,6 +158,13 @@
                     styleClass="page-button-selected"
                     onAction="#handleClickClosePopupButton"/>
         </HBox>
-
     </VBox>
+
+    <!-- ListView moved to be dynamically positioned below the TextField -->
+    <ListView fx:id="suggestionsListView"
+              styleClass="autocomplete-list"
+              visible="false"
+              maxWidth="200"
+              maxHeight="150"/>
+
 </StackPane>

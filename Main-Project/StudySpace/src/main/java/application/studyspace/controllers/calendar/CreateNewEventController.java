@@ -1,9 +1,20 @@
 package application.studyspace.controllers.calendar;
 
+import application.studyspace.services.calendar.CalendarEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateNewEventController {
 
@@ -11,13 +22,24 @@ public class CreateNewEventController {
     private Button closeBtn;
 
     @FXML
-    private TextField hourFieldend,minuteFieldend, hourFieldstart,minuteFieldstart;
-    private ContextMenu smartDropdown;
-    @FXML
-    private ComboBox<String> amPmDropdownstart;
+    private TextField hourFieldend,minuteFieldend, hourFieldstart,minuteFieldstart,tagInputField,
+            EventTitleField, descriptionArea;
 
     @FXML
-    private ComboBox<String> amPmDropdownend;
+    private ContextMenu smartDropdown;
+
+    @FXML
+    private FlowPane tagsContainer;
+
+    @FXML
+    private ListView<String> suggestionsListView;
+
+    @FXML
+    private ComboBox<String> amPmDropdownstart, amPmDropdownend;
+
+    private final ObservableList<String> selectedTags = FXCollections.observableArrayList();
+    private ObservableList<String> allTags;
+
 
     /**
      * Handles the action of clicking the close button in the popup window.
@@ -30,9 +52,23 @@ public class CreateNewEventController {
         stage.close();
     }
 
+    @FXML
+    private DatePicker startDatePicker;
+
+    @FXML
+    private DatePicker endDatePicker;
+
     /**
-     * Shows the smart dropdown with options for time selection (15/30/45/60 minutes, 1/2/3 hours).
-     * The dropdown is displayed when the user interacts with either the hours or minutes fields of the end time.
+     * Displays a smart selection dropdown near the currently focused input field for end time
+     * (either hours or minutes). The dropdown is populated with predefined time intervals.
+     *
+     * The method dynamically calculates the position of the dropdown based on the location
+     * of the focused text field and adjusts it to appear near the field. It creates the
+     * dropdown menu if it does not already exist. The dropdown provides options for quick
+     * time selection, easing user interaction.
+     *
+     * The dropdown is shown if one of the end time input fields (`hourFieldend` or
+     * `minuteFieldend`) is focused. Its position is offset to appear to the right of the field.
      */
     @FXML
     public void showSmartSelectionDropdown() {
@@ -40,6 +76,7 @@ public class CreateNewEventController {
             smartDropdown = createSmartTimeDropdown();
         }
 
+        // Determine the source field (either hours or minutes of the End Time)
         TextField sourceField = null;
         if (hourFieldend.isFocused()) {
             sourceField = hourFieldend;
@@ -48,9 +85,17 @@ public class CreateNewEventController {
         }
 
         if (sourceField != null) {
-            // Show the dropdown below the focused field
-            smartDropdown.show(sourceField, sourceField.getScene().getWindow().getX() + sourceField.getLayoutX(),
-                sourceField.getScene().getWindow().getY() + sourceField.getLayoutY() + sourceField.getHeight());
+            // Calculate the dropdown position (right or left of the field)
+            double xOffset = 10; // Space between field and dropdown
+            double fieldWidth = sourceField.getWidth();
+            double dropdownX = sourceField.getScene().getWindow().getX() +
+                    sourceField.localToScene(0, 0).getX() + fieldWidth + xOffset;
+
+            double dropdownY = sourceField.getScene().getWindow().getY() +
+                    sourceField.localToScene(0, 0).getY();
+
+            // Show the dropdown near the source field
+            smartDropdown.show(sourceField, dropdownX, dropdownY);
         }
     }
 
@@ -144,43 +189,142 @@ public class CreateNewEventController {
     }
 
     @FXML
+    private ComboBox<String> tagsCombo;
+
+    @FXML
     public void initialize() {
-        // Add items to the dropdowns
-        amPmDropdownstart.getItems().addAll("AM", "PM");
-        amPmDropdownend.getItems().addAll("AM", "PM");
+        // Load all possible tags from the database
+        allTags = FXCollections.observableArrayList(CalendarEvent.getExistingTagsatUser());
 
-        // Set default selections
-        amPmDropdownstart.getSelectionModel().select("AM");
-        amPmDropdownend.getSelectionModel().select("AM");
-
-        // Configure CellFactory to avoid truncation
-        amPmDropdownstart.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            cell.textProperty().bind(cell.itemProperty());
-            return cell;
-        });
-
-        amPmDropdownstart.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item);
-            }
-        });
-
-        amPmDropdownend.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            cell.textProperty().bind(cell.itemProperty());
-            return cell;
-        });
-
-        amPmDropdownend.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item);
-            }
-        });
+        // Initialize tags UI
+        setupTagsInput();
     }
+
+    public void handleClickCreateEventButton(){
+        System.out.println("Create Event Button Clicked");
+        System.out.println("Start Date: " + startDatePicker.getValue());
+        System.out.println("End Date: " + endDatePicker.getValue());
+        System.out.println("Start Time: " + hourFieldstart.getText() + ":" + minuteFieldstart.getText() + " " + amPmDropdownstart.getValue());
+        System.out.println("End Time: " + hourFieldend.getText() + ":" + minuteFieldend.getText() + " " + amPmDropdownend.getValue());
+        System.out.println("Event Title: " + EventTitleField.getText());
+        System.out.println("Event Description: " + descriptionArea.getText());
+        System.out.println("Event Tag: " + "Event Category");
+    }
+
+    private void setupTagsInput() {
+        // Autocomplete suggestions when typing
+        tagInputField.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText == null || newText.trim().isEmpty()) {
+                suggestionsListView.setVisible(false);
+            } else {
+                List<String> filtered = allTags.stream()
+                        .filter(tag -> tag.toLowerCase().contains(newText.toLowerCase())
+                                && !selectedTags.contains(tag))
+                        .collect(Collectors.toList());
+
+                suggestionsListView.setItems(FXCollections.observableArrayList(filtered));
+                if (!filtered.isEmpty()) {
+                    positionSuggestionsDropdown(); // Position dropdown below the input field
+                } else {
+                    suggestionsListView.setVisible(false);
+                }
+            }
+        });
+
+        // Add tag on Enter key
+        tagInputField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                addTagFromInput();
+            } else if (event.getCode() == KeyCode.DOWN) {
+                if (suggestionsListView.isVisible() && !suggestionsListView.getItems().isEmpty()) {
+                    suggestionsListView.requestFocus();
+                    suggestionsListView.getSelectionModel().select(0);
+                }
+            }
+        });
+
+        // Add tag on single click in suggestions (instead of double click)
+        suggestionsListView.setOnMouseClicked(event -> {
+            String selected = suggestionsListView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                addTag(selected);
+            }
+        });
+
+        // Add tag when Enter key is pressed inside the ListView
+        suggestionsListView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String selected = suggestionsListView.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    addTag(selected);
+                }
+            }
+        });
+
+        // Initial drawing of chips
+        drawChips();
+    }
+
+    private void addTagFromInput() {
+        String tag = tagInputField.getText().trim();
+        if (!tag.isEmpty() && !selectedTags.contains(tag)) {
+            // Optionally: Add new tag to DB & update allTags if it doesn't exist
+            if (!allTags.contains(tag)) {
+                CalendarEvent.addTagToDatabase(tag);
+                allTags.add(tag);
+            }
+            selectedTags.add(tag);
+            drawChips();
+        }
+        tagInputField.clear();
+        suggestionsListView.setVisible(false);
+    }
+
+    private void addTag(String tag) {
+        if (tag != null && !tag.isEmpty() && !selectedTags.contains(tag)) {
+            selectedTags.add(tag);
+            drawChips();
+        }
+        tagInputField.clear();
+        suggestionsListView.setVisible(false);
+    }
+
+    private void drawChips() {
+        tagsContainer.getChildren().clear();
+        for (String tag : selectedTags) {
+            tagsContainer.getChildren().add(createChip(tag));
+        }
+        tagsContainer.getChildren().add(tagInputField); // Always keep input at end
+    }
+
+    private HBox createChip(String tag) {
+        Label label = new Label(tag);
+        label.getStyleClass().add("chip-label");
+        Button remove = new Button("x");
+        remove.getStyleClass().add("chip-remove");
+        remove.setOnAction(e -> {
+            selectedTags.remove(tag);
+            drawChips();
+        });
+        HBox chip = new HBox(label, remove);
+        chip.getStyleClass().add("chip");
+        chip.setAlignment(Pos.CENTER);
+        chip.setSpacing(4);
+        return chip;
+    }
+
+    public List<String> getSelectedTags() {
+        return selectedTags;
+    }
+
+    private void positionSuggestionsDropdown() {
+        Bounds bounds = tagInputField.localToScene(tagInputField.getBoundsInLocal());
+
+        // Position the dropdown directly above the tag input field
+        suggestionsListView.setLayoutX(bounds.getMinX());
+        suggestionsListView.setLayoutY(bounds.getMinY() - suggestionsListView.getPrefHeight() - 5); // Offset by 5px
+        suggestionsListView.setVisible(true);
+    }
+
 
 }
