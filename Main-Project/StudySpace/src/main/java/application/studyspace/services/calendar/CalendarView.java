@@ -1,11 +1,14 @@
 package application.studyspace.services.calendar;
 
-import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.controllers.calendar.CreateNewEventController;
+import application.studyspace.controllers.calendar.EventDetailsController;
+import application.studyspace.controllers.landingpage.LandingpageController;
+import application.studyspace.services.Scenes.SceneSwitcher;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -53,12 +56,36 @@ public class CalendarView {
             LocalDate currentDay = yearMonth.atDay(d);
             VBox box = createDayBox(String.valueOf(d), currentDay);
 
-            // populate events
+            // populate events with click & hover behavior
             for (CalendarEvent ev : events) {
                 if (ev.getStart().toLocalDate().equals(currentDay)) {
                     Label eventLabel = new Label(ev.getTitle());
                     eventLabel.getStyleClass().add("calendar-event");
                     eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
+
+                    // hover effect
+                    eventLabel.setOnMouseEntered(e ->
+                            eventLabel.getStyleClass().add("calendar-event-hover")
+                    );
+                    eventLabel.setOnMouseExited(e ->
+                            eventLabel.getStyleClass().remove("calendar-event-hover")
+                    );
+
+                    // click opens details popup
+                    eventLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                        e.consume();
+                        Stage owner = (Stage) eventLabel.getScene().getWindow();
+                        SceneSwitcher.switchToPopupWithData(
+                                owner,
+                                "/application/studyspace/calendar/EventDetails.fxml",
+                                "Event Details",
+                                controller -> {
+                                    EventDetailsController ctrl = (EventDetailsController) controller;
+                                    ctrl.setEvent(ev);
+                                }
+                        );
+                    });
+
                     box.getChildren().add(eventLabel);
                 }
             }
@@ -114,6 +141,22 @@ public class CalendarView {
                         Label eventLabel = new Label(ev.getTitle());
                         eventLabel.getStyleClass().add("calendar-event");
                         eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
+
+                        // click to details
+                        eventLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                            e.consume();
+                            Stage owner = (Stage) eventLabel.getScene().getWindow();
+                            SceneSwitcher.switchToPopupWithData(
+                                    owner,
+                                    "/application/studyspace/calendar/EventDetails.fxml",
+                                    "Event Details",
+                                    controller -> {
+                                        EventDetailsController ctrl = (EventDetailsController) controller;
+                                        ctrl.setEvent(ev);
+                                    }
+                            );
+                        });
+
                         cell.getChildren().add(eventLabel);
                     }
                 }
@@ -146,6 +189,22 @@ public class CalendarView {
                     Label eventLabel = new Label(ev.getTitle());
                     eventLabel.getStyleClass().add("calendar-event");
                     eventLabel.setStyle("-fx-background-color: " + ev.getColor() + ";");
+
+                    // click to details
+                    eventLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                        e.consume();
+                        Stage owner = (Stage) eventLabel.getScene().getWindow();
+                        SceneSwitcher.switchToPopupWithData(
+                                owner,
+                                "/application/studyspace/calendar/EventDetails.fxml",
+                                "Event Details",
+                                controller -> {
+                                    EventDetailsController ctrl = (EventDetailsController) controller;
+                                    ctrl.setEvent(ev);
+                                }
+                        );
+                    });
+
                     row.getChildren().add(eventLabel);
                 }
             }
@@ -156,10 +215,7 @@ public class CalendarView {
         return vbox;
     }
 
-    /**
-     * Creates a day‐cell box and wires up a click listener that opens
-     * the Create New Event popup, passing along the date.
-     */
+    // day-cell creation remains unchanged
     private static VBox createDayBox(String dayNumber, LocalDate date) {
         VBox box = new VBox();
         box.getStyleClass().add("calendar-day-box");
@@ -170,10 +226,10 @@ public class CalendarView {
         dayNum.getStyleClass().add("calendar-day-number");
         box.getChildren().add(dayNum);
 
-        box.setOnMouseClicked(event -> {
-            Stage ownerStage = (Stage) box.getScene().getWindow();
+        box.setOnMouseClicked(e -> {
+            Stage owner = (Stage) box.getScene().getWindow();
             SceneSwitcher.switchToPopupWithData(
-                    ownerStage,
+                    owner,
                     "/application/studyspace/calendar/CreateNewEvent.fxml",
                     "Create New Event",
                     controller -> {
