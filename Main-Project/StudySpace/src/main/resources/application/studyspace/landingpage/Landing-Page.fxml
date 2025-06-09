@@ -12,7 +12,6 @@
         <ToggleGroup fx:id="viewGroup"/>
     </fx:define>
 
-
     <!-- Top bar with close button -->
     <top>
         <HBox alignment="CENTER_RIGHT" style="-fx-padding: 8 16 0 16;">
@@ -23,8 +22,7 @@
         </HBox>
     </top>
 
-
-    <!-- Navigation Menu (left side)-->
+    <!-- Navigation Menu (left side) -->
     <left>
         <VBox styleClass="sidebar" spacing="12">
             <Label text="Study Planner" styleClass="sidebar-title"/>
@@ -70,12 +68,9 @@
                               selected="true"
                               onAction="#showMonthView"/>
 
-    <Region HBox.hgrow="ALWAYS" />
+                <Region HBox.hgrow="ALWAYS" />
 
-    <!-- Button for Adding a new Calendar Event -->
-    <Button text="+" onAction="#handleCreateNewEvent"
-            styleClass="create-event-button"/>
-</HBox>
+            </HBox>
 
             <StackPane fx:id="calendarContainer"
                        styleClass="calendar-wrapper"
