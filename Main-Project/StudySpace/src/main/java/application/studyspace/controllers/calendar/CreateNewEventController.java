@@ -13,11 +13,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateNewEventController {
 
@@ -141,10 +141,12 @@ public class CreateNewEventController {
             String desc=descriptionArea.getText().trim();
             String tag=selectedTags.isEmpty()?"":selectedTags.get(0);
             EventColor color=(EventColor)colorGroup.getSelectedToggle().getUserData();
-            // Persist & refresh
+            // Persist
             CalendarEvent ev=new CalendarEvent(title,desc,start,end,color,tag);
             InsertCalendarEvent.insertIntoDatabase(ev);
-            LandingpageController.getInstance().updateCalendarView();
+            // Trigger calendar view refresh
+            LandingpageController.getInstance().showMonthView();
+            // Close popup
             handleClickClosePopupButton();
         } catch(Exception ex) {
             new Alert(Alert.AlertType.ERROR,"Save failed:\n"+ex.getMessage()).showAndWait();
@@ -184,6 +186,18 @@ public class CreateNewEventController {
                         - suggestionsListView.getPrefHeight() - 5);
                 suggestionsListView.setVisible(true);
             }
+        });
+
+        // Hide suggestion list when pressing Enter
+        tagInputField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER && !suggestionsListView.getItems().isEmpty()) {
+                addTag(suggestionsListView.getItems().get(0));
+            }
+        });
+
+        suggestionsListView.setOnMouseClicked(e -> {
+            String sel = suggestionsListView.getSelectionModel().getSelectedItem();
+            addTag(sel);
         });
     }
 

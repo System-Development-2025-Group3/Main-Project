@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.calendarfx.view.CalendarView?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -12,53 +13,37 @@
         <ToggleGroup fx:id="viewGroup"/>
     </fx:define>
 
-    <!-- Top bar with only Close button -->
-    <top>
-        <HBox alignment="CENTER_RIGHT"
-              spacing="8"
-              style="-fx-padding: 8 16 0 16;">
-            <!-- Close button -->
-            <Button fx:id="closeBtn"
-                    text="✕"
-                    styleClass="nav-button"
-                    onAction="#handleClose"/>
-        </HBox>
-    </top>
-
-    <!-- Navigation Menu (left side) -->
     <left>
-        <VBox styleClass="sidebar" spacing="12">
-            <Label text="Study Planner" styleClass="sidebar-title"/>
-            <ToggleButton text="📅 Calendar"
-                          styleClass="sidebar-button"
-                          toggleGroup="$navGroup"
-                          selected="true"/>
-            <ToggleButton text="📊 Dashboard"
-                          styleClass="sidebar-button"
-                          toggleGroup="$navGroup"/>
-            <ToggleButton text="⚙ Settings"
-                          styleClass="sidebar-button"
-                          toggleGroup="$navGroup"/>
-        </VBox>
+        <AnchorPane>
+            <children>
+                <VBox styleClass="sidebar"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0">
+                    <Label text="Study Planner" styleClass="sidebar-title"/>
+                    <ToggleButton text="📅 Calendar"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"
+                                  selected="true"
+                                  onAction="#showMonthView"/>
+                    <ToggleButton text="📊 Dashboard"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"/>
+                    <ToggleButton text="⚙ Settings"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"/>
+                </VBox>
+            </children>
+        </AnchorPane>
     </left>
 
-    <!-- Main content -->
     <center>
-        <VBox styleClass="content-root" spacing="16">
-
-            <HBox styleClass="header-box" alignment="CENTER_LEFT" spacing="8">
-                <Button text="◀"
-                        styleClass="nav-button"
-                        onAction="#goToPrevious"/>
-                <Label fx:id="monthYearLabel"
-                       styleClass="content-title"/>
-                <Button text="▶"
-                        styleClass="nav-button"
-                        onAction="#goToNext"/>
-            </HBox>
-
-            <!-- View toggles + New Event button -->
-            <HBox styleClass="view-toggle" spacing="6">
+        <VBox styleClass="content-root" spacing="8">
+            <!-- unified Day/Week/Month + New Event bar -->
+            <HBox styleClass="view-toggle"
+                  spacing="4"
+                  style="-fx-padding: 12;">
                 <ToggleButton text="Day"
                               styleClass="view-button"
                               toggleGroup="$viewGroup"
@@ -72,30 +57,15 @@
                               toggleGroup="$viewGroup"
                               selected="true"
                               onAction="#showMonthView"/>
-
                 <Region HBox.hgrow="ALWAYS"/>
-
-                <!-- New Event button -->
-                <Button fx:id="newEventBtn"
-                        text="+ New Event"
-                        onAction="#handleCreateNewEvent"
-                        styleClass="view-button"
-                        style="
-                        -fx-background-color: white;
-                        -fx-border-color: white;
-                        -fx-background-radius: 20;
-                        -fx-border-radius: 20;
-                        -fx-text-fill: black;
-                        -fx-font-weight: bold;
-                        -fx-padding: 4 12;
-                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.0, 0, 1);
-                        "/>
+                <Button text="+ New Event"
+                        styleClass="create-event-button"
+                        onAction="#handleCreateNewEvent"/>
             </HBox>
 
-            <StackPane fx:id="calendarContainer"
-                       styleClass="calendar-wrapper"
-                       VBox.vgrow="ALWAYS"/>
-
+            <StackPane styleClass="calendar-wrapper" VBox.vgrow="ALWAYS">
+                <CalendarView fx:id="calendarView"/>
+            </StackPane>
         </VBox>
     </center>
 </BorderPane>

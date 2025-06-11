@@ -185,8 +185,6 @@ public class LoginController {
                 (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
         );
 
-
-        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/OnboardingPage3.fxml", "Landing-Page");
 }
 
     }

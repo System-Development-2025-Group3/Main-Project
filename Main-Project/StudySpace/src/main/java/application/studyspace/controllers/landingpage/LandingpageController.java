@@ -3,24 +3,18 @@ package application.studyspace.controllers.landingpage;
 import application.studyspace.controllers.calendar.CreateNewEventController;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.calendar.CalendarEvent;
-import application.studyspace.services.calendar.CalendarView;
-import javafx.application.Platform;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.model.Entry;
+import com.calendarfx.view.CalendarView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LandingpageController implements Initializable {
@@ -35,129 +29,82 @@ public class LandingpageController implements Initializable {
     }
     // ────────────────────────────────────────────────────────────────────────
 
-    @FXML private StackPane calendarContainer;
-    @FXML private Label monthYearLabel;
+    @FXML private CalendarView calendarView;
 
-    private LocalDate currentDate = LocalDate.now();
-    private enum ViewMode { MONTH, WEEK, DAY }
-    private ViewMode currentView = ViewMode.MONTH;
+    private Calendar fxCalendar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Draw the default view
-        showMonthView();
+        // ─── 0) Hide all of CalendarFX’s built-in chrome ────────────────────────
+        calendarView.setShowToolBar(false);
+        calendarView.setShowPageSwitcher(false);
+        calendarView.setShowPageToolBarControls(false);
+        calendarView.setShowSearchField(false);
+        calendarView.setShowAddCalendarButton(false);
+        calendarView.setShowPrintButton(false);
+        calendarView.setShowDeveloperConsole(false);
+        calendarView.setShowSourceTray(false);
 
-        // Attach stylesheets
-        Platform.runLater(() -> {
-            Scene scene = calendarContainer.getScene();
-            if (scene != null) {
-                scene.getStylesheets().add(
-                        Objects.requireNonNull(
-                                getClass().getResource("/application/studyspace/styles/LandingPageStylesheet.css")
-                        ).toExternalForm()
-                );
-                scene.getStylesheets().add(
-                        Objects.requireNonNull(
-                                getClass().getResource("/application/studyspace/styles/calendar/calendar.css")
-                        ).toExternalForm()
-                );
-            }
+        // ─── 1) Create & style your Calendar, attach it ─────────────────────────
+        fxCalendar = new Calendar("Planify Events");
+        fxCalendar.setStyle(Calendar.Style.STYLE1);
+        CalendarSource source = new CalendarSource("StudySpace");
+        source.getCalendars().add(fxCalendar);
+        calendarView.getCalendarSources().add(source);
+
+        // ─── 2) Load your app’s events into it ─────────────────────────────────
+        loadAppEvents();
+
+        // ─── 3) Clicking on an empty slot → your own “New Event” popup ─────────
+        calendarView.setEntryFactory(param -> {
+            Stage owner = (Stage) calendarView.getScene().getWindow();
+            SceneSwitcher.switchToPopupWithData(
+                    owner,
+                    "/application/studyspace/calendar/CreateNewEvent.fxml",
+                    "Create New Event",
+                    ctrl -> ((CreateNewEventController)ctrl)
+                            .setPreselectedDate(param.getZonedDateTime().toLocalDate())
+            );
+            return null;
         });
+
+        // ─── 4) Clicking on an event → minimal pop-over ─────────────────────────
+        calendarView.setEntryDetailsPopOverContentCallback(param ->
+                new Label(param.getEntry().getTitle())
+        );
+
+        // ─── 5) Show the Month view by default ─────────────────────────────────
+        calendarView.showMonthPage();
     }
 
-    @FXML public void showMonthView() {
-        currentView = ViewMode.MONTH;
-        updateCalendarView();
-    }
-
-    @FXML public void showWeekView() {
-        currentView = ViewMode.WEEK;
-        updateCalendarView();
-    }
-
-    @FXML public void showDayView() {
-        currentView = ViewMode.DAY;
-        updateCalendarView();
-    }
-
-    @FXML public void goToNext() {
-        switch (currentView) {
-            case MONTH -> currentDate = currentDate.plusMonths(1);
-            case WEEK  -> currentDate = currentDate.plusWeeks(1);
-            case DAY   -> currentDate = currentDate.plusDays(1);
+    private void loadAppEvents() {
+        for (CalendarEvent ev : CalendarEvent.getAllEvents()) {
+            Entry<CalendarEvent> entry = new Entry<>(ev.getTitle());
+            entry.setUserObject(ev);
+            entry.changeStartDate(ev.getStart().toLocalDate());
+            entry.changeStartTime(ev.getStart().toLocalTime());
+            entry.changeEndDate(ev.getEnd().toLocalDate());
+            entry.changeEndTime(ev.getEnd().toLocalTime());
+            fxCalendar.addEntry(entry);
         }
-        updateCalendarView();
     }
 
-    @FXML public void goToPrevious() {
-        switch (currentView) {
-            case MONTH -> currentDate = currentDate.minusMonths(1);
-            case WEEK  -> currentDate = currentDate.minusWeeks(1);
-            case DAY   -> currentDate = currentDate.minusDays(1);
-        }
-        updateCalendarView();
-    }
+    // ─── Bound to your Day/Week/Month toggle buttons ─────────────────────────
 
-    /** Redraws the calendar using up-to-date events. */
-    public void updateCalendarView() {
-        List<CalendarEvent> events = CalendarEvent.getAllEvents();
-        Node view;
-        switch (currentView) {
-            case WEEK -> view = CalendarView.buildWeekView(currentDate, events);
-            case DAY  -> view = CalendarView.buildDayView(currentDate, events);
-            default   -> view = CalendarView.buildMonthView(currentDate, events);
-        }
-        calendarContainer.getChildren().setAll(view);
-        updateHeaderLabel();
-    }
+    @FXML public void showDayView()   { calendarView.showDayPage(); }
+    @FXML public void showWeekView()  { calendarView.showWeekPage(); }
+    @FXML public void showMonthView() { calendarView.showMonthPage(); }
 
-    /** Updates the header label to match the current view & date range. */
-    private void updateHeaderLabel() {
-        String labelText;
-        Locale locale = Locale.ENGLISH;
+    // ─── Bound to the “+ New Event” button ──────────────────────────────────
 
-        switch (currentView) {
-            case MONTH -> {
-                String month = currentDate.getMonth().getDisplayName(TextStyle.FULL, locale);
-                labelText = month + " " + currentDate.getYear();
-            }
-            case WEEK -> {
-                LocalDate start = currentDate.with(DayOfWeek.MONDAY);
-                LocalDate end   = currentDate.with(DayOfWeek.SUNDAY);
-                String s = start.getMonth().getDisplayName(TextStyle.SHORT, locale)
-                        + " " + start.getDayOfMonth();
-                String e = end.getMonth().getDisplayName(TextStyle.SHORT, locale)
-                        + " " + end.getDayOfMonth();
-                labelText = s + " – " + e;
-            }
-            case DAY -> {
-                String wd = currentDate.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
-                String mo = currentDate.getMonth().getDisplayName(TextStyle.SHORT, locale);
-                labelText = wd + ", " + mo + " " + currentDate.getDayOfMonth();
-            }
-            default -> labelText = "";
-        }
-
-        monthYearLabel.setText(labelText);
-    }
-
-    /** Closes this window. */
-    @FXML private void handleClose(ActionEvent event) {
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
-    /**
-     * Opens the CreateNewEvent popup, pre-selecting the current calendar date.
-     * You can wire this to a “New Event” button in your FXML if desired.
-     */
-    @FXML private void handleCreateNewEvent() {
-        Stage owner = (Stage) calendarContainer.getScene().getWindow();
+    @FXML public void handleCreateNewEvent(ActionEvent evt) {
+        Stage owner = (Stage) calendarView.getScene().getWindow();
         SceneSwitcher.switchToPopupWithData(
                 owner,
                 "/application/studyspace/calendar/CreateNewEvent.fxml",
                 "Create New Event",
-                controller -> ((CreateNewEventController)controller).setPreselectedDate(currentDate)
+                ctrl -> ((CreateNewEventController)ctrl)
+                        .setPreselectedDate(LocalDate.now())
         );
     }
 }

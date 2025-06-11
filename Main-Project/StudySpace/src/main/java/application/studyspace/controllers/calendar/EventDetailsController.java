@@ -55,8 +55,8 @@ public class EventDetailsController {
         deleteBtn.setOnAction(e -> {
             // 1) Delete from DB
             DeleteCalendarEvent.delete(event);
-            // 2) Refresh the main calendar view
-            LandingpageController.getInstance().updateCalendarView();
+            // 2) Refresh the calendar in LandingpageController
+            LandingpageController.getInstance().showMonthView();
             // 3) Close this popup
             ((Stage) deleteBtn.getScene().getWindow()).close();
         });
