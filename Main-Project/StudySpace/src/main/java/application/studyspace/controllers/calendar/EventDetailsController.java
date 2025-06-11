@@ -1,7 +1,7 @@
 package application.studyspace.controllers.calendar;
 
 import application.studyspace.services.calendar.CalendarEvent;
-import application.studyspace.services.calendar.DeleteCalendarEvent;  // your delete DAO
+import application.studyspace.services.calendar.DeleteCalendarEvent;
 import application.studyspace.controllers.landingpage.LandingpageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,6 +42,7 @@ public class EventDetailsController {
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("MMM d, yyyy");
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("h:mm a");
 
+        // Fill in UI labels
         titleLabel     .setText(ev.getTitle());
         descriptionArea.setText(ev.getDescription());
         startLabel     .setText(ev.getStart().toLocalDate().format(dateFmt));
@@ -50,12 +51,13 @@ public class EventDetailsController {
         );
         tagLabel.setText(ev.getTag());
 
+        // Wire Delete button
         deleteBtn.setOnAction(e -> {
-            // 1) delete from DB (implement this in your DAO)
+            // 1) Delete from DB
             DeleteCalendarEvent.delete(event);
-            // 2) refresh the calendar
+            // 2) Refresh the main calendar view
             LandingpageController.getInstance().updateCalendarView();
-            // 3) close this popup
+            // 3) Close this popup
             ((Stage) deleteBtn.getScene().getWindow()).close();
         });
     }

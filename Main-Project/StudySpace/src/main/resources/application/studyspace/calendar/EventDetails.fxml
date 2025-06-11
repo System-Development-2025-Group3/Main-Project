@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/23.0.1"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="application.studyspace.controllers.calendar.EventDetailsController"
-          hgap="10" vgap="10">
+<!--
+  We now load your OnboardingStylesheet so we can reuse the same
+  card-box, field-label, page-button, etc. styles.
+-->
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="application.studyspace.controllers.calendar.EventDetailsController"
+           stylesheets="@../styles/OnboardingStylesheet.css"
+           style="-fx-background-color: transparent; -fx-padding: 40;"
+           prefWidth="600" prefHeight="400">
 
-    <!-- Properly define padding as Insets -->
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
+    <VBox spacing="20"
+          alignment="TOP_LEFT"
+          styleClass="card-box"
+          maxWidth="500">
 
-    <!-- Two columns: labels (right‐aligned) and values -->
-    <columnConstraints>
-        <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
-        <ColumnConstraints percentWidth="70" halignment="LEFT"/>
-    </columnConstraints>
+        <!-- Title Row -->
+        <HBox spacing="6" alignment="CENTER_LEFT">
+            <Label text="Title:" styleClass="field-label-bold"/>
+            <Label fx:id="titleLabel" styleClass="subtitle"/>
+        </HBox>
 
-    <!-- Six rows: 5 fields + button row -->
-    <rowConstraints>
-        <RowConstraints minHeight="30"/>
-        <RowConstraints minHeight="60"/>  <!-- description area -->
-        <RowConstraints minHeight="30"/>
-        <RowConstraints minHeight="30"/>
-        <RowConstraints minHeight="30"/>
-        <RowConstraints minHeight="50"/>  <!-- buttons -->
-    </rowConstraints>
+        <!-- Description Card -->
+        <VBox spacing="8"
+              styleClass="card-box"
+              prefWidth="460">
+            <Label text="Description" styleClass="field-label"/>
+            <TextArea fx:id="descriptionArea"
+                      editable="false"
+                      wrapText="true"
+                      prefRowCount="3"
+                      styleClass="styled-text-area"/>
+        </VBox>
 
-    <children>
-        <!-- Title -->
-        <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <Label fx:id="titleLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <!-- Start/End Card -->
+        <HBox spacing="16" alignment="TOP_LEFT">
+            <VBox spacing="4" styleClass="card-box" prefWidth="220">
+                <Label text="Start" styleClass="field-label"/>
+                <Label fx:id="startLabel" styleClass="subtitle"/>
+            </VBox>
+            <VBox spacing="4" styleClass="card-box" prefWidth="220">
+                <Label text="End" styleClass="field-label"/>
+                <Label fx:id="endLabel" styleClass="subtitle"/>
+            </VBox>
+        </HBox>
 
-        <!-- Description -->
-        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextArea fx:id="descriptionArea"
-                  GridPane.rowIndex="1" GridPane.columnIndex="1"
-                  editable="false" wrapText="true" prefRowCount="3"/>
+        <!-- Tag Card -->
+        <VBox spacing="4"
+              styleClass="card-box"
+              prefWidth="460">
+            <Label text="Tag" styleClass="field-label"/>
+            <Label fx:id="tagLabel" styleClass="subtitle"/>
+        </VBox>
 
-        <!-- Start -->
-        <Label text="Start:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <Label fx:id="startLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <!-- Spacer pushes buttons to bottom -->
+        <Region VBox.vgrow="ALWAYS"/>
 
-        <!-- End -->
-        <Label text="End:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <Label fx:id="endLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-        <!-- Tag -->
-        <Label text="Tag:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <Label fx:id="tagLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-        <!-- Close & Delete buttons -->
-        <Button fx:id="closeBtn"
-                text="Close"
-                GridPane.rowIndex="5" GridPane.columnIndex="0"
-                styleClass="page-button"/>
-        <Button fx:id="deleteBtn"
-                text="Delete"
-                GridPane.rowIndex="5" GridPane.columnIndex="1"
-                styleClass="page-button-selected"/>
-    </children>
-</GridPane>
+        <!-- Close & Delete Buttons -->
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button fx:id="closeBtn"
+                    text="Close"
+                    styleClass="page-button"/>
+            <Button fx:id="deleteBtn"
+                    text="Delete"
+                    styleClass="page-button-selected"/>
+        </HBox>
+    </VBox>
+</StackPane>

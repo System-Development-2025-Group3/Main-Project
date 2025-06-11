@@ -15,14 +15,15 @@
 /* === INDIVIDUAL DAY BOXES === */
 .calendar-day-box {
     -fx-background-color: #fdfdff;
-    -fx-border-color: #d6dbf5;
+    -fx-border-color:   #d6dbf5;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 2, 0.2, 0, 1);
     -fx-cursor: hand;
 }
-.calendar-day-box:hover {
+/* Manual hover — triggered by adding “hover” class in code */
+.calendar-day-box.hover {
     -fx-background-color: #eef2ff;
 }
 
@@ -43,21 +44,9 @@
 /* === CELLS IN HOUR GRID (Day/Week view) === */
 .calendar-hour-cell {
     -fx-background-color: #ffffff;
-    -fx-border-color: #efefef;
-    -fx-border-width: 0 0 1 0;
-    -fx-padding: 6;
-}
-
-/* === EVENTS INSIDE CELLS === */
-.calendar-event {
-    -fx-background-color: #c2e7ff;
-    -fx-background-radius: 6;
-    -fx-padding: 4 8;
-    -fx-text-fill: #084b8a;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0.2, 0, 1);
-    -fx-wrap-text: true;
+    -fx-border-color:     #efefef;
+    -fx-border-width:     0 0 1 0;
+    -fx-padding:          6;
 }
 
 /* === CALENDAR TITLE === */
@@ -86,12 +75,59 @@
     -fx-text-fill: #1f3a93;
     -fx-cursor: hand;
 }
-.button:hover {
+/* Manual hover for nav buttons */
+.button.hover {
     -fx-background-color: #d0dbff;
 }
-/* event hover */
-.calendar-event-hover {
-    -fx-border-color: #000;
+
+/* === EVENTS INSIDE CELLS (modern, pastel-outline pills) === */
+.calendar-event {
+    /* shared pill look */
     -fx-border-width: 1px;
-    -fx-cursor: hand;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-padding: 4px 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+    -fx-text-fill: rgba(0,0,0,0.85);
+}
+
+/* Pastel fill + matching border for each EventColor */
+.calendar-event.event-red {
+    -fx-background-color: rgba(244,67,54,0.1);
+    -fx-border-color:       rgba(244,67,54,0.8);
+}
+.calendar-event.event-blue {
+    -fx-background-color: rgba(66,165,245,0.1);
+    -fx-border-color:       rgba(66,165,245,0.8);
+}
+.calendar-event.event-green {
+    -fx-background-color: rgba(102,187,106,0.1);
+    -fx-border-color:       rgba(102,187,106,0.8);
+}
+.calendar-event.event-yellow {
+    -fx-background-color: rgba(255,235,59,0.1);
+    -fx-border-color:       rgba(255,235,59,0.8);
+}
+.calendar-event.event-purple {
+    -fx-background-color: rgba(171,71,188,0.1);
+    -fx-border-color:       rgba(171,71,188,0.8);
+}
+
+/* Manual hover — explicit per color */
+.calendar-event.event-red.hover {
+    -fx-background-color: rgba(244,67,54,0.15);
+}
+.calendar-event.event-blue.hover {
+    -fx-background-color: rgba(66,165,245,0.15);
+}
+.calendar-event.event-green.hover {
+    -fx-background-color: rgba(102,187,106,0.15);
+}
+.calendar-event.event-yellow.hover {
+    -fx-background-color: rgba(255,235,59,0.15);
+}
+.calendar-event.event-purple.hover {
+    -fx-background-color: rgba(171,71,188,0.15);
 }

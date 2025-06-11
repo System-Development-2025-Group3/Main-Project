@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="application.studyspace.controllers.calendar.CreateNewEventController"
@@ -47,7 +47,7 @@
                            styleClass="styled-text-field"/>
 
                 <Label text="Description" styleClass="field-label"/>
-                <TextArea fx:id="descritpionArea"
+                <TextArea fx:id="descriptionArea"
                           promptText="e.g. Push/Pull/Legs"
                           prefRowCount="4"
                           styleClass="styled-text-area"/>
@@ -67,23 +67,15 @@
                 <!-- Start Time -->
                 <Label text="Start Time" styleClass="field-label"/>
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <!-- Hours Field -->
                     <TextField fx:id="hourFieldstart"
                                promptText="HH"
                                prefWidth="50"
-                               style="-fx-alignment: center; -fx-background-radius: 6;">
-                    </TextField>
-
+                               style="-fx-alignment: center; -fx-background-radius: 6;"/>
                     <Label text=":" styleClass="time-separator"/>
-
-                    <!-- Minutes Field -->
                     <TextField fx:id="minuteFieldstart"
                                promptText="MM"
                                prefWidth="50"
-                               style="-fx-alignment: center; -fx-background-radius: 6;">
-                    </TextField>
-
-                    <!-- AM/PM Dropdown -->
+                               style="-fx-alignment: center; -fx-background-radius: 6;"/>
                     <ComboBox fx:id="amPmDropdownstart"
                               prefWidth="100"
                               promptText="AM/PM"
@@ -100,7 +92,6 @@
                 <!-- End Time -->
                 <Label text="End Time" styleClass="field-label"/>
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <!-- Hours Field -->
                     <TextField fx:id="hourFieldend"
                                promptText="HH"
                                prefWidth="50"
@@ -108,16 +99,12 @@
                                onMouseClicked="#showSmartSelectionDropdown"
                                onKeyReleased="#showSmartSelectionDropdown"/>
                     <Label text=":" styleClass="time-separator"/>
-
-                    <!-- Minutes Field -->
                     <TextField fx:id="minuteFieldend"
                                promptText="MM"
                                prefWidth="50"
                                style="-fx-alignment: center; -fx-background-radius: 6;"
                                onMouseClicked="#showSmartSelectionDropdown"
                                onKeyReleased="#showSmartSelectionDropdown"/>
-
-                    <!-- AM/PM Dropdown -->
                     <ComboBox fx:id="amPmDropdownend"
                               prefWidth="100"
                               promptText="AM/PM"
@@ -133,7 +120,6 @@
 
                 <Label text="Tags" styleClass="field-label"/>
                 <FlowPane hgap="5" styleClass="tags-container" fx:id="tagsContainer">
-                    <!-- Chips (tags) will be added here dynamically -->
                     <TextField fx:id="tagInputField" promptText="Type to search or add tag…"/>
                 </FlowPane>
 
@@ -150,21 +136,18 @@
 
         <!-- Bottom pager + Finish -->
         <HBox spacing="12" alignment="CENTER">
-
             <Region HBox.hgrow="ALWAYS"/>
-
             <Button text="Create"
                     fx:id="CreateBtn"
                     styleClass="page-button-selected"
-                    onAction="#handleClickClosePopupButton"/>
+                    onAction="#handleSave"/>
         </HBox>
     </VBox>
 
-    <!-- ListView moved to be dynamically positioned below the TextField -->
+    <!-- Autocomplete suggestions -->
     <ListView fx:id="suggestionsListView"
               styleClass="autocomplete-list"
               visible="false"
               maxWidth="200"
               maxHeight="150"/>
-
 </StackPane>

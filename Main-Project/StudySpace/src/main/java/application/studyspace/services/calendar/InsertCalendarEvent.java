@@ -1,7 +1,7 @@
 package application.studyspace.services.calendar;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
-import application.studyspace.services.auth.LoginChecker;
+import application.studyspace.services.auth.SessionManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,7 @@ import static application.studyspace.services.DataBase.UUIDHelper.uuidToBytes;
 public class InsertCalendarEvent {
 
     /**
-     * Inserts the specified event into the database.
+     * Inserts the specified event into the database for the currently logged-in user.
      *
      * @param event the {@link CalendarEvent} to save; must have valid start/end times
      */
@@ -28,12 +28,12 @@ public class InsertCalendarEvent {
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Bind parameters in the order of the INSERT statement
-            UUID userId = LoginChecker.getLoggedInUserUUID();
+            // Bind parameters
+            UUID userId = SessionManager.getInstance().getLoggedInUserId();
             ps.setTimestamp(1, java.sql.Timestamp.valueOf(event.getStart()));
             ps.setTimestamp(2, java.sql.Timestamp.valueOf(event.getEnd()));
             ps.setString(3, event.getTag());
-            ps.setString(4, event.getColor());
+            ps.setString(4, event.getColor().name());
             ps.setString(5, event.getTitle());
             ps.setString(6, event.getDescription());
             ps.setBytes(7, uuidToBytes(userId));
@@ -42,7 +42,6 @@ public class InsertCalendarEvent {
             System.out.println("Inserted rows: " + rows);
 
         } catch (SQLException e) {
-            // Log any SQL errors for debugging
             e.printStackTrace();
         }
     }

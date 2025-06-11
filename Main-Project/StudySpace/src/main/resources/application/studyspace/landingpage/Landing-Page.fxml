@@ -12,9 +12,12 @@
         <ToggleGroup fx:id="viewGroup"/>
     </fx:define>
 
-    <!-- Top bar with close button -->
+    <!-- Top bar with only Close button -->
     <top>
-        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 8 16 0 16;">
+        <HBox alignment="CENTER_RIGHT"
+              spacing="8"
+              style="-fx-padding: 8 16 0 16;">
+            <!-- Close button -->
             <Button fx:id="closeBtn"
                     text="✕"
                     styleClass="nav-button"
@@ -39,6 +42,7 @@
         </VBox>
     </left>
 
+    <!-- Main content -->
     <center>
         <VBox styleClass="content-root" spacing="16">
 
@@ -53,6 +57,7 @@
                         onAction="#goToNext"/>
             </HBox>
 
+            <!-- View toggles + New Event button -->
             <HBox styleClass="view-toggle" spacing="6">
                 <ToggleButton text="Day"
                               styleClass="view-button"
@@ -68,8 +73,23 @@
                               selected="true"
                               onAction="#showMonthView"/>
 
-                <Region HBox.hgrow="ALWAYS" />
+                <Region HBox.hgrow="ALWAYS"/>
 
+                <!-- New Event button -->
+                <Button fx:id="newEventBtn"
+                        text="+ New Event"
+                        onAction="#handleCreateNewEvent"
+                        styleClass="view-button"
+                        style="
+                        -fx-background-color: white;
+                        -fx-border-color: white;
+                        -fx-background-radius: 20;
+                        -fx-border-radius: 20;
+                        -fx-text-fill: black;
+                        -fx-font-weight: bold;
+                        -fx-padding: 4 12;
+                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.0, 0, 1);
+                        "/>
             </HBox>
 
             <StackPane fx:id="calendarContainer"
@@ -78,5 +98,4 @@
 
         </VBox>
     </center>
-
 </BorderPane>

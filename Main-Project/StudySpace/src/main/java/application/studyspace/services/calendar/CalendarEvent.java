@@ -2,10 +2,12 @@ package application.studyspace.services.calendar;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
-import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.auth.SessionManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +21,18 @@ public class CalendarEvent {
     private String description;
     private LocalDateTime start;
     private LocalDateTime end;
-    private String color;  // only one color field now
+    private EventColor color;    // now an enum
     private String tag;
+
+    // In-memory caches for tags (unchanged)
+    private static final List<String> existingTagsAtUser = new ArrayList<>();
+    private static final List<String> existingTags = new ArrayList<>();
 
     public CalendarEvent(String title,
                          String description,
                          LocalDateTime start,
                          LocalDateTime end,
-                         String color,
+                         EventColor color,
                          String tag) {
         this.title = title;
         this.description = description;
@@ -36,67 +42,66 @@ public class CalendarEvent {
         this.tag = tag;
     }
 
-    public String getTitle()       { return title; }
-    public String getDescription() { return description; }
-    public LocalDateTime getStart(){ return start; }
-    public LocalDateTime getEnd()  { return end; }
-    public String getColor()       { return color; }
-    public String getTag()         { return tag; }
+    public String getTitle()        { return title; }
+    public String getDescription()  { return description; }
+    public LocalDateTime getStart() { return start; }
+    public LocalDateTime getEnd()   { return end; }
 
+    /** Returns the enum value. */
+    public EventColor getColor()    { return color; }
+
+    public String getTag()          { return tag; }
+
+    /** Fetch all events for the user. */
     public static List<CalendarEvent> getAllEvents() {
         return CalendarEventProvider.getEvents();
     }
 
-    private static final List<String> existingTagsatUser = new ArrayList<>();
-    private static final List<String> existingTags = new ArrayList<>();
-
     /**
-     * Retrieves a list of tags associated with the currently logged-in user from the database.
-     * The tags are fetched by querying the "calendar_tags" and "user_tags" tables.
-     *
-     * @return a List of Strings representing the tag values associated with the logged-in user
+     * Returns tags currently associated with the logged-in user.
+     * Queries calendar_tags & user_tags tables.
      */
     public static List<String> getExistingTagsatUser() {
-        existingTagsatUser.clear();
-        UUID loggedInUserUUID = SessionManager.getInstance().getLoggedInUserId();
+        existingTagsAtUser.clear();
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
 
-        try (Connection connection = new DatabaseConnection().getConnection()) {
-            String sql = "SELECT ct.tag_value FROM calendar_tags ct, user_tags ut WHERE ct.tag_uuid = ut.tag_uuid AND ut.user_id = ?";
-            System.out.println("Executing SQL Query: " + sql + " with user_id: " + loggedInUserUUID);
+        String sql = """
+            SELECT ct.tag_value
+              FROM calendar_tags ct
+              JOIN user_tags ut ON ct.tag_uuid = ut.tag_uuid
+             WHERE ut.user_id = ?
+            """;
 
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setBytes(1, uuidToBytes(loggedInUserUUID));
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ResultSet result = statement.executeQuery();
-
-            while (result.next()) {
-                existingTagsatUser.add(result.getString("tag_value"));
+            ps.setBytes(1, uuidToBytes(userId));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    existingTagsAtUser.add(rs.getString("tag_value"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return existingTagsatUser;
+        return existingTagsAtUser;
     }
 
     /**
-     * Retrieves a list of existing tags from the database.
-     * The tags are fetched from the "calendar_tags" table.
-     *
-     * @return a List of Strings representing the existing tag values retrieved from the database
+     * Returns all tags defined in calendar_tags.
      */
     public static List<String> getExistingTags() {
         existingTags.clear();
 
-        try (Connection connection = new DatabaseConnection().getConnection()) {
-            String sql = "SELECT ct.tag_value FROM calendar_tags ct;";
-            System.out.println("Executing SQL Query: " + sql);
+        String sql = "SELECT tag_value FROM calendar_tags";
 
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            while (result.next()) {
-                existingTags.add(result.getString("tag_value"));
+            while (rs.next()) {
+                existingTags.add(rs.getString("tag_value"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,56 +111,51 @@ public class CalendarEvent {
     }
 
     /**
-     * Adds a new tag to the database if it does not already exist.
-     * This method inserts the new tag into the "calendar_tags" table and associates it
-     * with the currently logged-in user in the "user_tags" table.
-     *
-     * @param newTag the new tag to be added to the database
+     * Adds a new tag to calendar_tags (if absent) and associates it to the user.
+     * Inserts into calendar_tags, retrieves the generated tag_uuid, then into user_tags.
      */
     public static void addTagToDatabase(String newTag) {
-        UUID loggedInUserUUID = SessionManager.getInstance().getLoggedInUserId();
-
+        // Refresh global tag cache
         if (!existingTags.contains(newTag)) {
             existingTags.add(newTag);
+        }
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
+        UUID tagUUID = null;
 
-            try (Connection connection = new DatabaseConnection().getConnection()) {
-                // Insert into calendar_tags table
-                String sql = "INSERT INTO calendar_tags (tag_value) VALUES (?) RETURNING tag_uuid;";
-                System.out.println("Executing SQL Query: " + sql);
-
-                // Create PreparedStatement with RETURN_GENERATED_KEYS
-                PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-                statement.setString(1, newTag); // Add the `tag_value` parameter
-                ResultSet result = statement.executeQuery();
-
-                UUID tagUUID = null;
-
-                if (result.next()) {
-                    byte[] uuidBytes = result.getBytes("tag_uuid");
-                    tagUUID = BytesToUUID(uuidBytes);
+        try (Connection conn = new DatabaseConnection().getConnection()) {
+            // Insert into calendar_tags if missing
+            String insertTag = "INSERT INTO calendar_tags (tag_value) VALUES (?) ON CONFLICT DO NOTHING RETURNING tag_uuid";
+            try (PreparedStatement ps = conn.prepareStatement(insertTag)) {
+                ps.setString(1, newTag);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        tagUUID = BytesToUUID(rs.getBytes("tag_uuid"));
+                    }
                 }
-
-                System.out.println("New tag UUID: " + tagUUID);
-
-                // Insert into user_tags table
-                sql = "INSERT INTO user_tags (user_id, tag_uuid) VALUES (?, ?)";
-                System.out.println("Executing SQL Query: " + sql);
-
-                statement = connection.prepareStatement(sql);
-                statement.setBytes(1, uuidToBytes(loggedInUserUUID));
-
-                assert tagUUID != null;
-                statement.setBytes(2, uuidToBytes(tagUUID));
-                statement.executeUpdate();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-
-            System.out.println("New tag added to database: " + newTag);
+            // If no UUID returned (existing tag), fetch it
+            if (tagUUID == null) {
+                String selectTag = "SELECT tag_uuid FROM calendar_tags WHERE tag_value = ?";
+                try (PreparedStatement ps = conn.prepareStatement(selectTag)) {
+                    ps.setString(1, newTag);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            tagUUID = BytesToUUID(rs.getBytes("tag_uuid"));
+                        }
+                    }
+                }
+            }
+            // Associate with user
+            if (tagUUID != null) {
+                String insertUserTag = "INSERT INTO user_tags (user_id, tag_uuid) VALUES (?, ?) ON CONFLICT DO NOTHING";
+                try (PreparedStatement ps = conn.prepareStatement(insertUserTag)) {
+                    ps.setBytes(1, uuidToBytes(userId));
+                    ps.setBytes(2, uuidToBytes(tagUUID));
+                    ps.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
-
-
-
 }

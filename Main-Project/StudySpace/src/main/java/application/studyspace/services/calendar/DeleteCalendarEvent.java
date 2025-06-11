@@ -1,12 +1,11 @@
 package application.studyspace.services.calendar;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
-import application.studyspace.services.auth.LoginChecker;
+import application.studyspace.services.auth.SessionManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 import static application.studyspace.services.DataBase.UUIDHelper.uuidToBytes;
@@ -34,14 +33,14 @@ public class DeleteCalendarEvent {
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            UUID userId = LoginChecker.getLoggedInUserUUID();
-            ps.setBytes   (1, uuidToBytes(userId));
-            ps.setTimestamp(2, Timestamp.valueOf(event.getStart()));
-            ps.setTimestamp(3, Timestamp.valueOf(event.getEnd()));
-            ps.setString  (4, event.getTag());
-            ps.setString  (5, event.getColor());
-            ps.setString  (6, event.getTitle());
-            ps.setString  (7, event.getDescription());
+            UUID userId = SessionManager.getInstance().getLoggedInUserId();
+            ps.setBytes      (1, uuidToBytes(userId));
+            ps.setTimestamp  (2, java.sql.Timestamp.valueOf(event.getStart()));
+            ps.setTimestamp  (3, java.sql.Timestamp.valueOf(event.getEnd()));
+            ps.setString     (4, event.getTag());
+            ps.setString(5, event.getColor().name());
+            ps.setString     (6, event.getTitle());
+            ps.setString     (7, event.getDescription());
 
             int deleted = ps.executeUpdate();
             System.out.println("Deleted " + deleted + " calendar event(s).");
