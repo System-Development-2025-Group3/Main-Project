@@ -137,5 +137,31 @@ public static boolean isSimilarEmail(String inputEmail, List<String> emailList, 
 
     return emailList;
     }
+
+    public static String isValidPassword(String password){
+
+        String ValidationState = "VALID";
+
+        if(!(password.length() >=12)){
+            ValidationState = "NOT_LONG_ENOUGH";
+        }
+
+        // Check for at least one uppercase letter
+        if (!password.matches(".*[A-Z].*")) {
+            ValidationState = "NO_UPPERCASE";
+        }
+
+        // Check for at least one number
+        if (!password.matches(".*[0-9].*")) {
+            ValidationState = "NO_NUMBER";
+        }
+
+        // Check for at least one special character
+        if (!password.matches(".*[%&!?#_\\-\\$].*")) {
+            ValidationState = "NO_SPECIAL_CHAR";
+        }
+
+        return ValidationState;
+    }
     
 }

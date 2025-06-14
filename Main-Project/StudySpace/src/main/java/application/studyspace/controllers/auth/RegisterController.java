@@ -14,6 +14,7 @@ import javafx.util.Duration;
 import static application.studyspace.services.auth.PasswordHasher.saveToDatabase;
 import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
 import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
+import static application.studyspace.services.auth.ValidationUtils.isValidPassword;
 
 /**
  * The RegisterController class manages the registration view in the application. It handles
@@ -80,6 +81,12 @@ public class RegisterController {
         } else if (!RegisterPassword_1.getText().equals(RegisterPassword_2.getText())) {
             validationState = "NOT_MATCHING_PASSWORDS";
 
+        } else if (!ValidationUtils.isValidPassword(RegisterPassword_1.getText()).equals("VALID")) {
+            validationState = "REGISTER_PASSWORD_INVALID";
+
+        }else if (ValidationUtils.isKnownEmail(RegisterEmailField.getText())){
+            validationState = "DUPLICATE_EMAIL";
+
         } else {
             validationState = "CORRECT";
         }
@@ -112,12 +119,12 @@ public class RegisterController {
 
                 case "INVALID_EMAIL" -> {
 
-                    String toolTipText = """
+                    String TooltipText = """
                         You did not enter a valid email address! Please do so next time.
                         • The format should be like example@domain.com.""";
 
                     applyErrorStyle(RegisterEmailField, "text-field-error");
-                    toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration);
+                    toolTipService.showTooltipForDurationX(emailTooltip, TooltipText, "tooltip-Label-Error", duration);
 
                     PauseTransition delay = new PauseTransition(Duration.seconds(duration));
                     delay.setOnFinished(finishedEvent -> {
@@ -127,24 +134,32 @@ public class RegisterController {
 
                 }
 
+                case "DUPLICATE_EMAIL" -> {
+                    String TooltipText = """
+                    The E-Mail you entered is already associated with an account. Would you instead like to log in?""";
+
+                    toolTipService.showAutocorrectPopup(emailTooltip, TooltipText, "tooltip-Label-Error-Autocorrect", 0, () -> SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/auth/Login.fxml", "Login"));
+                }
+
                 case "EMPTY_PASSWORD" -> {
 
                     String toolTipText = """
-                        You did not enter a password! Please enter a password that fulfills the following conditions:
+                        You did not enter both passwords!""";
+
+                    ApplyErrorStyleRegisterPassword(toolTipText);
+
+                }
+
+                case "REGISTER_PASSWORD_INVALID" -> {
+
+                    String toolTipText = """
+                        Invalid Password! Please make sure that your password fulfills the following conditions:
                         • At least 12 characters long
                         • Includes at least one uppercase letter
                         • Includes at least one number
                         • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
 
-                    applyErrorStyle(RegisterPassword_1, "password-field-error");
-                    applyErrorStyle(RegisterPassword_2, "password-field-error");
-                    toolTipService.showTooltipForDurationX(passwordTooltip1, toolTipText, "tooltip-Label-Error", 5);
-
-                    PauseTransition delay = new PauseTransition(Duration.seconds(10));
-                    delay.setOnFinished(finishedEvent -> {
-                        resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
-                        resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
-                    });
+                    ApplyErrorStyleRegisterPassword(toolTipText);
 
                 }
 
@@ -182,6 +197,19 @@ public class RegisterController {
 
         }
 
+    }
+
+    private void ApplyErrorStyleRegisterPassword(String toolTipText) {
+        applyErrorStyle(RegisterPassword_1, "password-field-error");
+        applyErrorStyle(RegisterPassword_2, "password-field-error");
+        toolTipService.showTooltipForDurationX(passwordTooltip1, toolTipText, "tooltip-Label-Error", 5);
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
+        delay.setOnFinished(finishedEvent -> {
+            resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
+            resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
+        });
+        delay.play();
     }
 
     /**

@@ -97,7 +97,7 @@
                             <!-- Back to login -->
                             <Hyperlink fx:id="BackToLoginLink"
                                        text="← Back to Login"
-                                       onAction="#handleBacktoLoginClick"
+                                       onAction="#handleBackToLoginClick"
                                        style="-fx-text-fill: #6e85d5; -fx-font-size: 12px;"/>
                         </VBox>
                     </StackPane>
