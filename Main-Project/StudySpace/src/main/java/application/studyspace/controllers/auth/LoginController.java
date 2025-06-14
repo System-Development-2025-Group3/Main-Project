@@ -20,7 +20,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -108,11 +107,17 @@ public class LoginController {
                         • The format should be like example@domain.com.""";
 
                 applyErrorStyle(InputEmailTextfield, "text-field-error");
-                toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration);
+
+                toolTipService.showTooltipForDurationX(emailTooltip,
+                        toolTipText,
+                        "tooltip-Label-Error",
+                        duration);
 
                 PauseTransition delay = new PauseTransition(Duration.seconds(duration));
                 delay.setOnFinished(finishedEvent -> {
-                    resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+                    resetFieldStyle(InputEmailTextfield,
+                            "text-field-error",
+                            "text-field");
                 });
                 delay.play();
             }
@@ -271,16 +276,20 @@ public class LoginController {
     private void initialize() {
         System.out.println("The LoginController has been initialized.");
         String tooltipText = """
-            Please enter a password that fulfills the following conditions:
+            The Password should fulfill the following conditions:
             • At least 12 characters long
             • Includes at least one uppercase letter
             • Includes at least one number
-            • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
+            • Includes at least one special character (%, &, !, ?, #, _, -, $)
+            
+            Please store the Password in a secure place.""";
 
         toolTipService.createCustomTooltip(passwordTooltip, tooltipText, "tooltip-Label");
 
         tooltipText = """
-                Please enter a valid email address:
+                Please your registered email address:
+                
+                Remember ...
                 • The format should be like example@domain.com.""";
 
         toolTipService.createCustomTooltip(emailTooltip, tooltipText, "tooltip-Label");
