@@ -1,38 +1,30 @@
 package application.studyspace.services.DataBase;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-/**
- * The DatabaseConnection class provides functionality to establish and manage
- * a connection to a MariaDB database using JDBC. The connection is configured
- * with specific database credentials and URL details.
- */
 public class DatabaseConnection {
-    public Connection databaseLink;
 
-    /**
-     * Establishes and returns a connection to a MariaDB database using JDBC.
-     * The connection is configured with predefined database credentials and URL.
-     *
-     * @return a Connection object representing the database connection
-     * @throws RuntimeException if the JDBC driver is not found or if the connection fails
-     */
+    // Try env var first; if missing, use your local dev DB settings
+    private static final String URL = System.getenv().getOrDefault(
+            "DB_URL",
+            "jdbc:mariadb://localhost:3306/studyspace_dev?useUnicode=true&characterEncoding=UTF-8"
+    );
+    private static final String USER = System.getenv().getOrDefault("DB_USER", "dev");
+    private static final String PW   = System.getenv().getOrDefault("DB_PASS", "devpass");
+
     public Connection getConnection() {
-        String databaseName = "systemdevelopment2025_maindatabase";
-        String databaseUser = "408880";
-        String databasePassword = "cefhyp-7jerba-qikGyr";
-        String url = "jdbc:mariadb://mysql-systemdevelopment2025.alwaysdata.net:3306/" + databaseName;
-
-
         try {
             Class.forName("org.mariadb.jdbc.Driver");
-            databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
-            System.out.println("Database connection successful!");
-            return databaseLink;
+            return DriverManager.getConnection(URL, USER, PW);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Driver class not found. Check if MariaDB driver is added!", e);
+            throw new RuntimeException("MariaDB JDBC driver not found", e);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to connect to database. Check URL, username, password!", e);
+            throw new RuntimeException(
+                    "Failed to connect to database at " + URL +
+                            " (user=" + USER + ")", e
+            );
         }
     }
 }

@@ -42,16 +42,14 @@
 
         <center>
             <VBox alignment="CENTER">
-                <!-- Top Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>
 
-                <!-- Login + Laptop Image -->
                 <HBox alignment="CENTER" spacing="100">
-                    <!-- Login Box -->
                     <StackPane maxWidth="480">
                         <VBox fx:id="LoginCard"
                               spacing="15"
                               style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;">
+
                             <Label fx:id="WelcomeTitle"
                                    text="Welcome to StudySpace!"
                                    styleClass="welcome-title"/>
@@ -60,37 +58,38 @@
                                 <Text text="Do you have an Account or would you like to " />
                                 <Text fx:id="linkText"
                                       text="register"
-                                      onMouseClicked="#handleRegisterTextClick"/>
+                                      onMouseClicked="#handleRegisterTextClick"
+                                      styleClass="link-text"/>
                                 <Text text=" for a new user Account on StudyFlow?" />
                             </TextFlow>
 
                             <Label text="E-Mail" styleClass="form-label"/>
-                            <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
-                                <TextField fx:id="InputEmailTextfield"
+                            <HBox spacing="5" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                <!-- Renamed to match your controller -->
+                                <TextField fx:id="emailField"
                                            promptText="Please input your email ..."
                                            styleClass="text-field"
                                            HBox.hgrow="ALWAYS"/>
-                                <Label fx:id="emailTooltip" text="?" styleClass="circle-label"/>
                             </HBox>
 
                             <Label text="Password" styleClass="form-label"/>
-                            <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="Infinity">
-                                <PasswordField fx:id="InputPassword"
-                                               promptText="Please input your Password ..."
+                            <HBox spacing="5" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                <!-- Renamed to match your controller -->
+                                <PasswordField fx:id="passwordField"
+                                               promptText="Please input your password ..."
                                                styleClass="password-field"
                                                HBox.hgrow="ALWAYS"/>
-                                <Label fx:id="passwordTooltip" text="?" styleClass="circle-label"/>
                             </HBox>
 
                             <Button fx:id="SubmitLoginButton"
                                     text="Login"
                                     styleClass="button"
                                     onMouseClicked="#handleSubmitLoginButtonClick"
-                                    alignment="CENTER"/>
+                                    HBox.hgrow="ALWAYS"/>
+
                         </VBox>
                     </StackPane>
 
-                    <!-- Right-side image -->
                     <ImageView fx:id="Image01"
                                fitHeight="400"
                                preserveRatio="true">
@@ -98,7 +97,6 @@
                     </ImageView>
                 </HBox>
 
-                <!-- Bottom Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>
             </VBox>
         </center>

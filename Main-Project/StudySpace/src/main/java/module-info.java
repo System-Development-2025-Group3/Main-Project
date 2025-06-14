@@ -14,6 +14,7 @@ module application.studyspace {
     requires org.json;
     requires org.mariadb.jdbc;
     requires com.calendarfx.view;
+    requires ical4j.core;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;
@@ -32,9 +33,7 @@ module application.studyspace {
     opens application.studyspace.services.Styling to javafx.fxml;
     exports application.studyspace.services.Scenes;
     opens application.studyspace.services.Scenes to javafx.fxml;
-    opens application.studyspace.controllers.settings to javafx.fxml;
-    exports application.studyspace.controllers.calendar to javafx.fxml;
     exports application.studyspace.services.calendar;
-    opens application.studyspace.controllers.calendar to javafx.fxml;
+
 
 }

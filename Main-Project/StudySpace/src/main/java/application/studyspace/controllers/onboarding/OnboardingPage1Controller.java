@@ -143,15 +143,15 @@ public class OnboardingPage1Controller {
         if (sunBtn.isSelected()) blockedDays += "Sunday ";
         blockedDays = blockedDays.trim();
 
-        InputStudyDays studyData = new InputStudyDays(
+        InputStudyDays prefs = new InputStudyDays(
                 userUUID,
                 preferredTimeBox.getValue(),
-                String.valueOf((int) sessionLengthSlider.getValue()),
-                String.valueOf((int) breakLengthSlider.getValue()),
+                (int) sessionLengthSlider.getValue(),
+                (int) breakLengthSlider.getValue(),
                 blockedDays.trim()
         );
+        boolean success = prefs.saveToDatabase();
 
-        boolean success = studyData.saveToDatabase();
         if (success) {
             System.out.println("Study preferences saved.");
             SceneSwitcher.closePopup((Node) event.getSource());

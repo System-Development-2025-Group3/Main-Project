@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -24,119 +14,67 @@
         <ToggleGroup fx:id="colorGroup"/>
     </fx:define>
 
-    <VBox spacing="20"
-          alignment="TOP_CENTER"
-          style="-fx-background-color: white;
-                 -fx-padding: 30;
-                 -fx-background-radius: 15;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
+    <VBox spacing="20" alignment="TOP_CENTER"
+          style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
           VBox.vgrow="ALWAYS">
 
         <HBox spacing="30" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
 
             <!-- LEFT CARD -->
-            <VBox spacing="20"
-                  alignment="TOP_LEFT"
-                  styleClass="card-box"
-                  prefWidth="520"
-                  HBox.hgrow="NEVER">
-
-                <Label text="Add your exams and blockers"
-                       style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+            <VBox spacing="20" alignment="TOP_LEFT" styleClass="card-box" prefWidth="520" HBox.hgrow="NEVER">
+                <Label text="Add your exams and blockers" style="-fx-font-size:22px; -fx-font-weight:bold;"/>
 
                 <Label text="Exam Name" styleClass="field-label"/>
-                <TextField fx:id="examNameField"
-                           promptText="e.g. Calculus"
-                           styleClass="styled-text-field"/>
+                <TextField fx:id="examNameField" promptText="e.g. Calculus" styleClass="styled-text-field"/>
 
                 <Label text="Description" styleClass="field-label"/>
-                <TextArea fx:id="descriptionArea"
-                          promptText="e.g. Covers chapters 1-5"
-                          prefRowCount="4"
-                          styleClass="styled-text-area"/>
+                <TextArea fx:id="descriptionArea" promptText="e.g. Covers chapters 1-5" prefRowCount="4" styleClass="styled-text-area"/>
 
                 <Label text="Estimated Study Hours" styleClass="field-label"/>
-                <TextField fx:id="estimatedHoursField"
-                           promptText="e.g. 20"
-                           styleClass="styled-text-field"/>
+                <TextField fx:id="estimatedHoursField" promptText="e.g. 20" styleClass="styled-text-field"/>
 
-                <!-- **This** must match your controller field -->
                 <Label text="Type" styleClass="field-label"/>
-                <ComboBox fx:id="typeCombo"
-                          promptText="Select…"
-                          prefWidth="160"
-                          styleClass="styled-combo"/>
+                <ComboBox fx:id="typeCombo" promptText="Select…" prefWidth="160" styleClass="styled-combo"/>
 
                 <Label text="Color" styleClass="field-label"/>
                 <HBox spacing="8">
-                    <ToggleButton fx:id="colorRed"    toggleGroup="$colorGroup" styleClass="color-button"/>
-                    <ToggleButton fx:id="colorBlue"   toggleGroup="$colorGroup" styleClass="color-button"/>
-                    <ToggleButton fx:id="colorGreen"  toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorRed" toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorBlue" toggleGroup="$colorGroup" styleClass="color-button"/>
+                    <ToggleButton fx:id="colorGreen" toggleGroup="$colorGroup" styleClass="color-button"/>
                     <ToggleButton fx:id="colorYellow" toggleGroup="$colorGroup" styleClass="color-button"/>
                     <ToggleButton fx:id="colorPurple" toggleGroup="$colorGroup" styleClass="color-button"/>
                 </HBox>
             </VBox>
 
             <!-- RIGHT CARD -->
-            <VBox spacing="12"
-                  alignment="TOP_CENTER"
-                  styleClass="card-box"
-                  prefWidth="760"
-                  HBox.hgrow="ALWAYS"
-                  VBox.vgrow="ALWAYS">
-
-                <Label text="Preview"
-                       style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+            <VBox spacing="12" alignment="TOP_CENTER" styleClass="card-box" prefWidth="760" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <Label text="Preview" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
 
                 <HBox spacing="10" alignment="CENTER">
-                    <Button text="◀"
-                            onAction="#goToPreviousPreview"
-                            styleClass="page-button"/>
-                    <Label fx:id="previewMonthLabel"
-                           style="-fx-font-size:14px; -fx-font-weight:bold;"/>
-                    <Button text="▶"
-                            onAction="#goToNextPreview"
-                            styleClass="page-button"/>
+                    <Button text="◀" onAction="#goToPreviousPreview" styleClass="page-button"/>
+                    <Label fx:id="previewDateLabel" style="-fx-font-size:14px; -fx-font-weight:bold;"/>
+                    <Button text="▶" onAction="#goToNextPreview" styleClass="page-button"/>
                 </HBox>
 
-                <ScrollPane fitToWidth="true"
-                            hbarPolicy="NEVER"
-                            vbarPolicy="AS_NEEDED"
-                            VBox.vgrow="ALWAYS"
-                            HBox.hgrow="ALWAYS">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                     <content>
-                        <StackPane fx:id="calendarPreviewContainer"
-                                   styleClass="calendar-wrapper"/>
+                        <StackPane fx:id="calendarPreviewContainer" styleClass="calendar-wrapper"/>
                     </content>
                 </ScrollPane>
             </VBox>
         </HBox>
 
-        <!-- push pager row to bottom -->
         <Region VBox.vgrow="ALWAYS"/>
 
-        <!-- Bottom pager + Finish -->
+        <!-- Bottom pager -->
         <HBox spacing="12" alignment="CENTER">
-            <Button text="1"
-                    fx:id="page1Btn"
-                    onAction="#handlePage1"
-                    styleClass="page-button"/>
-            <Button text="2"
-                    fx:id="page2Btn"
-                    onAction="#handlePage2"
-                    styleClass="page-button"/>
-            <Button text="3"
-                    fx:id="page3Btn"
-                    onAction="#handlePage3"
-                    styleClass="page-button-selected"/>
+            <Button text="1" fx:id="page1Btn" onAction="#handlePage1" styleClass="page-button"/>
+            <Button text="2" fx:id="page2Btn" onAction="#handlePage2" styleClass="page-button"/>
+            <Button text="3" fx:id="page3Btn" onAction="#handlePage3" styleClass="page-button-selected"/>
 
-            <!-- spacer so 'Finish' sits on the right -->
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button text="Finish"
-                    fx:id="SaveBtn"
-                    onAction="#handleSave"
-                    styleClass="page-button-selected"/>
+            <Button text="Finish" fx:id="SaveBtn" onAction="#handleSave" styleClass="page-button-selected"/>
         </HBox>
 
     </VBox>

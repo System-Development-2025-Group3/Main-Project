@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;        // <-- changed from StackPane
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -70,48 +71,6 @@ public class SceneSwitcher {
             stage.setResizable(true);
             stage.centerOnScreen();
             stage.show();
-
-        } catch (IOException e) {
-            System.err.println("❌ Error loading FXML: " + fxmlPath);
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Displays a popup window with a specified FXML layout and title. The popup window is initialized
-     * as modal, non-resizable, and undecorated, and it blocks interaction with the owner stage
-     * until the popup is closed.
-     *
-     * @param ownerStage the parent stage that owns the popup window. The popup is displayed on top
-     *                   of this stage and blocks input to it while open.
-     * @param fxmlPath   the path to the FXML file that defines the layout and structure of the popup window.
-     *                   The path must be relative to the classpath.
-     * @param title      the title of the popup window, displayed in the title bar (though not visible
-     *                   in undecorated style).
-     */
-    public static void switchToPopup(Stage ownerStage, String fxmlPath, String title) {
-        try {
-            URL resource = SceneSwitcher.class.getResource(fxmlPath);
-            if (resource == null) {
-                System.err.println("❌ FXML not found: " + fxmlPath);
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent popupRoot = loader.load();
-
-            Stage popupStage = new Stage();
-            popupStage.setTitle(title);
-
-            Scene popupScene = new Scene(popupRoot);
-            popupStage.setScene(popupScene);
-
-            popupStage.initOwner(ownerStage);
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.initStyle(StageStyle.UNDECORATED);
-            popupStage.setResizable(false);
-
-            popupStage.showAndWait();
 
         } catch (IOException e) {
             System.err.println("❌ Error loading FXML: " + fxmlPath);
@@ -187,27 +146,39 @@ public class SceneSwitcher {
             popupStage.setAlwaysOnTop(true);
             popupStage.setScene(scene);
 
-            // Cast to Pane so BorderPane (etc.) works without error
-            Pane ownerRoot = (Pane) ownerStage.getScene().getRoot();
+            // ⚠️ Check if the owner stage has a scene before trying to get its root
+            Scene ownerScene = ownerStage.getScene();
+            if (ownerScene == null) {
+                ownerScene = new Scene(new Pane()); // fallback pane if not initialized
+                ownerStage.setScene(ownerScene);
+            }
 
-            Region dimPane = new Region();
-            dimPane.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
-            dimPane.setPrefSize(ownerRoot.getWidth(), ownerRoot.getHeight());
-            dimPane.setMouseTransparent(true);
+            // Cast safely and dim background
+            Parent rootNode = ownerScene.getRoot();
+            if (rootNode instanceof Pane ownerRoot) {
+                Region dimPane = new Region();
+                dimPane.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+                dimPane.setPrefSize(ownerRoot.getWidth(), ownerRoot.getHeight());
+                dimPane.setMouseTransparent(true);
 
-            ownerRoot.getChildren().add(dimPane);
-            ownerRoot.setEffect(new GaussianBlur(10));
+                ownerRoot.getChildren().add(dimPane);
+                ownerRoot.setEffect(new GaussianBlur(10));
 
-            popupStage.showAndWait();
+                popupStage.showAndWait();
 
-            ownerRoot.getChildren().remove(dimPane);
-            ownerRoot.setEffect(null);
+                ownerRoot.getChildren().remove(dimPane);
+                ownerRoot.setEffect(null);
+            } else {
+                System.err.println("⚠️ Owner root is not a Pane. Skipping dim effect.");
+                popupStage.showAndWait();
+            }
 
         } catch (IOException e) {
             System.err.println("❌ Error loading FXML: " + fxmlPath);
             e.printStackTrace();
         }
     }
+
 
     /**
      * Closes the popup window associated with the specified source node.

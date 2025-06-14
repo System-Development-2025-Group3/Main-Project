@@ -3,7 +3,8 @@
 <?import javafx.scene.layout.*?>
 <?import com.calendarfx.view.CalendarView?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<BorderPane fx:id="rootPane"
+            xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
             stylesheets="@../styles/LandingPageStylesheet.css">
@@ -26,13 +27,16 @@
                                   styleClass="sidebar-button"
                                   toggleGroup="$navGroup"
                                   selected="true"
-                                  onAction="#showMonthView"/>
+                                  onAction="#handleSidebarCalendar"/>
                     <ToggleButton text="📊 Dashboard"
                                   styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"/>
+                                  toggleGroup="$navGroup"
+                                  onAction="#handleSidebarDashboard"/>
                     <ToggleButton text="⚙ Settings"
                                   styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"/>
+                                  toggleGroup="$navGroup"
+                                  onAction="#handleSidebarSettings"/>
+
                 </VBox>
             </children>
         </AnchorPane>

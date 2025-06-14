@@ -1,110 +1,128 @@
 package application.studyspace.controllers.landingpage;
 
-import application.studyspace.controllers.calendar.CreateNewEventController;
+import application.studyspace.controllers.onboarding.OnboardingPage1Controller;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import application.studyspace.services.calendar.CalendarEvent;
+import application.studyspace.services.calendar.CalendarEventMapper;
+import application.studyspace.services.calendar.CalendarEventRepository;
+import application.studyspace.services.auth.SessionManager;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.time.LocalDate;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class LandingpageController implements Initializable {
 
-    // ─── Singleton boilerplate ───────────────────────────────────────────────
-    private static LandingpageController instance;
-    public LandingpageController() {
-        instance = this;
-    }
-    public static LandingpageController getInstance() {
-        return instance;
-    }
-    // ────────────────────────────────────────────────────────────────────────
+    @FXML
+    private CalendarView calendarView;
 
-    @FXML private CalendarView calendarView;
+    @FXML
+    private ToggleButton showDayButton, showWeekButton, showMonthButton;
 
-    private Calendar fxCalendar;
+    @FXML private BorderPane rootPane;
+
+    // This is the CalendarFX Calendar that will hold your user's events
+    private Calendar userCalendar;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // ─── 0) Hide all of CalendarFX’s built-in chrome ────────────────────────
-        calendarView.setShowToolBar(false);
-        calendarView.setShowPageSwitcher(false);
-        calendarView.setShowPageToolBarControls(false);
-        calendarView.setShowSearchField(false);
-        calendarView.setShowAddCalendarButton(false);
-        calendarView.setShowPrintButton(false);
-        calendarView.setShowDeveloperConsole(false);
-        calendarView.setShowSourceTray(false);
+    public void initialize(URL location, ResourceBundle resources) {
+        // 1) Create your CalendarFX Calendar and style it
+        userCalendar = new Calendar("My Events");
+        userCalendar.setStyle(Calendar.Style.STYLE1.name());
 
-        // ─── 1) Create & style your Calendar, attach it ─────────────────────────
-        fxCalendar = new Calendar("Planify Events");
-        fxCalendar.setStyle(Calendar.Style.STYLE1);
-        CalendarSource source = new CalendarSource("StudySpace");
-        source.getCalendars().add(fxCalendar);
+        // 2) Put it into a CalendarSource and add to the view
+        CalendarSource source = new CalendarSource("Planify");
+        source.getCalendars().add(userCalendar);
         calendarView.getCalendarSources().add(source);
 
-        // ─── 2) Load your app’s events into it ─────────────────────────────────
-        loadAppEvents();
-
-        // ─── 3) Clicking on an empty slot → your own “New Event” popup ─────────
-        calendarView.setEntryFactory(param -> {
-            Stage owner = (Stage) calendarView.getScene().getWindow();
-            SceneSwitcher.switchToPopupWithData(
-                    owner,
-                    "/application/studyspace/calendar/CreateNewEvent.fxml",
-                    "Create New Event",
-                    ctrl -> ((CreateNewEventController)ctrl)
-                            .setPreselectedDate(param.getZonedDateTime().toLocalDate())
-            );
-            return null;
-        });
-
-        // ─── 4) Clicking on an event → minimal pop-over ─────────────────────────
-        calendarView.setEntryDetailsPopOverContentCallback(param ->
-                new Label(param.getEntry().getTitle())
-        );
-
-        // ─── 5) Show the Month view by default ─────────────────────────────────
+        // 3) Show the Month page by default
         calendarView.showMonthPage();
+
+        // 4) Load events from DB
+        loadEvents();
+
+        //temporary loading of the onboarding process not just the first time but always
+        final UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
+        Platform.runLater(() -> {
+            Stage popup = new Stage();
+            popup.initOwner(rootPane.getScene().getWindow());
+            popup.initModality(Modality.APPLICATION_MODAL);
+            SceneSwitcher.<OnboardingPage1Controller>switchToPopupWithData(
+                    popup,
+                    "/application/studyspace/onboarding/OnboardingPage1.fxml",
+                    "Onboarding — Step 1",
+                    controller -> controller.setUserUUID(userUUID)
+            );
+            popup.show();
+        });
     }
 
-    private void loadAppEvents() {
-        for (CalendarEvent ev : CalendarEvent.getAllEvents()) {
-            Entry<CalendarEvent> entry = new Entry<>(ev.getTitle());
-            entry.setUserObject(ev);
-            entry.changeStartDate(ev.getStart().toLocalDate());
-            entry.changeStartTime(ev.getStart().toLocalTime());
-            entry.changeEndDate(ev.getEnd().toLocalDate());
-            entry.changeEndTime(ev.getEnd().toLocalTime());
-            fxCalendar.addEntry(entry);
+    private void loadEvents() {
+        CalendarEventRepository repo = new CalendarEventRepository();
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
+
+        try {
+            List<CalendarEvent> events = repo.findByUser(userId);
+            for (CalendarEvent e : events) {
+                Entry<CalendarEvent> entry = CalendarEventMapper.toEntry(e, userCalendar);
+                userCalendar.addEntry(entry);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // TODO: show an error alert to the user
         }
     }
 
-    // ─── Bound to your Day/Week/Month toggle buttons ─────────────────────────
+    // FXML action handlers for your toggle buttons:
 
-    @FXML public void showDayView()   { calendarView.showDayPage(); }
-    @FXML public void showWeekView()  { calendarView.showWeekPage(); }
-    @FXML public void showMonthView() { calendarView.showMonthPage(); }
+    @FXML
+    private void showDayView(ActionEvent ev) {
+        calendarView.showDayPage();
+    }
 
-    // ─── Bound to the “+ New Event” button ──────────────────────────────────
+    @FXML
+    private void showWeekView(ActionEvent ev) {
+        calendarView.showWeekPage();
+    }
 
-    @FXML public void handleCreateNewEvent(ActionEvent evt) {
-        Stage owner = (Stage) calendarView.getScene().getWindow();
-        SceneSwitcher.switchToPopupWithData(
-                owner,
-                "/application/studyspace/calendar/CreateNewEvent.fxml",
-                "Create New Event",
-                ctrl -> ((CreateNewEventController)ctrl)
-                        .setPreselectedDate(LocalDate.now())
-        );
+    @FXML
+    private void showMonthView(ActionEvent ev) {
+        calendarView.showMonthPage();
+    }
+
+    @FXML
+    private void handleCreateNewEvent(ActionEvent ev) {
+        // TODO: open your "New Event" dialog
+    }
+    @FXML
+    private void handleSidebarCalendar(ActionEvent event) {
+        // Already on calendar; no action needed
+    }
+
+    @FXML
+    private void handleSidebarDashboard(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Dashboard.fxml", "Dashboard");
+    }
+
+    @FXML
+    private void handleSidebarSettings(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Settings.fxml", "Settings");
     }
 }
