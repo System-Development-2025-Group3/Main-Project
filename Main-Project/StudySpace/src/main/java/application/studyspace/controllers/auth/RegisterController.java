@@ -68,7 +68,7 @@ public class RegisterController {
             String ToolTipText = """
                     You did not enter an email address! Please enter a valid email address:
                     • The format should be like example@domain.com.""";
-            toolTipService.showTooltipForDurationX(emailTooltip, ToolTipText, "tooltip-Label-Error", 5, 0);
+            toolTipService.showTooltipForDurationX(emailTooltip, ToolTipText, "tooltip-Label-Error", 5);
             System.out.println("The user tried to register, but did not fill in all fields. Missing: RegisterEmailField");
 
             applyErrorStyle(RegisterEmailField, "text-field-error");
@@ -85,7 +85,7 @@ public class RegisterController {
             • Includes at least one uppercase letter
             • Includes at least one number
             • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
-            toolTipService.showTooltipForDurationX(passwordTooltip1, TooltipText, "tooltip-Label-Error", 5,0);
+            toolTipService.showTooltipForDurationX(passwordTooltip1, TooltipText, "tooltip-Label-Error", 5);
             System.out.println("The user tried to register, but did not fill in all fields. Missing: RegisterPassword_1 or RegisterPassword_2");
 
             applyErrorStyle(RegisterPassword_1, "text-field-error");
@@ -100,7 +100,7 @@ public class RegisterController {
         } else if (!RegisterPassword_1.getText().equals(RegisterPassword_2.getText())) {
             String TooltipText = """
             The passwords you entered do not match! Please try again with matching passwords.""";
-            toolTipService.showTooltipForDurationX(passwordTooltip1, TooltipText, "tooltip-Label-Error", 5, 0);
+            toolTipService.showTooltipForDurationX(passwordTooltip1, TooltipText, "tooltip-Label-Error", 5);
             System.out.println("The user tried to register, but did not enter matching passwords.");
 
             applyErrorStyle(RegisterPassword_1, "text-field-error");

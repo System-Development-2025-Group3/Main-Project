@@ -13,6 +13,7 @@ module application.studyspace {
     requires java.net.http;
     requires org.json;
     requires org.mariadb.jdbc;
+    requires org.apache.commons.text;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;

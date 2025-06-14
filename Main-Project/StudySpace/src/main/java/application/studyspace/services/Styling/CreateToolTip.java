@@ -42,7 +42,7 @@ public class CreateToolTip {
         targetNode.setOnMouseExited(e -> customTooltip.hide());
     }
 
-    public void showTooltipForDurationX(Node targetNode, String tooltipText, String styleClass, int durationInSeconds, double offsetY) {
+    public void showTooltipForDurationX(Node targetNode, String tooltipText, String styleClass, int durationInSeconds) {
         Label tooltipLabel = new Label(tooltipText);
         tooltipLabel.getStyleClass().add(styleClass);
         tooltipLabel.setWrapText(true);
@@ -56,7 +56,7 @@ public class CreateToolTip {
         tooltipLabel.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/application/studyspace/styles/Stylesheet.css")).toExternalForm());
         
         Bounds bounds = targetNode.localToScreen(targetNode.getBoundsInLocal());
-        customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY() + offsetY);
+        customTooltip.show(targetNode, bounds.getMaxX() + 5, bounds.getMinY());
         
         PauseTransition delay = new PauseTransition(Duration.seconds(durationInSeconds));
         delay.setOnFinished(e -> customTooltip.hide());

@@ -69,100 +69,142 @@ public class LoginController {
     @FXML
     private void handleSubmitLoginButtonClick(MouseEvent event) {
 
-    String validationState = "CORRECT";
+        String validationState;
 
-    if (InputEmailTextfield.getText().isEmpty()) {
-        validationState= "EMPTY_EMAIL";
-    }
-    if (ValidationUtils.isValidEmail(InputEmailTextfield.getText())) {
-        validationState = "INVALID_EMAIL";
-    }
-    if (InputPassword.getText().isEmpty()) {
-        validationState="EMPTY_PASSWORD";
-    }
-    if (!LoginChecker.checkLogin(InputEmailTextfield.getText(), InputPassword.getText())) {
-       validationState = "INVALID_CREDENTIALS";
-    }
+        if (InputEmailTextfield.getText().isEmpty()) {
+            validationState = "EMPTY_EMAIL";
 
-    double tooltipOffsetY = 0;
-    int duration = 5;
+        } else if (ValidationUtils.isValidEmail(InputEmailTextfield.getText())) {
+            validationState = "INVALID_EMAIL";
+            System.out.println("The user tried to log in, but the E-Mail address is invalid. Provided E-Mail: " + InputEmailTextfield.getText() + ".");
 
-    boolean isCorrect = "CORRECT".equals(validationState); // Safely compare strings
-    if (!isCorrect) {
-        System.out.println("The following error occurred while trying to log in: " + validationState + ".");
-        switch (validationState) {
-        case "EMPTY_EMAIL" -> {
-            String toolTipText = """
-                    You did not enter an email address! Please enter a valid email address:
-                    • The format should be like example@domain.com.""";
-            System.out.println("The user tried to log in, but did not fill in all fields. Missing: InputEmailTextfield");
+        } else if(!ValidationUtils.isKnownEmail(InputEmailTextfield.getText())) {
+            validationState = "UNKNOWN_EMAIL";
+            System.out.println("The user tried to log in, but the E-Mail address is not known in the Database. Provided E-Mail: " + InputEmailTextfield.getText() + ".");
 
-            applyErrorStyle(InputEmailTextfield, "text-field-error");
-            toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration, tooltipOffsetY);
-            tooltipOffsetY += emailTooltip.getHeight() + 10;
-            duration += 5;
+        } else if (InputPassword.getText().isEmpty()) {
+            validationState = "EMPTY_PASSWORD";
 
-            PauseTransition delay = new PauseTransition(Duration.seconds(duration));
-            delay.setOnFinished(finishedEvent -> {
-                resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
-            });
+        } else if (!LoginChecker.checkLogin(InputEmailTextfield.getText(), InputPassword.getText())) {
+            validationState = "INVALID_CREDENTIALS";
+
+        } else {
+            validationState = "CORRECT";
         }
 
-        case "INVALID_EMAIL" -> {
-            System.out.println("The user tried to log in but the email format is invalid.");
+        int duration = 5;
 
-            applyErrorStyle(InputEmailTextfield, "text-field-error");
-            tooltipOffsetY += emailTooltip.getHeight() + 10;
-            duration += 5;
+        boolean isCorrect = "CORRECT".equals(validationState);
 
-            mailAutocorrect();
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
-            delay.setOnFinished(finishedEvent -> {
-                resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
-            });
-            delay.play();
+        if (!isCorrect) {
+
+            System.out.println("Current Validation Status: " + validationState);
+
+            switch (validationState) {
+            case "EMPTY_EMAIL" -> {
+
+                String toolTipText = """
+                        You did not enter an email address! Please enter a valid email address:
+                        • The format should be like example@domain.com.""";
+
+                applyErrorStyle(InputEmailTextfield, "text-field-error");
+                toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration);
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                delay.setOnFinished(finishedEvent -> {
+                    resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+                });
+                delay.play();
+            }
+
+            case "INVALID_EMAIL" -> {
+
+                String toolTipText = """
+                        You did not enter a valid email address! Please do so next time.
+                        • The format should be like example@domain.com.""";
+
+                applyErrorStyle(InputEmailTextfield, "text-field-error");
+                toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration);
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                delay.setOnFinished(finishedEvent -> {
+                    resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+                });
+                delay.play();
+            }
+
+                case "UNKNOWN_EMAIL" -> {
+
+                    if (!ValidationUtils.isSimilarEmail(InputEmailTextfield.getText(), ValidationUtils.listOfKnownEmails(), 3)){
+
+                        String toolTipText = """
+                            The email address you entered is not registered in our system.\s
+                            Please try again with a known email address. Remember ...\s
+                            • The format should be like example@domain.com.""";
+
+
+                        applyErrorStyle(InputEmailTextfield, "text-field-error");
+                        toolTipService.showTooltipForDurationX(emailTooltip, toolTipText, "tooltip-Label-Error", duration);
+
+                        PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                        delay.setOnFinished(finishedEvent -> {
+                            resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
+                            resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+                        });
+                        delay.play();
+
+                    } else {
+                        applyErrorStyle(InputEmailTextfield, "text-field-error");
+                        mailAutocorrect();
+
+                        PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                        delay.setOnFinished(finishedEvent -> {
+                            resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
+                            resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+                        });
+                        delay.play();
+                    }
+
+                }
+
+            case "INVALID_CREDENTIALS" -> {
+
+                String toolTipText = """
+                        The Password you entered is incorrect! Please try again with a correct Password.""";
+
+                applyErrorStyle(InputPassword, "password-field-error");
+                toolTipService.showTooltipForDurationX(passwordTooltip, toolTipText, "tooltip-Label-Error", 5);
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                delay.setOnFinished(finishedEvent -> {
+                    resetFieldStyle(InputPassword, "password-field-error", "password-field");
+                });
+                delay.play();
+
+            }
+
+            case "EMPTY_PASSWORD" -> {
+
+                String toolTipText = """
+                        You did not enter a password! Please enter a password that fulfills the following conditions:
+                        • At least 12 characters long
+                        • Includes at least one uppercase letter
+                        • Includes at least one number
+                        • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
+
+                applyErrorStyle(InputPassword, "password-field-error");
+                toolTipService.showTooltipForDurationX(passwordTooltip, toolTipText, "tooltip-Label-Error", 5);
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(10));
+                delay.setOnFinished(finishedEvent -> {
+                    resetFieldStyle(InputPassword, "password-field-error", "password-field");
+                });
+
+            }
         }
 
-        case "INVALID_CREDENTIALS" -> {
-            System.out.println("The user tried to log in, but did not enter valid credentials.");
-
-            applyErrorStyle(InputPassword, "password-field-error");
-            applyErrorStyle(InputEmailTextfield, "text-field-error");
-
-            mailAutocorrect();
-            System.out.println("The Flow continues ...");
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
-            delay.setOnFinished(finishedEvent -> {
-                resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
-                resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
-                resetFieldStyle(InputPassword, "password-field-error", "password-field");
-            });
-            delay.play();
-
-        }
-
-        case "EMPTY_PASSWORD" -> {
-            String toolTipText = """
-                    You did not enter a password! Please enter a password that fulfills the following conditions:
-                    • At least 12 characters long
-                    • Includes at least one uppercase letter
-                    • Includes at least one number
-                    • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
-            System.out.println("The user tried to log in, but did not fill in all fields. Missing: InputPassword.");
-
-            applyErrorStyle(InputPassword, "password-field-error");
-            toolTipService.showTooltipForDurationX(passwordTooltip, toolTipText, "tooltip-Label-Error", 5, tooltipOffsetY);
-            tooltipOffsetY += passwordTooltip.getHeight() + 10;
-            duration += 5;
-
-            PauseTransition delay = new PauseTransition(Duration.seconds(10));
-            delay.setOnFinished(finishedEvent -> {
-                resetFieldStyle(InputPassword, "password-field-error", "password-field");
-            });
-        }
-    }
-} else {
-    // If no validation state exists, proceed with switching the scene
+    } else {
+        // If no validation state exists, proceed with switching the scene
         DatabaseHelper db = new DatabaseHelper();
         final UUID userUUID;
         try {
@@ -184,9 +226,6 @@ public class LoginController {
                 "Planify Onboarding",
                 (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
         );
-
-
-        //SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/usermanagement/OnboardingPage3.fxml", "Landing-Page");
 }
 
     }
@@ -194,7 +233,7 @@ public class LoginController {
     /**
      * Performs email autocorrection by analyzing the user-provided email input
      * and suggesting the most likely intended email address from the database.
-     *
+
      * The method uses the `executeDeepSeekAPI` to call an external AI-based service
      * to analyze and correct the email input. It includes the following steps:
      * 1. Constructs a dynamic input request string containing the user-provided email,
@@ -204,6 +243,7 @@ public class LoginController {
      *    The user can choose to accept the correction, which updates the input email field
      *    by invoking the `setInputEmail` method.
      */
+
     private void mailAutocorrect() {
         String dynamicInput = "You are an E-Mail Autocorrector. The following E-Mail has been provided: "
                 + InputEmailTextfield.getText();
@@ -212,10 +252,11 @@ public class LoginController {
         dynamicInput += " " + SELECT("email", "users", null, null) + "As Output please only provide the corrected E-Mail. Nothing else!";
         String email = executeDeepSeekAPI(dynamicInput);
         String TooltipText;
-        TooltipText = "The E-Mail you entered is not registered.\n"
-            + "However, we have found a possible valid email\n"
-            + "associated with your input. Would you like to\n"
-            + "accept our correction?";
+        TooltipText = """
+                The E-Mail you entered is not registered.
+                However, we might have found a possible valid email
+                associated with your input. Would you like to
+                accept our correction?""";
 
         toolTipService.showAutocorrectPopup(emailTooltip, TooltipText, "tooltip-Label-Error-Autocorrect", 0, () -> setInputEmail(email));
     }
@@ -260,6 +301,11 @@ public class LoginController {
         InputEmailTextfield.setText(email);
         applyErrorStyle(InputEmailTextfield, "text-field-correct");
         System.out.println("The user accepted our correction for the E-Mail input.");
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(10));
+        delay.setOnFinished(finishedEvent -> {
+            resetFieldStyle(InputPassword, "password-field-correct", "password-field");
+        });
 
         if (ValidationUtils.isValidEmail(email)) {
             System.out.println("The corrected email is still invalid.");
