@@ -39,5 +39,7 @@ module application.studyspace {
     exports application.studyspace.controllers.calendar to javafx.fxml;
     exports application.studyspace.services.calendar;
     opens application.studyspace.controllers.calendar to javafx.fxml;
+    exports application.studyspace.controllers.customerInteraction;
+    opens application.studyspace.controllers.customerInteraction to javafx.fxml;
 
 }

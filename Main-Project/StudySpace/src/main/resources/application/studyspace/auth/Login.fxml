@@ -29,7 +29,7 @@
                       -fx-border-color: white;
                       -fx-border-width: 1;
                       -fx-border-radius: 20;"
-                      prefWidth="480" prefHeight="120"
+                      prefHeight="120"
                       spacing="10" alignment="CENTER_LEFT"
                       AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20">
 
@@ -46,20 +46,20 @@
                     <Region HBox.hgrow="ALWAYS"/>
 
                     <!-- MENU BAR -->
-                    <MenuBar style="-fx-background-color: transparent; -fx-font-size: 18px;">
-                        <Menu text="Settings">
-                            <MenuItem text="Preferences"/>
-                            <MenuItem text="Themes"/>
-                        </Menu>
-                        <Menu text="About Us">
-                            <MenuItem text="Team"/>
-                            <MenuItem text="Mission"/>
-                        </Menu>
-                        <Menu text="Contact">
-                            <MenuItem text="Email"/>
-                            <MenuItem text="Support"/>
-                        </Menu>
-                    </MenuBar>
+                    <HBox spacing="50" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                        <Button text="Settings"
+                                onAction="#handleSettingsClick"
+                                style="-fx-font-size: 18px; -fx-padding: 8 16;"
+                                styleClass="menu-button"/>
+                        <Button text="About Us"
+                                onMouseClicked="#handleAboutUsClick"
+                                style="-fx-font-size: 18px; -fx-padding: 8 16;"
+                                styleClass="menu-button"/>
+                        <Button text="Contact"
+                                onAction="#handleContactClick"
+                                style="-fx-font-size: 18px; -fx-padding: 8 16;"
+                                styleClass="menu-button"/>
+                    </HBox>
                 </HBox>
             </AnchorPane>
         </top>

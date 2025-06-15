@@ -1,0 +1,85 @@
+/* General Page Background */
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+.about-title {
+    -fx-font-size: 36px;
+    -fx-font-family: "Arial Black";
+    -fx-text-fill: #444;
+    -fx-padding: 20px 0;
+}
+
+/* Left card: slight fade and smaller scale */
+.team-card-left-card {
+    -fx-pref-width: 300px;
+    -fx-opacity: 0.5;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+    -fx-background-color: #f2f2f2; /* Light grey box */
+    -fx-background-radius: 15;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-alignment: center;
+    -fx-max-width: 500px;
+    -fx-min-height: 300px;
+}
+
+/* Right card: slight fade and smaller scale */
+.team-card-right-card {
+    -fx-pref-width: 300px;
+    -fx-opacity: 0.5;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+    -fx-background-color: #f2f2f2; /* Light grey box */
+    -fx-background-radius: 15;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-alignment: center;
+    -fx-max-width: 500px;
+    -fx-min-height: 300px;
+}
+
+/* Center card: full opacity and emphasized */
+.team-card-center-card {
+    -fx-pref-width: 450px;
+    -fx-opacity: 1.0;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-background-color: #f2f2f2; /* Light grey box */
+    -fx-background-radius: 15;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-alignment: center;
+    -fx-max-width: 500px;
+    -fx-min-height: 300px;
+}
+
+/* Text Styles */
+.team-card-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.team-card-property {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.team-card-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666;
+    -fx-wrap-text: true;
+    -fx-text-alignment: justify;  /* Improves readability */
+    -fx-line-spacing: 2px;       /* Adds space between wrapped lines */
+}

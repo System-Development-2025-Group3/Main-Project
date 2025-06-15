@@ -9,6 +9,7 @@ import application.studyspace.services.auth.*;
 import application.studyspace.services.Scenes.SceneSwitcher;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -169,13 +170,6 @@ public class LoginController {
                     } else {
                         applyErrorStyle(InputEmailTextfield, "text-field-error");
                         mailAutocorrect();
-
-                        PauseTransition delay = new PauseTransition(Duration.seconds(duration));
-                        delay.setOnFinished(finishedEvent -> {
-                            resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
-                            resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
-                        });
-                        delay.play();
                     }
 
                 }
@@ -284,16 +278,19 @@ public class LoginController {
         applyErrorStyle(InputEmailTextfield, "text-field-correct");
         System.out.println("The user accepted our correction for the E-Mail input.");
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(10));
-        delay.setOnFinished(finishedEvent -> {
-            resetFieldStyle(InputPassword, "password-field-correct", "password-field");
-        });
-
         if (ValidationUtils.isValidEmail(email)) {
             System.out.println("The corrected email is still invalid.");
         } else {
             System.out.println("The corrected email is now valid.");
         }
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
+        delay.setOnFinished(finishedEvent -> {
+            resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
+            resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+        });
+        delay.play();
+
     }
 
     /**
@@ -329,5 +326,15 @@ public class LoginController {
         Image03.fitHeightProperty().bind(stackPane.heightProperty());
         StackPane.setAlignment(Image03, javafx.geometry.Pos.TOP_RIGHT);
 
+    }
+
+    public void handleSettingsClick(ActionEvent actionEvent) {
+    }
+
+    public void handleAboutUsClick(MouseEvent event) {
+        SceneSwitcher.switchTo(event.getSource(), "/application/studyspace/CustomerInteraction/AboutUs.fxml", "Register");
+    }
+
+    public void handleContactClick(ActionEvent actionEvent) {
     }
 }

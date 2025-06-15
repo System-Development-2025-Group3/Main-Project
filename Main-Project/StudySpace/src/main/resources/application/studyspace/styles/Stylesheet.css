@@ -48,9 +48,23 @@
     -fx-padding: 10 25;
     -fx-cursor: hand;
 }
+
 .button:hover {
     -fx-background-color: #90919e;
 }
+
+.menu-button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20;
+    -fx-font-size: 16px;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+Button.menu-button:hover {
+    -fx-background-color: #dddde4; /* Example hover background */
+}
+
 
 /* Custom Checkbox */
 .custom-checkbox .box {
