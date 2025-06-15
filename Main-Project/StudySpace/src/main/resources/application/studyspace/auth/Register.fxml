@@ -19,24 +19,48 @@
 
     <!-- Main UI Content -->
     <BorderPane style="-fx-background-color: transparent;">
-        
-        <!-- Top Menu -->
+
         <top>
-            <Pane style="-fx-background-color: white; -fx-background-radius: 20;" prefHeight="60.0">
-                <HBox spacing="20.0" alignment="CENTER_LEFT">
+            <!-- AnchorPane lets us position a fixed‑size HBox at (20,20) -->
+            <AnchorPane style="-fx-background-color: transparent;">
+                <HBox style="-fx-background-color: white;
+                      -fx-background-radius: 20;
+                      -fx-border-color: white;
+                      -fx-border-width: 1;
+                      -fx-border-radius: 20;"
+                      prefWidth="480" prefHeight="120"
+                      spacing="10" alignment="CENTER_LEFT"
+                      AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20">
+
                     <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
+                        <Insets top="10" right="30" bottom="10" left="30"/>
                     </padding>
-                    <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
+
+                    <!-- LOGO -->
+                    <ImageView fitHeight="80" preserveRatio="true">
                         <Image url="@../../../images/auth/LoginPage03.png"/>
                     </ImageView>
-                    <MenuBar style="-fx-background-color: white;">
-                        <Menu text="Home |"/>
-                        <Menu text="About Us |"/>
-                        <Menu text="Contact"/>
+
+                    <!-- spacer pushes MenuBar right -->
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- MENU BAR -->
+                    <MenuBar style="-fx-background-color: transparent; -fx-font-size: 18px;">
+                        <Menu text="Settings">
+                            <MenuItem text="Preferences"/>
+                            <MenuItem text="Themes"/>
+                        </Menu>
+                        <Menu text="About Us">
+                            <MenuItem text="Team"/>
+                            <MenuItem text="Mission"/>
+                        </Menu>
+                        <Menu text="Contact">
+                            <MenuItem text="Email"/>
+                            <MenuItem text="Support"/>
+                        </Menu>
                     </MenuBar>
                 </HBox>
-            </Pane>
+            </AnchorPane>
         </top>
         
         <!-- Center Content -->
@@ -46,20 +70,21 @@
                 <Region VBox.vgrow="ALWAYS"/>
                 
                 <!-- Form and Image -->
-                <HBox alignment="CENTER" spacing="100">
-                    
-                    <!-- Register Form -->
-                    <StackPane maxWidth="480">
+                <HBox alignment="CENTER" spacing="250">
+
+                    <!-- Register Form (fixed width to match LoginCard) -->
+                    <StackPane HBox.hgrow="ALWAYS" maxWidth="580" prefWidth="580">
                         <VBox spacing="15"
                               style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;"
-                              HBox.hgrow="ALWAYS">
-
+                              HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                              maxWidth="580" prefWidth="580">
+                            <!-- Title -->
                             <Label fx:id="TextAreaRegister"
                                    text="Create your StudySpace account"
                                    styleClass="welcome-title"/>
 
+                            <!-- E‑Mail -->
                             <Label text="E-Mail" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <TextField fx:id="RegisterEmailField"
                                            promptText="Enter your email"
@@ -68,8 +93,8 @@
                                 <Label fx:id="emailTooltip" text="?" styleClass="circle-label"/>
                             </HBox>
 
+                            <!-- Password -->
                             <Label text="Password" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <PasswordField fx:id="RegisterPassword_1"
                                                promptText="Enter password"
@@ -78,8 +103,8 @@
                                 <Label fx:id="passwordTooltip1" text="?" styleClass="circle-label"/>
                             </HBox>
 
+                            <!-- Repeat Password -->
                             <Label text="Repeat Password" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <PasswordField fx:id="RegisterPassword_2"
                                                promptText="Repeat password"
@@ -88,13 +113,14 @@
                                 <Label fx:id="passwordTooltip2" text="?" styleClass="circle-label"/>
                             </HBox>
 
+                            <!-- Register Button -->
                             <Button fx:id="SubmitRegistrationButton"
                                     text="Register"
                                     styleClass="button"
                                     onAction="#handleSubmitRegistrationButtonClick"
                                     alignment="CENTER"/>
 
-                            <!-- Back to login -->
+                            <!-- Back Link -->
                             <Hyperlink fx:id="BackToLoginLink"
                                        text="← Back to Login"
                                        onAction="#handleBackToLoginClick"

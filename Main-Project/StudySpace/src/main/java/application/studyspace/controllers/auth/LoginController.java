@@ -5,11 +5,8 @@ import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.DataBase.UUIDHelper;
 import application.studyspace.services.Styling.CreateToolTip;
-import application.studyspace.services.auth.LoginChecker;
+import application.studyspace.services.auth.*;
 import application.studyspace.services.Scenes.SceneSwitcher;
-import application.studyspace.services.auth.LoginSession;
-import application.studyspace.services.auth.SessionManager;
-import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -228,7 +225,9 @@ public class LoginController {
                 throw new RuntimeException(e);
             }
 
-            activateAutoLogin(userUUID.toString());
+            if (stayLoggedInCheckbox.isSelected()) {
+                AutoLoginHandler.activateAutoLogin(userUUID.toString());
+            }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Landing-Page.fxml", "Landing Page");
@@ -240,42 +239,6 @@ public class LoginController {
                 "Planify Onboarding",
                 (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
             );
-        }
-    }
-
-    /**
-     * Activates the auto-login mechanism for the specified user. This method generates
-     * a unique token if the "stay logged in" option is selected and stores the token
-     * in both the session and the database for future login validation. The token is
-     * accompanied by a timestamp to track its creation time. If an error occurs during
-     * the database operation, a runtime exception is thrown.
-     *
-     * @param uuidOfUser The unique identifier of the user for whom the auto-login process
-     *                   is being activated.
-     */
-    private void activateAutoLogin(String uuidOfUser) {
-        if (stayLoggedInCheckbox.isSelected()) {
-            String token = ValidationUtils.generateToken().toString();
-            LoginSession.saveLogin(uuidOfUser, token);
-
-            String sql = """
-            UPDATE users
-               SET login_token = ?, timestamp_token = ?
-               WHERE user_id = ?;""";
-
-            System.out.println("!!!!!!! " + token);
-            try (Connection conn = new DatabaseConnection().getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-
-                ps.setString(1, token);
-                ps.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
-                ps.setBytes(3, uuidToBytes(UUIDHelper.stringToUUID(uuidOfUser)));
-
-                ps.executeQuery();
-
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 
@@ -311,6 +274,29 @@ public class LoginController {
     }
 
     /**
+     * Sets the input email in the email text field, applies a correction style,
+     * and logs validation status after the correction.
+     *
+     * @param email The email address to set and validate.
+     */
+    public void setInputEmail(String email) {
+        InputEmailTextfield.setText(email);
+        applyErrorStyle(InputEmailTextfield, "text-field-correct");
+        System.out.println("The user accepted our correction for the E-Mail input.");
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(10));
+        delay.setOnFinished(finishedEvent -> {
+            resetFieldStyle(InputPassword, "password-field-correct", "password-field");
+        });
+
+        if (ValidationUtils.isValidEmail(email)) {
+            System.out.println("The corrected email is still invalid.");
+        } else {
+            System.out.println("The corrected email is now valid.");
+        }
+    }
+
+    /**
      * Initializes the controller after its root element has been completely processed.
      * This method sets up a custom tooltip for the password input field, providing
      * guidance on the expected password format and requirements.
@@ -343,28 +329,5 @@ public class LoginController {
         Image03.fitHeightProperty().bind(stackPane.heightProperty());
         StackPane.setAlignment(Image03, javafx.geometry.Pos.TOP_RIGHT);
 
-    }
-
-    /**
-     * Sets the input email in the email text field, applies a correction style,
-     * and logs validation status after the correction.
-     *
-     * @param email The email address to set and validate.
-     */
-    public void setInputEmail(String email) {
-        InputEmailTextfield.setText(email);
-        applyErrorStyle(InputEmailTextfield, "text-field-correct");
-        System.out.println("The user accepted our correction for the E-Mail input.");
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(10));
-        delay.setOnFinished(finishedEvent -> {
-            resetFieldStyle(InputPassword, "password-field-correct", "password-field");
-        });
-
-        if (ValidationUtils.isValidEmail(email)) {
-            System.out.println("The corrected email is still invalid.");
-        } else {
-            System.out.println("The corrected email is now valid.");
-        }
     }
 }

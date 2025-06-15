@@ -61,4 +61,39 @@ public class AutoLoginHandler {
 
         return false;
     }
+
+    /**
+     * Activates the auto-login mechanism for the specified user. This method generates
+     * a unique token if the "stay logged in" option is selected and stores the token
+     * in both the session and the database for future login validation. The token is
+     * accompanied by a timestamp to track its creation time. If an error occurs during
+     * the database operation, a runtime exception is thrown.
+     *
+     * @param uuidOfUser The unique identifier of the user for whom the auto-login process
+     *                   is being activated.
+     */
+    public static void activateAutoLogin(String uuidOfUser) {
+
+        String token = ValidationUtils.generateToken().toString();
+        LoginSession.saveLogin(uuidOfUser, token);
+
+        String sql = """
+        UPDATE users
+           SET login_token = ?, timestamp_token = ?
+           WHERE user_id = ?;""";
+
+        System.out.println("!!!!!!! " + token);
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, token);
+            ps.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setBytes(3, uuidToBytes(UUIDHelper.stringToUUID(uuidOfUser)));
+
+            ps.executeQuery();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

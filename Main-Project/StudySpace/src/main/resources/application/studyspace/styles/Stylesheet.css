@@ -25,7 +25,7 @@
 
 /* TextField & PasswordField styling */
 .text-field, .password-field {
-    -fx-background-color: #becaff;
+    -fx-background-color: #c0c3d1;
     -fx-border-color: transparent;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -36,20 +36,20 @@
 }
 
 .text-field:focused, .password-field:focused {
-    -fx-border-color: #b8aefd;
+    -fx-border-color: #827f91;
     -fx-border-width: 2px;
 }
 
 /* Login/Register Button */
 .button {
-    -fx-background-color: #e2e4ff;
+    -fx-background-color: #c0c1cd;
     -fx-background-radius: 20;
     -fx-font-size: 16px;
     -fx-padding: 10 25;
     -fx-cursor: hand;
 }
 .button:hover {
-    -fx-background-color: #cfd3ff;
+    -fx-background-color: #90919e;
 }
 
 /* Custom Checkbox */
