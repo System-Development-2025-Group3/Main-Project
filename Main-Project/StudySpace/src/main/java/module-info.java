@@ -14,6 +14,7 @@ module application.studyspace {
     requires org.json;
     requires org.mariadb.jdbc;
     requires org.apache.commons.text;
+    requires java.prefs;
 
     opens application.studyspace to javafx.fxml;
     exports application.studyspace;

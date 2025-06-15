@@ -48,6 +48,7 @@ public class LoginChecker {
                     SessionManager.getInstance().setLoggedInUserId(loggedInUserUUID);
                     System.out.println("Login successful! Session for user " + loggedInUserUUID + " created.");
                     return true;
+
                 } else {
                     System.out.println("Wrong password.");
                     return false;
@@ -64,19 +65,15 @@ public class LoginChecker {
         }
     }
 
-    /**
-     * Retrieves the universally unique identifier (UUID) of the currently logged-in user.
-     * This UUID is associated with the user session and is expected to be set when a user logs in.
-     * If no user is logged in, an IllegalStateException will be thrown.
-     *
-     * @return the UUID of the currently logged-in user
-     * @throws IllegalStateException if no user is currently logged in
-     */
-    public static UUID getLoggedInUserUUID() {
-        if (loggedInUserUUID == null) {
-            throw new IllegalStateException("No user is currently logged in."); // Handle case where no user is logged in
+    public static boolean autoLoginIfPossible() {
+        String savedUsername = LoginSession.getSavedUsername();
+        String token = LoginSession.getSavedToken();
+
+        if (savedUsername != null && token != null) {
+
+            return ValidationUtils.validateToken(savedUsername, token);
         }
-        return loggedInUserUUID;
+        return false;
     }
 
 }

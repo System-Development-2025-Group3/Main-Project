@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URL;
@@ -225,4 +226,44 @@ public class SceneSwitcher {
             System.err.println("❌ Cannot close popup: source node is not attached to a scene.");
         }
     }
+
+    public static void switchToWithoutEvent(Stage stage, String fxmlPath, String title) {
+        try {
+            // Load the FXML file
+            URL resource = SceneSwitcher.class.getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("❌ FXML not found: " + fxmlPath);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent newRoot = loader.load();
+
+            // Set new root and ensure stage is fully initialized
+            if (stage.getScene() == null) {
+                Scene newScene = new Scene(newRoot);
+                stage.setScene(newScene);
+            } else {
+                stage.getScene().setRoot(newRoot);
+            }
+
+            // Set the title and show the stage
+            stage.setTitle(title);
+            stage.show();
+
+            // Enforce fullscreen after rendering cycle
+            Platform.runLater(() -> {
+                if (!stage.isFullScreen()) {
+                    stage.setFullScreen(true);
+                    System.out.println("✅ Fullscreen enforced in SceneSwitcher.");
+                }
+            });
+
+        } catch (IOException e) {
+            System.err.println("❌ Error loading FXML: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+
 }

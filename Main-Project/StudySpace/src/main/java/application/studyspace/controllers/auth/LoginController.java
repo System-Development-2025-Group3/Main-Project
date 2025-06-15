@@ -1,12 +1,17 @@
 package application.studyspace.controllers.auth;
 
 import application.studyspace.controllers.onboarding.OnboardingPage1Controller;
+import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.DatabaseHelper;
+import application.studyspace.services.DataBase.UUIDHelper;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.auth.LoginSession;
+import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -20,25 +25,31 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static application.studyspace.services.DataBase.DatabaseHelper.SELECT;
 import static application.studyspace.services.API.DeepSeekAPI.executeDeepSeekAPI;
+import static application.studyspace.services.DataBase.UUIDHelper.uuidToBytes;
 import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
 import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
 
 public class LoginController {
 
-    public VBox LoginCard;
-    public Label WelcomeTitle;
-    public Button SubmitLoginButton;
-    public TextFlow textFlow;
-    public Text linkText;
-    public ImageView Image01;
+    @FXML public VBox LoginCard;
+    @FXML public Label WelcomeTitle, passwordTooltip, emailTooltip;
+    @FXML public Button SubmitLoginButton;
+    @FXML public TextFlow textFlow;
+    @FXML public Text linkText;
+    @FXML public ImageView Image01;
+    @FXML public CheckBox stayLoggedInCheckbox;
     @FXML private TextField InputEmailTextfield;
     @FXML private PasswordField InputPassword;
-    @FXML private Label passwordTooltip, emailTooltip;
     @FXML private StackPane stackPane;
     @FXML private ImageView Image03;
 
@@ -208,31 +219,64 @@ public class LoginController {
             }
         }
 
-    } else {
-        // If no validation state exists, proceed with switching the scene
-        DatabaseHelper db = new DatabaseHelper();
-        final UUID userUUID;
-        try {
-            userUUID = db.getUserUUIDByEmail(InputEmailTextfield.getText());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        } else { //Validation was successful. Changing Scene to Landing Page.
+            DatabaseHelper db = new DatabaseHelper();
+            final UUID userUUID;
+            try {
+                userUUID = db.getUserUUIDByEmail(InputEmailTextfield.getText());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-        // Get the stage before switching scenes
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            activateAutoLogin(userUUID.toString());
 
-        // Switch to the landing page
-        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Landing-Page.fxml", "Landing Page");
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Landing-Page.fxml", "Landing Page");
 
-        // Immediately show the popup
-        SceneSwitcher.switchToPopupWithData(
-                stage,
+            // Immediately show the popup
+            SceneSwitcher.switchToPopupWithData(
+                    stage,
                 "/application/studyspace/onboarding/OnboardingPage1.fxml",
                 "Planify Onboarding",
                 (OnboardingPage1Controller controller) -> controller.setUserUUID(userUUID)
-        );
-}
+            );
+        }
+    }
 
+    /**
+     * Activates the auto-login mechanism for the specified user. This method generates
+     * a unique token if the "stay logged in" option is selected and stores the token
+     * in both the session and the database for future login validation. The token is
+     * accompanied by a timestamp to track its creation time. If an error occurs during
+     * the database operation, a runtime exception is thrown.
+     *
+     * @param uuidOfUser The unique identifier of the user for whom the auto-login process
+     *                   is being activated.
+     */
+    private void activateAutoLogin(String uuidOfUser) {
+        if (stayLoggedInCheckbox.isSelected()) {
+            String token = ValidationUtils.generateToken().toString();
+            LoginSession.saveLogin(uuidOfUser, token);
+
+            String sql = """
+            UPDATE users
+               SET login_token = ?, timestamp_token = ?
+               WHERE user_id = ?;""";
+
+            System.out.println("!!!!!!! " + token);
+            try (Connection conn = new DatabaseConnection().getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setString(1, token);
+                ps.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+                ps.setBytes(3, uuidToBytes(UUIDHelper.stringToUUID(uuidOfUser)));
+
+                ps.executeQuery();
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -274,6 +318,7 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
+
         System.out.println("The LoginController has been initialized.");
         String tooltipText = """
             The Password should fulfill the following conditions:

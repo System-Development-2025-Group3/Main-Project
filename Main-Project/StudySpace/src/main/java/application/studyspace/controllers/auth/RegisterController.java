@@ -14,7 +14,6 @@ import javafx.util.Duration;
 import static application.studyspace.services.auth.PasswordHasher.saveToDatabase;
 import static application.studyspace.services.Styling.StylingUtility.applyErrorStyle;
 import static application.studyspace.services.Styling.StylingUtility.resetFieldStyle;
-import static application.studyspace.services.auth.ValidationUtils.isValidPassword;
 
 /**
  * The RegisterController class manages the registration view in the application. It handles

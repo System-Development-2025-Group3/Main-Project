@@ -30,4 +30,31 @@ public class UUIDHelper {
         long low = byteBuffer.getLong();
         return new UUID(high, low);
     }
+
+    /**
+     * Converts a string to a UUID.
+     *
+     * @param uuidString The string representation of the UUID.
+     * @return The UUID object.
+     */
+    public static UUID stringToUUID(String uuidString) {
+        if (uuidString == null || uuidString.isEmpty()) {
+            throw new IllegalArgumentException("UUID string cannot be null or empty.");
+        }
+        return UUID.fromString(uuidString);
+    }
+
+    /**
+     * Converts a UUID to a string.
+     *
+     * @param uuid The UUID object to convert.
+     * @return The string representation of the UUID.
+     */
+    public static String uuidToString(UUID uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID cannot be null.");
+        }
+        return uuid.toString();
+    }
+
 }

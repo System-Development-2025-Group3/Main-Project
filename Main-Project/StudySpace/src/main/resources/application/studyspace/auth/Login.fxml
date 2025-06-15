@@ -82,6 +82,8 @@
                                 <Label fx:id="passwordTooltip" text="?" styleClass="circle-label"/>
                             </HBox>
 
+                            <CheckBox fx:id="stayLoggedInCheckbox" text="Stay Logged In" />
+
                             <Button fx:id="SubmitLoginButton"
                                     text="Login"
                                     styleClass="button"

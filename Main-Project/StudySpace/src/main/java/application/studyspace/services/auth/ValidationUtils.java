@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
@@ -138,6 +139,22 @@ public static boolean isSimilarEmail(String inputEmail, List<String> emailList, 
     return emailList;
     }
 
+    /**
+     * Validates the strength of a given password based on predefined criteria.
+     * The method checks if the password meets the following requirements:
+     * - At least 12 characters long
+     * - Contains at least one uppercase letter
+     * - Contains at least one numeric digit
+     * - Contains at least one special character from the set [%&!?#_-\\$]
+
+     * If any requirement is not met, the method returns a validation state indicating
+     * the first unmet criterion ("NOT_LONG_ENOUGH", "NO_UPPERCASE", "NO_NUMBER", or
+     * "NO_SPECIAL_CHAR"). If all criteria are satisfied, it returns "VALID".
+     *
+     * @param password the password string to validate
+     * @return a string representing the validation result. "VALID" if the password
+     *         meets all criteria, or a specific validation state string if it does not.
+     */
     public static String isValidPassword(String password){
 
         String ValidationState = "VALID";
@@ -162,6 +179,14 @@ public static boolean isSimilarEmail(String inputEmail, List<String> emailList, 
         }
 
         return ValidationState;
+    }
+
+    static boolean validateToken(String savedUsername, String token) {
+        return false;
+    }
+
+    public static UUID generateToken() {
+        return UUID.randomUUID();
     }
     
 }
