@@ -1,7 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
-import application.studyspace.controllers.onboarding.OnboardingPage1Controller;
-import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarEventMapper;
 import application.studyspace.services.calendar.CalendarEventRepository;
@@ -14,11 +13,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -28,47 +24,34 @@ import java.util.UUID;
 
 public class LandingpageController implements Initializable {
 
-    @FXML
-    private CalendarView calendarView;
-
-    @FXML
-    private ToggleButton showDayButton, showWeekButton, showMonthButton;
-
+    @FXML private CalendarView calendarView;
+    @FXML private ToggleButton showDayButton, showWeekButton, showMonthButton;
     @FXML private BorderPane rootPane;
 
-    // This is the CalendarFX Calendar that will hold your user's events
     private Calendar userCalendar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // 1) Create your CalendarFX Calendar and style it
+        // 1) Create and style your CalendarFX calendar
         userCalendar = new Calendar("My Events");
-        userCalendar.setStyle(Calendar.Style.STYLE1.name());
+        userCalendar.setStyle(Calendar.Style.STYLE6);
 
-        // 2) Put it into a CalendarSource and add to the view
         CalendarSource source = new CalendarSource("Planify");
         source.getCalendars().add(userCalendar);
         calendarView.getCalendarSources().add(source);
 
-        // 3) Show the Month page by default
-        calendarView.showMonthPage();
+        // 4) Show the week view by default
+        calendarView.showWeekPage();
 
-        // 4) Load events from DB
+        // 5) Populate existing events from the DB
         loadEvents();
 
-        //temporary loading of the onboarding process not just the first time but always
-        final UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
+        // 6) Kick off the onboarding overlay after the scene is ready
         Platform.runLater(() -> {
-            Stage popup = new Stage();
-            popup.initOwner(rootPane.getScene().getWindow());
-            popup.initModality(Modality.APPLICATION_MODAL);
-            SceneSwitcher.<OnboardingPage1Controller>switchToPopupWithData(
-                    popup,
+            ViewManager.showOverlay(
                     "/application/studyspace/onboarding/OnboardingPage1.fxml",
-                    "Onboarding — Step 1",
-                    controller -> controller.setUserUUID(userUUID)
+                    controller -> {}
             );
-            popup.show();
         });
     }
 
@@ -88,41 +71,31 @@ public class LandingpageController implements Initializable {
         }
     }
 
-    // FXML action handlers for your toggle buttons:
-
-    @FXML
-    private void showDayView(ActionEvent ev) {
+    @FXML private void showDayView(ActionEvent ev) {
         calendarView.showDayPage();
     }
 
-    @FXML
-    private void showWeekView(ActionEvent ev) {
+    @FXML private void showWeekView(ActionEvent ev) {
         calendarView.showWeekPage();
     }
 
-    @FXML
-    private void showMonthView(ActionEvent ev) {
+    @FXML private void showMonthView(ActionEvent ev) {
         calendarView.showMonthPage();
     }
 
-    @FXML
-    private void handleCreateNewEvent(ActionEvent ev) {
+    @FXML private void handleCreateNewEvent(ActionEvent ev) {
         // TODO: open your "New Event" dialog
     }
-    @FXML
-    private void handleSidebarCalendar(ActionEvent event) {
-        // Already on calendar; no action needed
+
+    @FXML private void handleSidebarCalendar(ActionEvent event) {
+        // Already on calendar
     }
 
-    @FXML
-    private void handleSidebarDashboard(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Dashboard.fxml", "Dashboard");
+    @FXML private void handleSidebarDashboard(ActionEvent event) {
+        ViewManager.show("/application/studyspace/landingpage/Dashboard.fxml");
     }
 
-    @FXML
-    private void handleSidebarSettings(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.switchTo(stage, "/application/studyspace/landingpage/Settings.fxml", "Settings");
+    @FXML private void handleSidebarSettings(ActionEvent event) {
+        ViewManager.show("/application/studyspace/landingpage/Settings.fxml");
     }
 }

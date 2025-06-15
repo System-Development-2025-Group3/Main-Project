@@ -1,20 +1,31 @@
 package application.studyspace;
 
-import application.studyspace.services.Scenes.SceneSwitcher;
-import application.studyspace.services.auth.PasswordHasher;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.util.UUID;
 
 public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        System.out.println("🚀 Starting app...");
-        stage.setFullScreen(true); // Set fullscreen before scene is shown
-        SceneSwitcher.switchTo(stage, "/application/studyspace/auth/Login.fxml", "StudySpace Login");
-        stage.show();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/application/studyspace/scenes/RootLayout.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+            stage.setTitle("Planify");
+            stage.show();
+
+        } catch (Exception e) {
+            System.err.println("❌ Failed to load RootLayout.fxml");
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

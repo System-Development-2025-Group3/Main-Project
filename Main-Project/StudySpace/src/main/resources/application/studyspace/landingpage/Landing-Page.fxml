@@ -1,74 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.calendarfx.view.*?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.calendarfx.view.CalendarView?>
+<?import javafx.scene.paint.*?>
 
-<BorderPane fx:id="rootPane"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
-            stylesheets="@../styles/LandingPageStylesheet.css">
+<BorderPane fx:id="rootPane" stylesheets="@../styles/LandingPageStylesheet.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.studyspace.controllers.landingpage.LandingpageController">
 
     <fx:define>
-        <ToggleGroup fx:id="navGroup"/>
-        <ToggleGroup fx:id="viewGroup"/>
+        <ToggleGroup fx:id="viewGroup" />
     </fx:define>
 
     <left>
         <AnchorPane>
             <children>
-                <VBox styleClass="sidebar"
-                      AnchorPane.topAnchor="0"
-                      AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0"
-                      AnchorPane.rightAnchor="0">
-                    <Label text="Study Planner" styleClass="sidebar-title"/>
-                    <ToggleButton text="📅 Calendar"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  selected="true"
-                                  onAction="#handleSidebarCalendar"/>
-                    <ToggleButton text="📊 Dashboard"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarDashboard"/>
-                    <ToggleButton text="⚙ Settings"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarSettings"/>
-
+                <VBox styleClass="sidebar" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    <Label styleClass="sidebar-title" text="Study Planner" />
+                    <ToggleButton onAction="#handleSidebarCalendar" selected="true" styleClass="sidebar-button" text="📅 Calendar">
+                  <toggleGroup>
+                     <ToggleGroup fx:id="navGroup" />
+                  </toggleGroup></ToggleButton>
+                    <ToggleButton onAction="#handleSidebarDashboard" styleClass="sidebar-button" text="📊 Dashboard" toggleGroup="$navGroup" />
+                    <ToggleButton onAction="#handleSidebarSettings" styleClass="sidebar-button" text="⚙ Settings" toggleGroup="$navGroup" />
                 </VBox>
             </children>
         </AnchorPane>
     </left>
 
     <center>
-        <VBox styleClass="content-root" spacing="8">
-            <!-- unified Day/Week/Month + New Event bar -->
-            <HBox styleClass="view-toggle"
-                  spacing="4"
-                  style="-fx-padding: 12;">
-                <ToggleButton text="Day"
-                              styleClass="view-button"
-                              toggleGroup="$viewGroup"
-                              onAction="#showDayView"/>
-                <ToggleButton text="Week"
-                              styleClass="view-button"
-                              toggleGroup="$viewGroup"
-                              onAction="#showWeekView"/>
-                <ToggleButton text="Month"
-                              styleClass="view-button"
-                              toggleGroup="$viewGroup"
-                              selected="true"
-                              onAction="#showMonthView"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ New Event"
-                        styleClass="create-event-button"
-                        onAction="#handleCreateNewEvent"/>
-            </HBox>
+        <VBox spacing="8" styleClass="content-root">
+            <!-- Removed view toggle bar -->
 
             <StackPane styleClass="calendar-wrapper" VBox.vgrow="ALWAYS">
-                <CalendarView fx:id="calendarView"/>
+                <CalendarView fx:id="calendarView" selectionMode="SINGLE" showAddCalendarButton="false" showPageSwitcher="false" showPrintButton="false" showSearchField="false" showSourceTrayButton="false" showToday="false" showToolBar="false" stylesheets="@../styles/calendarfx-overrides.css">
+               <availabilityFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.15323464572429657" green="0.1073952242732048" blue="0.5657894611358643" opacity="0.10000000149011612" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </availabilityFill>
+               <styleClass>
+                  <String fx:value="date-control" />
+                  <String fx:value="time-label" />
+               </styleClass></CalendarView>
             </StackPane>
         </VBox>
     </center>

@@ -16,24 +16,26 @@ module application.studyspace {
     requires com.calendarfx.view;
     requires ical4j.core;
 
+    // === Opens for FXML Reflection ===
     opens application.studyspace to javafx.fxml;
+    opens application.studyspace.controllers.auth to javafx.fxml;
+    opens application.studyspace.controllers.landingpage to javafx.fxml;
+    opens application.studyspace.controllers.onboarding to javafx.fxml;
+    opens application.studyspace.controllers.scenes to javafx.fxml;
+    opens application.studyspace.services.API to javafx.fxml;
+    opens application.studyspace.services.auth to javafx.fxml;
+    opens application.studyspace.services.DataBase to javafx.fxml;
+    opens application.studyspace.services.Styling to javafx.fxml;
+    opens application.studyspace.services.Scenes to javafx.fxml;
+
+    // === Exports for normal usage ===
     exports application.studyspace;
     exports application.studyspace.controllers.auth;
-    opens application.studyspace.controllers.auth to javafx.fxml;
     exports application.studyspace.controllers.landingpage;
-    opens application.studyspace.controllers.landingpage to javafx.fxml;
     exports application.studyspace.services.API;
-    opens application.studyspace.services.API to javafx.fxml;
     exports application.studyspace.services.auth;
-    opens application.studyspace.controllers.onboarding to javafx.fxml;
-    opens application.studyspace.services.auth to javafx.fxml;
     exports application.studyspace.services.DataBase;
-    opens application.studyspace.services.DataBase to javafx.fxml;
     exports application.studyspace.services.Styling;
-    opens application.studyspace.services.Styling to javafx.fxml;
     exports application.studyspace.services.Scenes;
-    opens application.studyspace.services.Scenes to javafx.fxml;
     exports application.studyspace.services.calendar;
-
-
 }

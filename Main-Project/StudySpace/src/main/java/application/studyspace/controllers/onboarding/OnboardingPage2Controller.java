@@ -1,6 +1,7 @@
 package application.studyspace.controllers.onboarding;
 
-import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarEventMapper;
 import application.studyspace.services.calendar.CalendarEventRepository;
@@ -8,18 +9,14 @@ import application.studyspace.services.onboarding.CalendarImportHelper;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
-import com.calendarfx.view.AgendaView;
 import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.MonthView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.File;
@@ -33,27 +30,19 @@ public class OnboardingPage2Controller implements Initializable {
 
     @FXML private StackPane calendarContainer;
 
-    private UUID userUUID;
     private LocalDate currentDate;
     private Calendar userCalendar;
     private CalendarView calendarView;
 
-    public void setUserUUID(UUID uuid) {
-        this.userUUID = uuid;
-        if (calendarView != null) {
-            refreshCalendar();
-        }
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         currentDate = LocalDate.now();
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
 
         calendarView = new CalendarView();
         calendarView.setDate(LocalDate.now());
         calendarView.showWeekPage();
 
-// Hide clutter
         calendarView.setShowToolBar(false);
         calendarView.setShowPageSwitcher(false);
         calendarView.setShowSearchField(false);
@@ -62,7 +51,6 @@ public class OnboardingPage2Controller implements Initializable {
         calendarView.setShowAddCalendarButton(false);
         calendarView.setShowToday(false);
 
-// Set calendar source
         userCalendar = new Calendar("Imported");
         userCalendar.setStyle(Calendar.Style.STYLE1.name());
 
@@ -72,14 +60,13 @@ public class OnboardingPage2Controller implements Initializable {
 
         calendarContainer.getChildren().setAll(calendarView);
 
-        // Enable drag and drop
         calendarContainer.setOnDragOver(this::onDragOver);
         calendarContainer.setOnDragDropped(this::onDragDropped);
 
-        refreshCalendar();
+        refreshCalendar(userUUID);
     }
 
-    private void refreshCalendar() {
+    private void refreshCalendar(UUID userUUID) {
         if (userUUID == null || userCalendar == null) return;
 
         userCalendar.clear();
@@ -96,6 +83,7 @@ public class OnboardingPage2Controller implements Initializable {
 
     @FXML
     private void handleUploadCSV(ActionEvent ev) {
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select ICS or CSV File");
 
@@ -115,7 +103,7 @@ public class OnboardingPage2Controller implements Initializable {
 
                 if (success) {
                     System.out.println("✅ File imported successfully: " + selectedFile.getName());
-                    refreshCalendar();
+                    refreshCalendar(userUUID);
                 } else {
                     System.err.println("❌ Failed to import file: " + selectedFile.getName());
                 }
@@ -135,11 +123,12 @@ public class OnboardingPage2Controller implements Initializable {
     }
 
     private void onDragDropped(DragEvent e) {
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         var files = e.getDragboard().getFiles();
         if (!files.isEmpty()) {
             boolean ok = new CalendarImportHelper(userUUID).importFromFile(files.get(0).getAbsolutePath());
             if (ok) {
-                refreshCalendar();
+                refreshCalendar(userUUID);
             }
         }
         e.setDropCompleted(true);
@@ -148,28 +137,18 @@ public class OnboardingPage2Controller implements Initializable {
 
     @FXML
     private void handlePage1(ActionEvent event) {
-        Stage popup = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage1Controller>switchPopupContent(
-                popup,
-                "/application/studyspace/onboarding/OnboardingPage1.fxml",
-                "Onboarding Page 1",
-                ctrl -> ctrl.setUserUUID(userUUID)
-        );
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", controller -> {});
     }
 
     @FXML
     private void handlePage2(ActionEvent event) {
-        // No-op
+        // Already on Page 2 — no action
     }
 
     @FXML
     private void handlePage3(ActionEvent event) {
-        Stage popup = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage3Controller>switchPopupContent(
-                popup,
-                "/application/studyspace/onboarding/OnboardingPage3.fxml",
-                "Onboarding Page 3",
-                ctrl -> ctrl.setUserUUID(userUUID)
-        );
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage3.fxml", controller -> {});
     }
 }

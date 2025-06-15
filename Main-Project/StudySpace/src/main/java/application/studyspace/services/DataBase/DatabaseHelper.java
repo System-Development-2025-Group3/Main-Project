@@ -19,33 +19,6 @@ public class DatabaseHelper {
     }
 
     /**
-     * Retrieves a UUID from the database using an email address.
-     * Assumes that the UUID is stored as BINARY(16) in the "id" column.
-     * @param email the user's email address
-     * @return the user's UUID if found, null otherwise
-     * @throws SQLException if a database error occurs
-     */
-    public UUID getUserUUIDByEmail(String email) throws SQLException {
-        String query = "SELECT user_id FROM users WHERE email = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                byte[] uuidBytes = rs.getBytes("user_id");
-                ByteBuffer byteBuffer = ByteBuffer.wrap(uuidBytes);
-                long high = byteBuffer.getLong();
-                long low = byteBuffer.getLong();
-                return new UUID(high, low);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    /**
      * Executes a SELECT query with optional WHERE clause and returns formatted results.
      * @param what columns to select (e.g. "*", or "email")
      * @param from table name

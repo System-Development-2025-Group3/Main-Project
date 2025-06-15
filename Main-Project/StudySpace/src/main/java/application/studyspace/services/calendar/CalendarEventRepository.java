@@ -6,6 +6,7 @@ import application.studyspace.services.DataBase.UUIDHelper;
 import java.sql.*;
 import java.time.Duration;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -108,6 +109,30 @@ public class CalendarEventRepository {
         }
 
         return list;
+    }
+    public boolean exists(UUID userId, String title, ZonedDateTime start, ZonedDateTime end) {
+        String sql = """
+        SELECT 1 FROM calendar_events
+        WHERE user_id = ? AND title = ? AND start_datetime = ? AND end_datetime = ?
+        LIMIT 1
+        """;
+
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBytes(1, UUIDHelper.uuidToBytes(userId));
+            stmt.setString(2, title);
+            stmt.setObject(3, start);
+            stmt.setObject(4, end);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // true if any match found
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void deleteById(UUID eventId) throws SQLException {

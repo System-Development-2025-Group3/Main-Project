@@ -33,30 +33,35 @@ public class InputStudyDays {
      */
     public boolean saveToDatabase() {
         String sql = """
-            INSERT INTO study_preferences
-              (user_id, preferred_time, session_length, break_length, blocked_days)
-            VALUES (?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE
-              preferred_time  = VALUES(preferred_time),
-              session_length  = VALUES(session_length),
-              break_length    = VALUES(break_length),
-              blocked_days    = VALUES(blocked_days)
-            """;
+        INSERT INTO study_preferences
+          (user_id, preferred_time, session_length, break_length, blocked_days)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          preferred_time  = VALUES(preferred_time),
+          session_length  = VALUES(session_length),
+          break_length    = VALUES(break_length),
+          blocked_days    = VALUES(blocked_days)
+    """;
 
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
-            ps.setString(2, preferredTime);
-            ps.setInt   (3, sessionLength);
-            ps.setInt   (4, breakLength);
-            ps.setString(5, blockedDays);
+            ps.setString(2, preferredTime != null ? preferredTime : "Morning");
+            ps.setInt(3, sessionLength);
+            ps.setInt(4, breakLength);
+            ps.setString(5, blockedDays != null ? blockedDays : "");
 
-            ps.executeUpdate();
-            return true;
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
         } catch (SQLException e) {
+            System.err.println("❌ Failed to save study preferences");
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
             return false;
         }
     }
+
 }

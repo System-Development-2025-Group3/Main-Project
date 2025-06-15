@@ -76,8 +76,12 @@ public class CalendarImportHelper {
                         end
                 );
 
-                repo.save(ev);
-                savedCount++;
+                if (!repo.exists(userUUID, summary, start, end)) {
+                    repo.save(ev);
+                    savedCount++;
+                } else {
+                    System.out.println("⚠️ Skipped duplicate: " + summary + " (" + start + ")");
+                }
             }
 
             System.out.println("✅ Successfully added " + savedCount + " of " + totalEvents + " event(s) to the database");

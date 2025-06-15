@@ -1,6 +1,6 @@
 package application.studyspace.controllers.auth;
 
-import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.auth.PasswordHasher;
 import application.studyspace.services.auth.SessionManager;
@@ -9,7 +9,6 @@ import application.studyspace.services.auth.ValidationUtils.RegistrationError;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -35,11 +34,7 @@ public class RegisterController {
 
     @FXML
     private void handleBacktoLoginClick(ActionEvent event) {
-        SceneSwitcher.switchTo(
-                (Node) event.getSource(),
-                "/application/studyspace/auth/Login.fxml",
-                "Login"
-        );
+        ViewManager.show("/application/studyspace/auth/Login.fxml");
     }
 
     @FXML
@@ -48,99 +43,62 @@ public class RegisterController {
         String pw1   = RegisterPassword_1.getText();
         String pw2   = RegisterPassword_2.getText();
 
-        // ask ValidationUtils what’s wrong
         RegistrationError err = ValidationUtils.validateRegistration(email, pw1, pw2);
         if (err != RegistrationError.NONE) {
             showRegistrationError(err);
             return;
         }
 
-        // all good → create user, log in, go to landing
         UUID newUserId = PasswordHasher.saveToDatabase(email, pw1);
         SessionManager.getInstance().login(newUserId);
-        SceneSwitcher.switchTo(
-                (Node) event.getSource(),
-                "/application/studyspace/landingpage/Landing-Page.fxml",
-                "Landing Page"
-        );
+        ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
     }
 
-    /** Show the right tooltip & red‐style for the given error. */
     private void showRegistrationError(RegistrationError err) {
         PauseTransition delay = new PauseTransition(Duration.seconds(5));
         switch (err) {
-            case EMAIL_EMPTY:
-                toolTipService.showTooltipForDurationX(
-                        emailTooltip,
-                        "Please enter an email address.",
-                        "tooltip-Label-Error", 5, 0
-                );
+            case EMAIL_EMPTY -> {
+                toolTipService.showTooltipForDurationX(emailTooltip, "Please enter an email address.", "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterEmailField, "text-field-error");
-                delay.setOnFinished(e ->
-                        resetFieldStyle(RegisterEmailField, "text-field-error", "text-field")
-                );
-                break;
-
-            case EMAIL_INVALID:
-                toolTipService.showTooltipForDurationX(
-                        emailTooltip,
-                        "That doesn’t look like a valid email address!",
-                        "tooltip-Label-Error", 5, 0
-                );
+                delay.setOnFinished(e -> resetFieldStyle(RegisterEmailField, "text-field-error", "text-field"));
+            }
+            case EMAIL_INVALID -> {
+                toolTipService.showTooltipForDurationX(emailTooltip, "That doesn’t look like a valid email address!", "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterEmailField, "text-field-error");
-                delay.setOnFinished(e ->
-                        resetFieldStyle(RegisterEmailField, "text-field-error", "text-field")
-                );
-                break;
-
-            case PASSWORD_EMPTY:
-                toolTipService.showTooltipForDurationX(
-                        passwordTooltip1,
-                        "Please enter a password and confirm it.",
-                        "tooltip-Label-Error", 5, 0
-                );
+                delay.setOnFinished(e -> resetFieldStyle(RegisterEmailField, "text-field-error", "text-field"));
+            }
+            case PASSWORD_EMPTY -> {
+                toolTipService.showTooltipForDurationX(passwordTooltip1, "Please enter a password and confirm it.", "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterPassword_1, "text-field-error");
                 applyErrorStyle(RegisterPassword_2, "text-field-error");
                 delay.setOnFinished(e -> {
                     resetFieldStyle(RegisterPassword_1, "text-field-error", "text-field");
                     resetFieldStyle(RegisterPassword_2, "text-field-error", "text-field");
                 });
-                break;
-
-            case PASSWORD_MISMATCH:
-                toolTipService.showTooltipForDurationX(
-                        passwordTooltip1,
-                        "Passwords do not match. Please try again.",
-                        "tooltip-Label-Error", 5, 0
-                );
+            }
+            case PASSWORD_MISMATCH -> {
+                toolTipService.showTooltipForDurationX(passwordTooltip1, "Passwords do not match. Please try again.", "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterPassword_1, "text-field-error");
                 applyErrorStyle(RegisterPassword_2, "text-field-error");
                 delay.setOnFinished(e -> {
                     resetFieldStyle(RegisterPassword_1, "text-field-error", "text-field");
                     resetFieldStyle(RegisterPassword_2, "text-field-error", "text-field");
                 });
-                break;
-
-            case PASSWORD_WEAK:
-                toolTipService.showTooltipForDurationX(
-                        passwordTooltip1,
-                        """
-                        Password must be at least 12 characters,\s
-                        include an uppercase letter, a digit,\s
+            }
+            case PASSWORD_WEAK -> {
+                toolTipService.showTooltipForDurationX(passwordTooltip1, """
+                        Password must be at least 12 characters, 
+                        include an uppercase letter, a digit, 
                         and a special char (! % & ? # _ - $).
-                        """,
-                        "tooltip-Label-Error", 5, 0
-                );
+                        """, "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterPassword_1, "text-field-error");
                 applyErrorStyle(RegisterPassword_2, "text-field-error");
                 delay.setOnFinished(e -> {
                     resetFieldStyle(RegisterPassword_1, "text-field-error", "text-field");
                     resetFieldStyle(RegisterPassword_2, "text-field-error", "text-field");
                 });
-                break;
-
-            default:
-                // no-op
+            }
+            default -> {}
         }
         delay.play();
     }

@@ -1,21 +1,19 @@
 package application.studyspace.controllers.onboarding;
 
-import application.studyspace.services.Scenes.SceneSwitcher;
+import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.auth.SessionManager;
 import com.calendarfx.view.CalendarView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class OnboardingPage3Controller implements Initializable {
 
@@ -38,11 +36,6 @@ public class OnboardingPage3Controller implements Initializable {
 
     private CalendarView calendarView;
     private LocalDate previewDate;
-    private UUID userUUID;
-
-    public void setUserUUID(UUID uuid) {
-        this.userUUID = uuid;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -60,9 +53,9 @@ public class OnboardingPage3Controller implements Initializable {
 
     private void updateLabel() {
         previewDateLabel.setText(
-                previewDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
-                        + " " + previewDate.getDayOfMonth()
-                        + ", " + previewDate.getYear()
+                previewDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) +
+                        " " + previewDate.getDayOfMonth() +
+                        ", " + previewDate.getYear()
         );
     }
 
@@ -79,31 +72,23 @@ public class OnboardingPage3Controller implements Initializable {
     }
 
     @FXML private void handlePage1(ActionEvent event) {
-        Stage popup = (Stage)((Node)event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage1Controller>switchPopupContent(
-                popup,
-                "/application/studyspace/onboarding/OnboardingPage1.fxml",
-                "Onboarding Page 1",
-                ctrl -> ctrl.setUserUUID(userUUID)
-        );
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", controller -> {});
     }
 
     @FXML private void handlePage2(ActionEvent event) {
-        Stage popup = (Stage)((Node)event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage2Controller>switchPopupContent(
-                popup,
-                "/application/studyspace/onboarding/OnboardingPage2.fxml",
-                "Onboarding Page 2",
-                ctrl -> ctrl.setUserUUID(userUUID)
-        );
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage2.fxml", controller -> {});
     }
 
     @FXML private void handlePage3() {
-        // Already here
+        // Already on this page
     }
 
     @FXML private void handleSave(ActionEvent event) {
-        // TODO: Save logic
-        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        // TODO: Save logic goes here
+
+        // For now, just close the overlay
+        ViewManager.closeTopOverlay();
     }
 }
