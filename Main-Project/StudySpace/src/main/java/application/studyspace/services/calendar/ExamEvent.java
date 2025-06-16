@@ -19,7 +19,8 @@ public class ExamEvent {
     private String subject;
     private String description;
     private String location;
-    private ZonedDateTime examDate;
+    private ZonedDateTime start;
+    private ZonedDateTime end;
     private double gradeWeight;
     private int difficulty;
     private int priority;
@@ -39,7 +40,7 @@ public class ExamEvent {
      * @param subject            The subject related to the exam (e.g., "Biology", "History").
      * @param description        Optional text description providing additional details about the exam.
      * @param location           The location where the exam will take place (e.g., classroom or online link).
-     * @param examDate           The date and time the exam is scheduled to start.
+     *
      * @param gradeWeight        The weight of the exam as a percentage of the final grade (e.g., 25.0).
      * @param difficulty         The estimated difficulty of the exam (0 = easy, 10 = hard). Must be in the range [0–10].
      * @param numberOfTopics     The number of distinct topics the student needs to study for this exam.
@@ -51,7 +52,8 @@ public class ExamEvent {
                      String subject,
                      String description,
                      String location,
-                     ZonedDateTime examDate,
+                     ZonedDateTime start,
+                     ZonedDateTime end,
                      double gradeWeight,
                      int difficulty,
                      int numberOfTopics,
@@ -62,7 +64,8 @@ public class ExamEvent {
         this.subject        = subject;
         this.description    = description;
         this.location       = location;
-        this.examDate       = examDate;
+        this.start            = start;
+        this.end              = end;
         this.gradeWeight    = gradeWeight;
         this.difficulty     = difficulty;
         this.priority       = computePriority(gradeWeight, difficulty);
@@ -98,8 +101,10 @@ public class ExamEvent {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    public ZonedDateTime getExamDate() { return examDate; }
-    public void setExamDate(ZonedDateTime examDate) { this.examDate = examDate; }
+    public ZonedDateTime getStart() { return start; }
+    public void setStart(ZonedDateTime start) { this.start = start; }
+    public ZonedDateTime getEnd() { return end; }
+    public void setEnd(ZonedDateTime end) { this.end = end; }
 
     public double getGradeWeight() { return gradeWeight; }
     public void setGradeWeight(double gradeWeight) {

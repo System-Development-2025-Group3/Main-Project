@@ -52,10 +52,19 @@ public class ViewManager {
             FXMLLoader loader = new FXMLLoader(vm.getClass().getResource(fxmlPath));
             Parent popupContent = loader.load();
 
+            // Initialize controller
             T controller = loader.getController();
             if (controllerInit != null) {
                 controllerInit.accept(controller);
             }
+
+            // Force CSS/layout pass so pref sizes are accurate
+            popupContent.applyCss();
+            popupContent.layout();
+
+            // Measure content
+            double contentW = popupContent.prefWidth(-1);
+            double contentH = popupContent.prefHeight(-1);
 
             // Dim background
             Region dim = new Region();
@@ -63,17 +72,15 @@ public class ViewManager {
             dim.prefWidthProperty().bind(vm.overlayRoot.widthProperty());
             dim.prefHeightProperty().bind(vm.overlayRoot.heightProperty());
 
-            // Popup wrapper
+            // Popup wrapper — make transparent so only the FXML’s white card shows
             VBox popupWrapper = new VBox(popupContent);
-            popupWrapper.setStyle("-fx-background-color: white; -fx-padding: 20;");
-            popupWrapper.setMaxWidth(600);
-            popupWrapper.setMaxHeight(500);
+            popupWrapper.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
             popupWrapper.setEffect(new DropShadow());
             StackPane.setAlignment(popupWrapper, Pos.CENTER);
 
-            // Final container holding dim + popup together
+            // Composite
             StackPane wrapper = new StackPane(dim, popupWrapper);
-            wrapper.setPickOnBounds(true); // Let inner nodes handle clicks too
+            wrapper.setPickOnBounds(true);
 
             vm.overlayRoot.getChildren().add(wrapper);
 

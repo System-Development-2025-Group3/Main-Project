@@ -1,13 +1,17 @@
+// CalendarEventMapper.java
 package application.studyspace.services.calendar;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 
-import java.time.ZoneId;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.util.logging.Logger;
 
 public class CalendarEventMapper {
 
+    private static final Logger logger = Logger.getLogger(CalendarEventMapper.class.getName());
+
+    /** Maps a CalendarEvent to a CalendarFX Entry. */
     public static Entry<CalendarEvent> toEntry(CalendarEvent e, Calendar fxCalendar) {
         Entry<CalendarEvent> entry = new Entry<>(e.getTitle());
         entry.setId(e.getId().toString());
@@ -20,7 +24,6 @@ public class CalendarEventMapper {
                 e.getEnd().toLocalDate(),
                 e.getEnd().toLocalTime()
         );
-
         entry.setFullDay(e.isFullDay());
         entry.setHidden(e.isHidden());
         entry.setLocation(e.getLocation());
@@ -28,7 +31,6 @@ public class CalendarEventMapper {
         if (e.getRecurrenceRule() != null) {
             entry.setRecurrenceRule(e.getRecurrenceRule());
         }
-
         if (e.getMinDuration() != null) {
             entry.setMinimumDuration(e.getMinDuration());
         }
@@ -36,32 +38,42 @@ public class CalendarEventMapper {
         return entry;
     }
 
+    /** Maps an ExamEvent to a CalendarFX Entry. */
+    public static Entry<ExamEvent> toEntry(ExamEvent e, Calendar fxCalendar) {
+        Entry<ExamEvent> entry = new Entry<>(e.getTitle());
+        entry.setId(e.getId().toString());
+        entry.setUserObject(e);
+        entry.setCalendar(fxCalendar);
+
+        entry.setInterval(
+                e.getStart().toLocalDate(),
+                e.getStart().toLocalTime(),
+                e.getEnd().toLocalDate(),
+                e.getEnd().toLocalTime()
+        );
+        entry.setFullDay(false);
+        entry.setLocation(e.getLocation());
+        entry.setTitle(e.getTitle() + " (" + e.getSubject() + ")");
+
+        logger.info("Mapped ExamEvent to Entry: " + e.getId());
+        return entry;
+    }
+
+    /** Reconstructs a CalendarEvent from a CalendarFX Entry. */
     public static CalendarEvent fromEntry(Entry<CalendarEvent> entry) {
         CalendarEvent old = entry.getUserObject();
-
         return new CalendarEvent(
-                // id and owner
-                UUID.fromString(entry.getId()),
+                java.util.UUID.fromString(entry.getId()),
                 old.getUserId(),
-
-                // visible properties
                 entry.getTitle(),
-                old.getDescription(),            // pull from your domain object
+                old.getDescription(),
                 entry.getLocation(),
-
-                // interval
                 entry.getInterval().getStartZonedDateTime(),
                 entry.getInterval().getEndZonedDateTime(),
-
-                // flags & constraints
                 entry.isFullDay(),
                 entry.isHidden(),
                 entry.getMinimumDuration(),
-
-                // recurrence rule only
                 entry.getRecurrenceRule(),
-
-                // preserve original recurrence metadata & tag
                 old.getRecurrenceSource(),
                 old.getRecurrenceId(),
                 old.getTagUuid()

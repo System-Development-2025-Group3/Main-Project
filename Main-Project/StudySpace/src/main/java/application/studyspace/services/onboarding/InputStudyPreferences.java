@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class InputStudyDays {
+public class InputStudyPreferences {
 
     private final UUID   userId;
     private final String preferredTime;
@@ -16,11 +16,11 @@ public class InputStudyDays {
     private final int    breakLength;
     private final String blockedDays;
 
-    public InputStudyDays(UUID userId,
-                          String preferredTime,
-                          int sessionLength,
-                          int breakLength,
-                          String blockedDays) {
+    public InputStudyPreferences(UUID userId,
+                                 String preferredTime,
+                                 int sessionLength,
+                                 int breakLength,
+                                 String blockedDays) {
         this.userId         = userId;
         this.preferredTime  = preferredTime;
         this.sessionLength  = sessionLength;

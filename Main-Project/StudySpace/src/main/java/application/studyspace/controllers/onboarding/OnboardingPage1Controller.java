@@ -2,7 +2,7 @@ package application.studyspace.controllers.onboarding;
 
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
-import application.studyspace.services.onboarding.InputStudyDays;
+import application.studyspace.services.onboarding.InputStudyPreferences;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
@@ -84,7 +84,7 @@ public class OnboardingPage1Controller {
         if (sunBtn.isSelected()) blockedDays += "Sunday ";
         blockedDays = blockedDays.trim();
 
-        InputStudyDays prefs = new InputStudyDays(
+        InputStudyPreferences prefs = new InputStudyPreferences(
                 userUUID,
                 preferredTimeBox.getValue(),
                 (int) sessionLengthSlider.getValue(),
