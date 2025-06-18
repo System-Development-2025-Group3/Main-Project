@@ -1,10 +1,13 @@
 package application.studyspace.services.Scenes;
 
+import application.studyspace.controllers.scenes.RootController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.function.Consumer;

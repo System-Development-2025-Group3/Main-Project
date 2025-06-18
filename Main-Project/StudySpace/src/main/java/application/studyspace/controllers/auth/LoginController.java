@@ -15,12 +15,12 @@ public class LoginController {
     @FXML private PasswordField passwordField;
 
     @FXML
-    private void handleLogin(ActionEvent event) {
+    private void handleSubmitLoginButtonClick(MouseEvent mouseEvent) {
         attemptLogin();
     }
 
     @FXML
-    private void handleSubmitLoginButtonClick(MouseEvent mouseEvent) {
+    private void handleLogin(ActionEvent event) {
         attemptLogin();
     }
 
@@ -48,5 +48,21 @@ public class LoginController {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Unable to load Register screen").showAndWait();
         }
+    }
+
+    // Placeholder handlers for top menu buttons
+    @FXML
+    private void handleSettingsClick(ActionEvent event) {
+        System.out.println("⚙ Settings clicked (not implemented yet)");
+    }
+
+    @FXML
+    private void handleAboutUsClick(MouseEvent event) {
+        ViewManager.show("/application/studyspace/CustomerInteraction/AboutUs.fxml");
+    }
+
+    @FXML
+    private void handleContactClick(ActionEvent event) {
+        System.out.println("📨 Contact clicked (not implemented yet)");
     }
 }

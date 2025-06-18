@@ -17,10 +17,8 @@
         <Image url="@../../../images/auth/backgroundarcs.png"/>
     </ImageView>
 
-    <!-- Main UI Content -->
+    <!-- Main Layout -->
     <BorderPane style="-fx-background-color: transparent;">
-        
-        <!-- Top Menu -->
         <top>
             <Pane style="-fx-background-color: white; -fx-background-radius: 20;" prefHeight="60.0">
                 <HBox spacing="20.0" alignment="CENTER_LEFT">
@@ -38,17 +36,12 @@
                 </HBox>
             </Pane>
         </top>
-        
-        <!-- Center Content -->
+
         <center>
             <VBox alignment="CENTER">
-                <!-- Spacer Above -->
                 <Region VBox.vgrow="ALWAYS"/>
-                
-                <!-- Form and Image -->
                 <HBox alignment="CENTER" spacing="100">
-                    
-                    <!-- Register Form -->
+
                     <StackPane maxWidth="480">
                         <VBox spacing="15"
                               style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 30;"
@@ -59,7 +52,6 @@
                                    styleClass="welcome-title"/>
 
                             <Label text="E-Mail" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <TextField fx:id="RegisterEmailField"
                                            promptText="Enter your email"
@@ -69,7 +61,6 @@
                             </HBox>
 
                             <Label text="Password" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <PasswordField fx:id="RegisterPassword_1"
                                                promptText="Enter password"
@@ -79,7 +70,6 @@
                             </HBox>
 
                             <Label text="Repeat Password" styleClass="form-label"/>
-
                             <HBox spacing="5" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS" prefWidth="-Infinity">
                                 <PasswordField fx:id="RegisterPassword_2"
                                                promptText="Repeat password"
@@ -94,26 +84,21 @@
                                     onAction="#handleSubmitRegistrationButtonClick"
                                     alignment="CENTER"/>
 
-                            <!-- Back to login -->
                             <Hyperlink fx:id="BackToLoginLink"
                                        text="← Back to Login"
                                        onAction="#handleBacktoLoginClick"
                                        style="-fx-text-fill: #6e85d5; -fx-font-size: 12px;"/>
                         </VBox>
                     </StackPane>
-                    
-                    <!-- Right-side Image -->
+
                     <ImageView fx:id="Image01"
                                fitHeight="400"
                                preserveRatio="true">
                         <Image url="@../../../images/auth/LoginPage01.png"/>
                     </ImageView>
                 </HBox>
-                
-                <!-- Spacer Below -->
                 <Region VBox.vgrow="ALWAYS"/>
             </VBox>
         </center>
     </BorderPane>
-
 </StackPane>

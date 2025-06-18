@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -21,27 +22,22 @@ import static application.studyspace.services.Styling.StylingUtility.resetFieldS
 
 public class RegisterController {
 
-    @FXML private TextField    RegisterEmailField;
+    @FXML private TextField RegisterEmailField;
     @FXML private PasswordField RegisterPassword_1;
     @FXML private PasswordField RegisterPassword_2;
-    @FXML private Label         emailTooltip;
-    @FXML private Label         passwordTooltip1;
-    @FXML private Label         passwordTooltip2;
-    @FXML private StackPane     stackPane;
-    @FXML private ImageView     Image03;
+    @FXML private Label emailTooltip;
+    @FXML private Label passwordTooltip1;
+    @FXML private Label passwordTooltip2;
+    @FXML private StackPane stackPane;
+    @FXML private ImageView Image03;
 
     private final CreateToolTip toolTipService = new CreateToolTip();
 
     @FXML
-    private void handleBacktoLoginClick(ActionEvent event) {
-        ViewManager.show("/application/studyspace/auth/Login.fxml");
-    }
-
-    @FXML
     private void handleSubmitRegistrationButtonClick(ActionEvent event) {
         String email = RegisterEmailField.getText().trim();
-        String pw1   = RegisterPassword_1.getText();
-        String pw2   = RegisterPassword_2.getText();
+        String pw1 = RegisterPassword_1.getText();
+        String pw2 = RegisterPassword_2.getText();
 
         RegistrationError err = ValidationUtils.validateRegistration(email, pw1, pw2);
         if (err != RegistrationError.NONE) {
@@ -54,8 +50,14 @@ public class RegisterController {
         ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
     }
 
+    @FXML
+    private void handleBacktoLoginClick(ActionEvent event) {
+        ViewManager.show("/application/studyspace/auth/Login.fxml");
+    }
+
     private void showRegistrationError(RegistrationError err) {
         PauseTransition delay = new PauseTransition(Duration.seconds(5));
+
         switch (err) {
             case EMAIL_EMPTY -> {
                 toolTipService.showTooltipForDurationX(emailTooltip, "Please enter an email address.", "tooltip-Label-Error", 5, 0);
@@ -87,10 +89,10 @@ public class RegisterController {
             }
             case PASSWORD_WEAK -> {
                 toolTipService.showTooltipForDurationX(passwordTooltip1, """
-                        Password must be at least 12 characters, 
-                        include an uppercase letter, a digit, 
-                        and a special char (! % & ? # _ - $).
-                        """, "tooltip-Label-Error", 5, 0);
+                    Password must be at least 12 characters, 
+                    include an uppercase letter, a digit, 
+                    and a special char (! % & ? # _ - $).
+                """, "tooltip-Label-Error", 5, 0);
                 applyErrorStyle(RegisterPassword_1, "text-field-error");
                 applyErrorStyle(RegisterPassword_2, "text-field-error");
                 delay.setOnFinished(e -> {
@@ -98,8 +100,8 @@ public class RegisterController {
                     resetFieldStyle(RegisterPassword_2, "text-field-error", "text-field");
                 });
             }
-            default -> {}
         }
+
         delay.play();
     }
 
@@ -110,16 +112,34 @@ public class RegisterController {
             • At least 12 characters long
             • Includes at least one uppercase letter
             • Includes at least one number
-            • Includes at least one special character (%, &, !, ?, #, _, -, $)""";
+            • Includes at least one special character (%, &, !, ?, #, _, -, $)
+            """;
         toolTipService.createCustomTooltip(passwordTooltip1, pwTooltip, "tooltip-Label");
         toolTipService.createCustomTooltip(passwordTooltip2, pwTooltip, "tooltip-Label");
 
         String emailTooltipText = """
             Please enter a valid email address:
-            • The format should be like example@domain.com.""";
+            • The format should be like example@domain.com.
+            """;
         toolTipService.createCustomTooltip(emailTooltip, emailTooltipText, "tooltip-Label");
 
         Image03.fitWidthProperty().bind(stackPane.widthProperty());
         Image03.fitHeightProperty().bind(stackPane.heightProperty());
+    }
+
+    // Menu button placeholders
+    @FXML
+    private void handleSettingsClick(ActionEvent event) {
+        System.out.println("⚙ Settings clicked (not implemented yet)");
+    }
+
+    @FXML
+    private void handleAboutUsClick(MouseEvent event) {
+        ViewManager.show("/application/studyspace/CustomerInteraction/AboutUs.fxml");
+    }
+
+    @FXML
+    private void handleContactClick(ActionEvent event) {
+        System.out.println("📨 Contact clicked (not implemented yet)");
     }
 }
