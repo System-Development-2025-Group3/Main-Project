@@ -75,38 +75,42 @@ public class LoginController {
                     applyErrorStyle(InputEmailTextfield, "text-field-error");
                     toolTipService.showTooltipForDurationX(
                             emailTooltip,
-                            "You did not enter an email address! Please enter a valid email address:\n• The format should be like example@domain.com.",
+                            "You did not enter an email address! Please enter a valid email address:\n" +
+                                    "• The format should be like example@domain.com.",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"))
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"));
+                    delay.play();
                 }
                 case "INVALID_EMAIL" -> {
                     applyErrorStyle(InputEmailTextfield, "text-field-error");
                     toolTipService.showTooltipForDurationX(
                             emailTooltip,
-                            "You did not enter a valid email address! Please do so next time.\n• The format should be like example@domain.com.",
+                            "You did not enter a valid email address! Please do so next time.\n" +
+                                    "• The format should be like example@domain.com.",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"))
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"));
+                    delay.play();
                 }
                 case "UNKNOWN_EMAIL" -> {
                     if (!ValidationUtils.isSimilarEmail(InputEmailTextfield.getText(), ValidationUtils.listOfKnownEmails(), 3)) {
                         applyErrorStyle(InputEmailTextfield, "text-field-error");
                         toolTipService.showTooltipForDurationX(
                                 emailTooltip,
-                                "The email address you entered is not registered in our system.\nPlease try again with a known email address.\n• The format should be like example@domain.com.",
+                                "The email address you entered is not registered in our system.\n" +
+                                        "Please try again with a known email address.\n" +
+                                        "• The format should be like example@domain.com.",
                                 "tooltip-Label-Error",
                                 duration
                         );
-                        new PauseTransition(Duration.seconds(duration))
-                                .setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"))
-                                .play();
+                        PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                        delay.setOnFinished(e -> resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field"));
+                        delay.play();
                     } else {
                         applyErrorStyle(InputEmailTextfield, "text-field-error");
                         mailAutocorrect();
@@ -116,13 +120,14 @@ public class LoginController {
                     applyErrorStyle(InputPassword, "password-field-error");
                     toolTipService.showTooltipForDurationX(
                             passwordTooltip,
-                            "You did not enter a password! Please enter a password that fulfills the following:\n• ≥12 chars\n• ≥1 uppercase\n• ≥1 number\n• ≥1 special (% & ! ? # _ - $)",
+                            "You did not enter a password! Please enter a password that fulfills the following:\n" +
+                                    "• ≥12 chars\n• ≥1 uppercase\n• ≥1 number\n• ≥1 special (% & ! ? # _ - $)",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(InputPassword, "password-field-error", "password-field"))
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> resetFieldStyle(InputPassword, "password-field-error", "password-field"));
+                    delay.play();
                 }
                 case "INVALID_CREDENTIALS" -> {
                     applyErrorStyle(InputPassword, "password-field-error");
@@ -132,9 +137,9 @@ public class LoginController {
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(InputPassword, "password-field-error", "password-field"))
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> resetFieldStyle(InputPassword, "password-field-error", "password-field"));
+                    delay.play();
                 }
             }
         } else {
@@ -177,12 +182,12 @@ public class LoginController {
     public void setInputEmail(String email) {
         InputEmailTextfield.setText(email);
         applyErrorStyle(InputEmailTextfield, "text-field-correct");
-        new PauseTransition(Duration.seconds(5))
-                .setOnFinished(e -> {
-                    resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
-                    resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
-                })
-                .play();
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
+        delay.setOnFinished(e -> {
+            resetFieldStyle(InputEmailTextfield, "text-field-correct", "text-field");
+            resetFieldStyle(InputEmailTextfield, "text-field-error", "text-field");
+        });
+        delay.play();
     }
 
     @FXML

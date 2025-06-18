@@ -15,6 +15,7 @@ module application.studyspace {
     requires org.mariadb.jdbc;
     requires com.calendarfx.view;
     requires ical4j.core;
+    requires org.apache.commons.text;
 
     // === Opens for FXML Reflection ===
     opens application.studyspace to javafx.fxml;

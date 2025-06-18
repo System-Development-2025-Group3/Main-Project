@@ -57,14 +57,12 @@
       <artifactId>ikonli-core</artifactId>
       <version>12.3.1</version>
     </dependency>
-
     <!-- JavaFX UI support -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-javafx</artifactId>
       <version>12.3.1</version>
     </dependency>
-
     <!-- FontAwesome icon pack -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
@@ -136,6 +134,13 @@
       <groupId>org.mnode.ical4j</groupId>
       <artifactId>ical4j</artifactId>
       <version>4.1.1</version>
+    </dependency>
+
+    <!-- Apache Commons Text (for LevenshteinDistance) -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.13.1</version>
     </dependency>
 
     <!-- JUnit -->

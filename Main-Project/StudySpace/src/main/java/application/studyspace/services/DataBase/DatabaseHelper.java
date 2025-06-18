@@ -7,28 +7,18 @@ import java.util.UUID;
 public class DatabaseHelper {
 
     /**
-     * Converts a UUID to a 16-byte array for storing in a BINARY(16) database field.
-     * @param uuid the UUID to convert
-     * @return byte array representing the UUID
-     */
-    public byte[] uuidToBytes(UUID uuid) {
-        ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putLong(uuid.getMostSignificantBits());
-        buffer.putLong(uuid.getLeastSignificantBits());
-        return buffer.array();
-    }
-
-    /**
      * Executes a SELECT query with optional WHERE clause and returns formatted results.
-     * @param what columns to select (e.g. "*", or "email")
-     * @param from table name
+     *
+     * @param what        columns to select (e.g. "*", or "email")
+     * @param from        table name
      * @param whereColumn optional column name for filtering
-     * @param whereValue value to match for filtering (if whereColumn is provided)
-     * @return string of formatted results or empty string if failed
+     * @param whereValue  value to match for filtering (if whereColumn is provided)
+     * @return string of formatted results (tab-separated rows) or empty string if none/failure
      */
     public static String SELECT(String what, String from, String whereColumn, String whereValue) {
         Connection connectDB = new DatabaseConnection().getConnection();
 
+        // sanitize identifiers by escaping backticks
         String escapedWhat = "`" + what.replace("`", "``") + "`";
         String escapedFrom = "`" + from.replace("`", "``") + "`";
 
@@ -44,24 +34,21 @@ public class DatabaseHelper {
 
         StringBuilder result = new StringBuilder();
 
-        try {
-            PreparedStatement preparedStatement;
+        try (PreparedStatement preparedStatement = connectDB.prepareStatement(selectQuery)) {
             if (whereColumn != null && !whereColumn.isEmpty()) {
-                preparedStatement = connectDB.prepareStatement(selectQuery);
                 preparedStatement.setString(1, whereValue);
-            } else {
-                preparedStatement = connectDB.prepareStatement(selectQuery);
             }
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
 
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    result.append(resultSet.getString(i)).append("\t");
+                while (resultSet.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        result.append(resultSet.getString(i)).append("\t");
+                    }
+                    result.append("\n");
                 }
-                result.append("\n");
             }
 
         } catch (SQLException e) {
@@ -71,4 +58,43 @@ public class DatabaseHelper {
 
         return result.toString();
     }
+    // … your existing SELECT(), uuidToBytes(), bytesToUUID(), etc. …
+
+    /**
+     * Look up a user's UUID (stored as BINARY(16)) by their email address.
+     * @param email the user's email
+     * @return the UUID if found, or null otherwise
+     * @throws SQLException on database error
+     */
+    public static UUID getUserUUIDByEmail(String email) throws SQLException {
+        String sql = "SELECT uuid FROM users WHERE email = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    byte[] raw = rs.getBytes("uuid");
+                    // delegate to UUIDHelper
+                    return UUIDHelper.BytesToUUID(raw);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Optionally: look up all user fields (or a subset) by their UUID.
+     * @param uuid the user's UUID
+     * @return a ResultSet (or map it into a user‐model object), or null if not found
+     * @throws SQLException on database error
+     */
+    public static ResultSet getUserByUUID(UUID uuid) throws SQLException {
+        String sql = "SELECT * FROM users WHERE uuid = ?";
+        Connection conn = new DatabaseConnection().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        // delegate to UUIDHelper
+        ps.setBytes(1, UUIDHelper.uuidToBytes(uuid));
+        return ps.executeQuery();
+    }
+
 }
