@@ -1,6 +1,8 @@
 package application.studyspace.services.DataBase;
 
+
 import java.sql.*;
+
 
 /**
  * The DatabaseConnection class provides functionality to establish and manage
@@ -9,6 +11,7 @@ import java.sql.*;
  */
 public class DatabaseConnection {
     public Connection databaseLink;
+
 
     /**
      * Establishes and returns a connection to a MariaDB database using JDBC.
@@ -24,6 +27,8 @@ public class DatabaseConnection {
         String url = "jdbc:mariadb://mysql-systemdevelopment2025.alwaysdata.net:3306/" + databaseName;
 
 
+
+
         try {
             Class.forName("org.mariadb.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
@@ -36,3 +41,4 @@ public class DatabaseConnection {
         }
     }
 }
+

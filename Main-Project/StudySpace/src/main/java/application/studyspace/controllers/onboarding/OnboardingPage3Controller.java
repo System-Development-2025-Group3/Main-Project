@@ -1,195 +1,231 @@
+// OnboardingPage3Controller.java
 package application.studyspace.controllers.onboarding;
 
+import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.CalendarEvent;
-import application.studyspace.services.calendar.CalendarView;
-import application.studyspace.services.Scenes.SceneSwitcher;
-import application.studyspace.services.onboarding.OnboardingEventInput;
+import application.studyspace.services.calendar.CalendarEventMapper;
+import application.studyspace.services.calendar.CalendarEventRepository;
+import application.studyspace.services.calendar.ExamEvent;
+import application.studyspace.services.calendar.ExamEventRepository;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Calendar.Style;
+import com.calendarfx.model.Entry;
+import com.calendarfx.view.CalendarView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Controller class responsible for managing functionality and interactions
- * on the third page of the onboarding sequence. This includes UI component
- * initialization, navigation to other onboarding pages, updating the calendar
- * preview, and handling user inputs.
- *
- * Implements the {@code Initializable} interface, allowing custom setup and
- * initialization logic for this controller.
- */
 public class OnboardingPage3Controller implements Initializable {
 
-    public Button page1Btn;
-    public Button page2Btn;
-    public Button page3Btn;
-    public Button SaveBtn;
-    @FXML private TextField examNameField;
-    @FXML private TextArea descriptionArea;
-    @FXML private TextField estimatedHoursField;
-    @FXML private ComboBox<String> typeCombo;
-    @FXML private ToggleGroup colorGroup;
+    private static final Logger logger = Logger.getLogger(OnboardingPage3Controller.class.getName());
 
-    @FXML private Label previewMonthLabel;
     @FXML private StackPane calendarPreviewContainer;
+    @FXML private Label     previewDateLabel;
+    @FXML private Button page1Btn, page2Btn, page3Btn, SaveBtn;
+    @FXML private ToggleGroup typeToggleGroup;
+    @FXML private ToggleButton examToggle, blockerToggle;
+    @FXML private VBox examForm, blockerForm;
+    @FXML private TextField  examNameField;
+    @FXML private TextArea   descriptionArea;
+    @FXML private DatePicker exStartDate, exEndDate;
+    @FXML private TextField  estimatedMinutesField;
+    @FXML private ToggleButton colorRed, colorBlue, colorGreen, colorYellow, colorPurple;
+    @FXML private TextField          evtTitleField, evtLocationField;
+    @FXML private DatePicker         evtStartDate, evtEndDate;
+    @FXML private Spinner<LocalTime> evtStartTime, evtEndTime;
+    @FXML private CheckBox           evtAllDay;
 
-    private LocalDate previewDate = LocalDate.now();
-    private final List<CalendarEvent> events = CalendarEvent.getAllEvents();
-    private UUID userUUID;
+    private CalendarView calendarView;
+    private LocalDate    previewDate;
+    private Calendar     defaultCalendar;
+
+    private final CalendarEventMapper     mapper  = new CalendarEventMapper();
+    private final CalendarEventRepository calRepo = new CalendarEventRepository();
+    private final ExamEventRepository     exRepo  = ExamEventRepository.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // 1) populate type selector
-        typeCombo.getItems().addAll("Exam", "Blocker");
-        updatePreview();
+        setupPreview();
+        setupTypeToggle();
+        setupTimeSpinners();
     }
 
-    public void setUserUUID(UUID uuid) {
-        this.userUUID = uuid;
+    private void setupPreview() {
+        previewDate  = LocalDate.now();
+        calendarView = new CalendarView();
+
+        // only show the day page, no toolbar or extra controls
+        calendarView.showDayPage();
+        calendarView.setShowToolBar(false);          // hide entire top bar
+        calendarView.setShowAddCalendarButton(false);
+        calendarView.setShowPageSwitcher(false);
+        calendarView.setShowPrintButton(false);
+        calendarView.setShowSearchField(false);
+        calendarView.setShowDeveloperConsole(false);
+
+        calendarView.setDate(previewDate);
+
+        defaultCalendar = new Calendar("Blockers");
+        defaultCalendar.setStyle(Style.STYLE1);
+        calendarView.getCalendarSources().get(0).getCalendars().add(defaultCalendar);
+
+        calendarPreviewContainer.getChildren().setAll(calendarView);
     }
 
-    /**
-     * Updates the calendar preview component to display the week view for the current
-     * preview date and sets the corresponding label displaying the range of dates.
-     *
-     * The method does the following:
-     * 1. Calculates the start and end dates of the week based on the {@code previewDate}.
-     * 2. Builds a week view using the {@code CalendarView.buildWeekView} method, populating it with events.
-     * 3. Updates the {@code calendarPreviewContainer} with the newly built week view.
-     * 4. Generates a textual representation of the week’s date range in the format
-     *    "StartMonth StartDay – EndMonth EndDay, Year" and sets it on the {@code previewMonthLabel}.
-     *
-     * Dependencies:
-     * - The method uses the {@code previewDate} field as the reference date.
-     * - The list of events is accessed through the {@code events} field.
-     * - The visual calendar view is updated in the {@code calendarPreviewContainer}.
-     * - The label displaying the date range is updated through the {@code previewMonthLabel}.
-     *
-     * This method assumes that {@code previewDate} has already been set and represents
-     * the starting date for the week view to be generated.
-     */
-    private void updatePreview() {
-        // build a week view and update label to "MonDay – SunDay, Year"
-        LocalDate start = previewDate;
-        LocalDate end = previewDate.plusDays(6);
-
-        calendarPreviewContainer.getChildren().setAll(
-                CalendarView.buildWeekView(start, events)
-        );
-
-        String startMonth = start.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-        String endMonth   = end.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        previewMonthLabel.setText(
-                startMonth + " " + start.getDayOfMonth()
-                        + " – "
-                        + endMonth   + " " + end.getDayOfMonth()
-                        + ", " + end.getYear()
+    private void updateLabel() {
+        previewDateLabel.setText(
+                previewDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                        + " " + previewDate.getDayOfMonth()
+                        + ", " + previewDate.getYear()
         );
     }
 
-    /**
-     * Advances the preview date by one week and updates the calendar preview.
-     *
-     * This method increments the current `previewDate` by 7 days, effectively
-     * shifting the displayed weekly calendar view forward by one week.
-     * After updating the preview date, the method invokes `updatePreview()`
-     * to refresh the UI components, including updating the label to reflect
-     * the new date range and rebuilding the weekly calendar view.
-     *
-     * Note: This method is triggered by a UI event handler, typically when
-     * the user interacts with a specific control (e.g., a "Next" button).
-     */
     @FXML private void goToNextPreview() {
-        previewDate = previewDate.plusDays(7);
-        updatePreview();
+        previewDate = previewDate.plusDays(1);
+        calendarView.setDate(previewDate);
+        updateLabel();
     }
 
-    /**
-     * Navigates to the previous week in the calendar preview.
-     *
-     * This method modifies the `previewDate` field by subtracting 7 days, effectively moving
-     * the displayed preview week backward by one week. After updating the date, it calls
-     * the `updatePreview` method to refresh the calendar preview and update the associated label
-     * to reflect the new date range.
-     *
-     * The operation is triggered by a user interaction in the interface, typically linked
-     * to a button or other UI element.
-     */
     @FXML private void goToPreviousPreview() {
-        previewDate = previewDate.minusDays(7);
-        updatePreview();
+        previewDate = previewDate.minusDays(1);
+        calendarView.setDate(previewDate);
+        updateLabel();
     }
 
-    @FXML
-    private void handlePage1(ActionEvent event) {
-        Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage1Controller>switchPopupContent(
-                popupStage,
-                "/application/studyspace/onboarding/OnboardingPage1.fxml",
-                "Onboarding Page 1",
-                controller -> controller.setUserUUID(userUUID)
+    private void setupTypeToggle() {
+        typeToggleGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
+            boolean isExam = newT == examToggle;
+            examForm.setVisible(isExam);
+            examForm.setManaged(isExam);
+            blockerForm.setVisible(!isExam);
+            blockerForm.setManaged(!isExam);
+        });
+        examToggle.setSelected(true);
+    }
+
+    private void setupTimeSpinners() {
+        ObservableList<LocalTime> times = FXCollections.observableArrayList();
+        for (int h = 0; h < 24; h++) {
+            times.add(LocalTime.of(h, 0));
+            times.add(LocalTime.of(h, 30));
+        }
+        SpinnerValueFactory<LocalTime> sf1 = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+        SpinnerValueFactory<LocalTime> sf2 = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+        StringConverter<LocalTime> conv = new StringConverter<>() {
+            @Override public String toString(LocalTime t) { return t == null ? "" : t.format(fmt); }
+            @Override public LocalTime fromString(String s) { return LocalTime.parse(s, fmt); }
+        };
+        sf1.setConverter(conv);
+        sf2.setConverter(conv);
+
+        evtStartTime.setValueFactory(sf1);
+        evtEndTime.setValueFactory(sf2);
+        evtStartTime.setEditable(true);
+        evtEndTime.setEditable(true);
+    }
+
+    @FXML private void handlePage1(ActionEvent e) {
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", c -> {});
+    }
+
+    @FXML private void handlePage2(ActionEvent e) {
+        ViewManager.closeTopOverlay();
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage2.fxml", c -> {});
+    }
+
+    @FXML private void handlePage3() {}
+
+    @FXML private void handleSave(ActionEvent e) {
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
+        try {
+            if (examToggle.isSelected()) saveExam(userId);
+            else                         saveBlocker(userId);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Error in handleSave", ex);
+        }
+        ViewManager.closeTopOverlay();
+    }
+
+    private void saveExam(UUID userId) {
+        ZonedDateTime start = exStartDate.getValue().atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime end   = exEndDate  .getValue().atStartOfDay(ZoneId.systemDefault());
+        int minutes = Integer.parseInt(estimatedMinutesField.getText());
+
+        ExamEvent exam = new ExamEvent(
+                userId,
+                examNameField.getText(),
+                "",
+                descriptionArea.getText(),
+                "",
+                start, end,
+                0.0, 0, 1, minutes
         );
+        exRepo.save(exam);
+        logger.info("Created ExamEvent: " + exam.getId());
+
+        Calendar examCal = new Calendar(exam.getTitle());
+        examCal.setStyle(pickStyle());
+        Entry<ExamEvent> fx = mapper.toEntry(exam, examCal);
+        examCal.addEntry(fx);
+        calendarView.getCalendarSources().get(0).getCalendars().add(examCal);
     }
 
-    @FXML
-    private void handlePage2(ActionEvent event) {
-        Stage popupStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitcher.<OnboardingPage2Controller>switchPopupContent(
-                popupStage,
-                "/application/studyspace/onboarding/OnboardingPage2.fxml",
-                "Onboarding Page 2",
-                controller -> controller.setUserUUID(userUUID)
-        );
+    private void saveBlocker(UUID userId) {
+        try {
+            LocalDate sd = evtStartDate.getValue();
+            LocalTime st = evtStartTime.getValue();
+            ZonedDateTime start = ZonedDateTime.of(sd, st, ZoneId.systemDefault());
+            ZonedDateTime end = evtAllDay.isSelected()
+                    ? start.plusDays(1)
+                    : ZonedDateTime.of(evtEndDate.getValue(), evtEndTime.getValue(), ZoneId.systemDefault());
+
+            CalendarEvent evt = new CalendarEvent(
+                    userId,
+                    evtTitleField.getText(),
+                    "",
+                    evtLocationField.getText(),
+                    start, end
+            );
+            calRepo.save(evt);
+            logger.info("Created CalendarEvent: " + evt.getId());
+
+            Entry<CalendarEvent> fx = mapper.toEntry(evt, defaultCalendar);
+            defaultCalendar.addEntry(fx);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Failed to save blocker", ex);
+        }
     }
 
-    @FXML private void handlePage3() {
-        // no-op: already on Page 3
-    }
-
-    @FXML
-    private void handleSave(ActionEvent event) {
-        //temporary solution
-        Stage popup = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        popup.close();
-        /** String title = examNameField.getText();
-         String desc  = descriptionArea.getText();
-         int hours    = Integer.parseInt(estimatedHoursField.getText());
-         String type  = typeCombo.getValue();
-         String color = ((ToggleButton) colorGroup.getSelectedToggle())
-         .getId()
-         .replace("color", "")
-         .toLowerCase();
-
-         OnboardingEventInput input = new OnboardingEventInput(
-         userUUID, title, desc, hours, type, color
-         );
-
-         if (input.saveToDatabase()) {
-         // Stage popup = (Stage) ((Node)event.getSource()).getScene().getWindow();
-         //popup.close();
-         // proceed…
-         } else {
-         // show error to user…
-         }
-         **/
+    private Style pickStyle() {
+        if (colorRed   .isSelected()) return Style.STYLE1;
+        if (colorBlue  .isSelected()) return Style.STYLE2;
+        if (colorGreen .isSelected()) return Style.STYLE3;
+        if (colorYellow.isSelected()) return Style.STYLE4;
+        if (colorPurple.isSelected()) return Style.STYLE5;
+        return Style.STYLE1;
     }
 }

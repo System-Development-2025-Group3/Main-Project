@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="overlayRoot"
+           xmlns:fx="http://javafx.com/fxml"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           fx:controller="application.studyspace.controllers.scenes.RootController">
+
+    <BorderPane fx:id="rootLayout"/>
+</StackPane>

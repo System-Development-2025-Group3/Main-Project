@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="application.studyspace.controllers.landingpage.DashboardController"
+            stylesheets="@../styles/LandingPageStylesheet.css"
+            style="-fx-background-color: white;">
+
+    <fx:define>
+        <ToggleGroup fx:id="navGroup"/>
+    </fx:define>
+
+    <!-- Sidebar -->
+    <left>
+        <AnchorPane>
+            <children>
+                <VBox styleClass="sidebar"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0">
+                    <Label text="Study Planner" styleClass="sidebar-title"/>
+                    <ToggleButton text="📅 Calendar"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"
+                                  onAction="#handleSidebarCalendar"/>
+                    <ToggleButton text="📊 Dashboard"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"
+                                  selected="true"
+                                  onAction="#handleSidebarDashboard"/>
+                    <ToggleButton text="⚙ Settings"
+                                  styleClass="sidebar-button"
+                                  toggleGroup="$navGroup"
+                                  onAction="#handleSidebarSettings"/>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </left>
+
+    <!-- Main dashboard content -->
+    <center>
+        <StackPane style="-fx-padding: 40;">
+            <Label text="📊 Dashboard Page"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,19 @@
+/* ─── CalendarFX Palette Overrides ─── */
+
+/* Override style-6 palette (used by Calendar.Style.STYLE6) */
+.calendar-view {
+    /* light fill used in month tiles & entry backgrounds */
+    -palette6-light:         rgba(0,0,0,0.25) !important;
+    /* darker border/legend color */
+    -palette6-dark:          rgba(0,0,0,0.5)  !important;
+    /* header accent (today marker) */
+    -palette6-primary:       black           !important;
+}
+
+/* Also override “today” marker & header text just in case */
+.date-control .today-marker {
+    -fx-background-color: black !important;
+}
+.calendar-header .label {
+    -fx-text-fill:        black !important;
+}

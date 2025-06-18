@@ -1,136 +1,144 @@
-/* ==== GLOBAL ROOT ==== */
+/* ============ GLOBAL ============ */
 .root {
-    -fx-background-color: white;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-background-color: #FFFFFF;
 }
 
-/* ==== SIDEBAR ==== */
+/* ============ SIDEBAR ============ */
 .sidebar {
-    -fx-background-color: #f1f2f4;
-    -fx-padding: 24;
+  -fx-background-color: #FFFFFF;
+  -fx-border-color: #E5E7EB;      /* subtle right border */
+  -fx-border-width: 0 1 0 0;
+  -fx-padding: 32 16;
 }
 .sidebar-title {
-    -fx-text-fill: #121417;
-    -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-padding: 0 0 8 0;
+  -fx-text-fill: #111827;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 0 24 0;
 }
 .sidebar-button {
-    -fx-alignment: CENTER_LEFT;
-    -fx-graphic-text-gap: 10;
-    -fx-padding: 8 12;
-    -fx-background-radius: 999;
-    -fx-background-color: transparent;
-    -fx-text-fill: #121417;
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
-    -fx-cursor: hand;
+  -fx-text-fill: #374151;
+  -fx-font-size: 14px;
+  -fx-font-weight: 500;
+  -fx-background-color: transparent;
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 8 12;
+  -fx-background-radius: 8;
+  -fx-cursor: hand;
+}
+.sidebar-button:hover {
+  -fx-background-color: #F3F4F6;
 }
 .sidebar-button:selected {
-    -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+  -fx-background-color: #E5E7EB;
+  -fx-text-fill: #111827;
 }
 
-/* ==== MAIN CONTENT ==== */
-.content-root {
-    -fx-padding: 24;
-}
+/* ============ HEADER BAR ============ */
 .header-box {
-    /* no extra styling needed */
+  -fx-padding: 16 24;
+  -fx-spacing: 12;
+  -fx-alignment: CENTER_LEFT;
 }
 .nav-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #121417;
-    -fx-font-size: 14px;
-    -fx-padding: 4 8;
-    -fx-cursor: hand;
+  -fx-background-color: transparent;
+  -fx-text-fill: #374151;
+  -fx-font-size: 14px;
+  -fx-cursor: hand;
 }
 .nav-button:hover {
-    -fx-background-color: #f1f2f4;
-    -fx-background-radius: 4;
+  -fx-background-color: #F3F4F6;
+  -fx-background-radius: 4;
 }
 .content-title {
-    -fx-text-fill: #121417;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
+  -fx-text-fill: #111827;
+  -fx-font-size: 20px;
+  -fx-font-weight: 600;
 }
-
-/* ==== VIEW TOGGLE ==== */
-.view-toggle {
-    -fx-background-color: #f1f2f4;
-    -fx-padding: 4;
-    -fx-background-radius: 999;
-    -fx-alignment: center;
-}
-.view-toggle .view-button {
-    -fx-background-radius: 999;
-    -fx-background-color: transparent;
-    -fx-text-fill: #677583;
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
-    -fx-padding: 6 14;
-    -fx-cursor: hand;
-}
-.view-toggle .view-button:selected {
-    -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
-    -fx-text-fill: #121417;
-}
-
-/* ==== CALENDAR WRAPPER & GRID ==== */
-.calendar-wrapper {
-    -fx-background-color: white;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-padding: 16;
-    -fx-alignment: center;   /* center the grid */
-}
-
-/* constrain the grid to 7×120px + gaps = ~880px */
-.calendar-wrapper .calendar-grid {
-    -fx-pref-width: 880px;
-    -fx-max-width: 880px;
-}
-
-/* each day‐cell gets its own border & padding */
-.calendar-wrapper .calendar-day-box {
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 8;
-}
-
-/* ==== YOUR EXISTING CALENDAR STYLES ==== */
-/* (drop in your original definitions for these classes) */
-.calendar-day-header {
-    /* e.g. -fx-font-weight: bold; -fx-text-fill: #1e2a39; … */
-}
-
-.calendar-day-number {
-    /* e.g. -fx-font-size: 12px; -fx-text-fill: #121417; … */
-}
-
-.calendar-event {
-    /* e.g. -fx-padding: 2 4; -fx-background-radius: 4; -fx-font-size: 11px; … */
-}
-
-.calendar-hour-cell {
-    /* e.g. -fx-border-color: #e0e0e0; -fx-min-height: 40px; … */
-}
-
-.calendar-hour-label {
-    /* e.g. -fx-font-size: 10px; -fx-text-fill: #677583; … */
-}
-
 .create-event-button {
-    -fx-background-color: #90affa;
-    -fx-text-fill: #121417;
-    -fx-font-size: 14px;
-    -fx-padding: 4 8;
-    -fx-cursor: hand;
+  -fx-background-color: #111827;
+  -fx-text-fill: white;
+  -fx-padding: 6 16;
+  -fx-background-radius: 6;
+  -fx-font-size: 14px;
 }
 .create-event-button:hover {
-    -fx-background-color: #6e85d5;
-    -fx-background-radius: 4;
+  -fx-background-color: #374151;
 }
 
+/* ============ VIEW TOGGLE ============ */
+.view-toggle {
+  -fx-background-color: #FFFFFF;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-border-color: #E5E7EB;
+  -fx-border-width: 1;
+  -fx-padding: 8 12;
+  -fx-alignment: CENTER_LEFT;
+}
+.view-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #374151;
+  -fx-font-size: 13px;
+  -fx-font-weight: 500;
+  -fx-padding: 6 12;
+  -fx-background-radius: 6;
+}
+.view-button:selected {
+  -fx-background-color: #111827;
+  -fx-text-fill: #FFFFFF;
+}
+.view-button:hover {
+  -fx-background-color: #F3F4F6;
+}
+
+/* ============ CALENDAR WRAPPER ============ */
+.calendar-wrapper {
+  -fx-background-color: #FFFFFF;
+  -fx-padding: 16;
+  -fx-border-color: #E5E7EB;
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+}
+
+/* ============ CalendarFX OVERRIDES ============ */
+/* (targets its default classes) */
+.calendar-view {
+  -fx-background-color: transparent;
+}
+.calendar-header-view,
+.calendar-toolbar,
+.calendar-secondary-toolbar {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+}
+.day-header-text {
+  -fx-text-fill: #374151;
+  -fx-font-size: 12px;
+  -fx-font-weight: 600;
+}
+.hour-text {
+  -fx-text-fill: #9CA3AF;
+  -fx-font-size: 10px;
+}
+.day-cell {
+  -fx-border-color: #E5E7EB;
+}
+.today {
+  -fx-background-color: #F9FAFB;
+}
+.entry {
+  -fx-background-color: #374151;
+  -fx-text-fill: #FFFFFF;
+  -fx-background-radius: 4;
+  -fx-padding: 2 4;
+}
+.entry:hover {
+  -fx-background-color: #1F2937;
+}
+.calendar-view .page-toolbar,
+.calendar-view .page-toolbar-button {
+  -fx-background-color: transparent !important;
+  -fx-border-color: transparent !important;
+}

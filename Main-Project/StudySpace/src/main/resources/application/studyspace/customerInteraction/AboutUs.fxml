@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           fx:controller="application.studyspace.controllers.customerInteraction.AboutUsController"
+           stylesheets="@../styles/customerInteraction/AboutUs.css">
+
+
+    <!-- Background Pane -->
+    <Pane style="-fx-background-color: #f5f5f5;" />
+
+
+    <!-- Main Content -->
+    <VBox alignment="CENTER" spacing="40" style="-fx-padding: 50;">
+        <!-- Title -->
+        <Label text="Meet Our Team" styleClass="about-title" />
+
+
+        <!-- Carousel Container -->
+        <StackPane fx:id="cardCarousel" style="-fx-min-height: 500px; -fx-pref-height: 500px; -fx-alignment: CENTER;">
+            <HBox fx:id="cardContainer" alignment="CENTER" spacing="50" style="-fx-alignment: center;">
+                <!-- Left Card -->
+                <VBox styleClass="team-card-left-card">
+                    <ImageView fx:id="imageLeft" fitWidth="100" fitHeight="100" preserveRatio="true" />
+                    <Label fx:id="nameLeft" styleClass="team-card-name" />
+                    <Label fx:id="ageLeft" styleClass="team-card-property" />
+                    <Label fx:id="professionLeft" styleClass="team-card-property" />
+                    <Label fx:id="descriptionLeft" styleClass="team-card-description" wrapText="true" maxWidth="350" />
+                </VBox>
+
+
+                <!-- Center Card -->
+                <VBox styleClass="team-card-center-card">
+                    <ImageView fx:id="imageCenter" fitWidth="150" fitHeight="150" preserveRatio="true" />
+                    <Label fx:id="nameCenter" styleClass="team-card-name" />
+                    <Label fx:id="ageCenter" styleClass="team-card-property" />
+                    <Label fx:id="professionCenter" styleClass="team-card-property" />
+                    <Label fx:id="descriptionCenter" styleClass="team-card-description" wrapText="true" maxWidth="450" />
+                </VBox>
+
+
+                <!-- Right Card -->
+                <VBox styleClass="team-card-right-card">
+                    <ImageView fx:id="imageRight" fitWidth="100" fitHeight="100" preserveRatio="true" />
+                    <Label fx:id="nameRight" styleClass="team-card-name" />
+                    <Label fx:id="ageRight" styleClass="team-card-property" />
+                    <Label fx:id="professionRight" styleClass="team-card-property" />
+                    <Label fx:id="descriptionRight" styleClass="team-card-description" wrapText="true" maxWidth="350" />
+                </VBox>
+            </HBox>
+        </StackPane>
+    </VBox>
+</StackPane>
+

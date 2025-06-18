@@ -58,15 +58,6 @@
               styleClass="card-box"
               prefWidth="600"
               VBox.vgrow="ALWAYS">
-            <Label text="Preview"
-                   style="-fx-font-size:16px; -fx-font-weight:bold;"/>
-
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="◀" onAction="#goToPrevious" styleClass="page-button"/>
-                <Label fx:id="monthYearLabel"
-                       style="-fx-font-size:14px; -fx-font-weight:bold;"/>
-                <Button text="▶" onAction="#goToNext" styleClass="page-button"/>
-            </HBox>
 
             <StackPane fx:id="calendarContainer"
                        styleClass="calendar-wrapper"

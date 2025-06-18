@@ -1,9 +1,12 @@
 package application.studyspace.services.DataBase;
 
+
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+
 public class UUIDHelper {
+
 
     /**
      * Converts a UUID into a 16-byte array representation.
@@ -18,6 +21,7 @@ public class UUIDHelper {
         return buffer.array();
     }
 
+
     /**
      * Converts a byte array (BINARY(16) format) into a UUID.
      *
@@ -30,6 +34,7 @@ public class UUIDHelper {
         long low = byteBuffer.getLong();
         return new UUID(high, low);
     }
+
 
     /**
      * Converts a string to a UUID.
@@ -44,6 +49,7 @@ public class UUIDHelper {
         return UUID.fromString(uuidString);
     }
 
+
     /**
      * Converts a UUID to a string.
      *
@@ -56,5 +62,6 @@ public class UUIDHelper {
         }
         return uuid.toString();
     }
+
 
 }

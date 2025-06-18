@@ -1,10 +1,13 @@
 package application.studyspace.services.DataBase;
 
+
 import java.nio.ByteBuffer;
 import java.sql.*;
 import java.util.UUID;
 
+
 public class DatabaseHelper {
+
 
     /**
      * Converts a UUID to a 16-byte array for storing in a BINARY(16) database field.
@@ -18,6 +21,7 @@ public class DatabaseHelper {
         return buffer.array();
     }
 
+
     /**
      * Retrieves a UUID from the database using an email address.
      * Assumes that the UUID is stored as BINARY(16) in the "id" column.
@@ -30,8 +34,10 @@ public class DatabaseHelper {
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
+
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
+
 
             if (rs.next()) {
                 byte[] uuidBytes = rs.getBytes("user_id");
@@ -45,6 +51,7 @@ public class DatabaseHelper {
         }
     }
 
+
     /**
      * Executes a SELECT query with optional WHERE clause and returns formatted results.
      * @param what columns to select (e.g. "*", or "email")
@@ -56,8 +63,10 @@ public class DatabaseHelper {
     public static String SELECT(String what, String from, String whereColumn, String whereValue) {
         Connection connectDB = new DatabaseConnection().getConnection();
 
+
         String escapedWhat = "`" + what.replace("`", "``") + "`";
         String escapedFrom = "`" + from.replace("`", "``") + "`";
+
 
         String selectQuery;
         if (whereColumn != null && !whereColumn.isEmpty()) {
@@ -67,9 +76,12 @@ public class DatabaseHelper {
             selectQuery = "SELECT " + escapedWhat + " FROM " + escapedFrom;
         }
 
+
         System.out.println("SQL Query: " + selectQuery);
 
+
         StringBuilder result = new StringBuilder();
+
 
         try {
             PreparedStatement preparedStatement;
@@ -80,9 +92,11 @@ public class DatabaseHelper {
                 preparedStatement = connectDB.prepareStatement(selectQuery);
             }
 
+
             ResultSet resultSet = preparedStatement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
+
 
             while (resultSet.next()) {
                 for (int i = 1; i <= columnCount; i++) {
@@ -91,11 +105,16 @@ public class DatabaseHelper {
                 result.append("\n");
             }
 
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         }
 
+
         return result.toString();
     }
 }
+
+
+

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>Application</groupId>
@@ -11,20 +12,23 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<junit.version>5.10.2</junit.version>  </properties>
+    <junit.version>5.10.2</junit.version>
+  </properties>
 
   <dependencies>
+    <!-- MariaDB -->
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
       <version>3.5.3</version>
     </dependency>
+
+    <!-- JavaFX -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>23.0.1</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
@@ -36,28 +40,63 @@
       <artifactId>javafx-fxml</artifactId>
       <version>23.0.1</version>
     </dependency>
-
-  <dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20231013</version>
-  </dependency>
-
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
-      <version>21</version>
+      <version>21.0.1</version>
     </dependency>
-      <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-swing</artifactId>
-        <version>21</version>
-      </dependency>
-<dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>21.0.1</version>
+    </dependency>
+
+    <!-- CalendarFX -->
+    <dependency>
+      <groupId>com.calendarfx</groupId>
+      <artifactId>view</artifactId>
+      <version>11.12.7</version>
+    </dependency>
+    <!-- Ikonli Core (Required) -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-core</artifactId>
+      <version>12.3.1</version>
+    </dependency>
+    <!-- JavaFX UI support -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-javafx</artifactId>
+      <version>12.3.1</version>
+    </dependency>
+    <!-- FontAwesome icon pack -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-fontawesome5-pack</artifactId>
+      <version>12.3.1</version>
+    </dependency>
+
+    <!-- SLF4J simple binding to silence warnings -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.36</version>
+    </dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20231013</version>
+    </dependency>
+
+    <!-- ControlsFX, FormsFX, ValidatorFX, BootstrapFX, TilesFX -->
+    <dependency>
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
       <version>11.2.1</version>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>com.dlsc.formsfx</groupId>
       <artifactId>formsfx-core</artifactId>
       <version>11.6.0</version>
@@ -67,7 +106,8 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>net.synedra</groupId>
       <artifactId>validatorfx</artifactId>
       <version>0.5.0</version>
@@ -77,11 +117,13 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>org.kordamp.bootstrapfx</groupId>
       <artifactId>bootstrapfx-core</artifactId>
       <version>0.4.0</version>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>eu.hansolo</groupId>
       <artifactId>tilesfx</artifactId>
       <version>21.0.3</version>
@@ -92,7 +134,23 @@
         </exclusion>
       </exclusions>
     </dependency>
-<dependency>
+
+    <!-- iCal4j for .ics parsing -->
+    <dependency>
+      <groupId>org.mnode.ical4j</groupId>
+      <artifactId>ical4j</artifactId>
+      <version>4.1.1</version>
+    </dependency>
+
+    <!-- Apache Commons Text (for LevenshteinDistance) -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.13.1</version>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
@@ -103,10 +161,12 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
-    </dependency>  </dependencies>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
+      <!-- Compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -116,16 +176,17 @@
           <target>21</target>
         </configuration>
       </plugin>
+
+      <!-- JavaFX Maven Plugin -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <executions>
           <execution>
-            <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>application.studyspace/application.studyspace.MainApp</mainClass>
+              <mainClass>application.studyspace.application.studyspace.MainApp</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

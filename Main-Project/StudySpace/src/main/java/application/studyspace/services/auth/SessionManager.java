@@ -1,56 +1,61 @@
 package application.studyspace.services.auth;
 
+import java.util.Objects;
 import java.util.UUID;
 
-import application.studyspace.services.auth.SessionManager;
-
 /**
- * SessionManager is a singleton class that manages the session state of the application.
- * It holds the logged-in user's information and provides global access to it.
+ * SessionManager is a singleton that holds the current user's session.
  */
 public class SessionManager {
-    private static SessionManager instance;
 
-    // Logged-in user ID (e.g., UUID from the database)
+    private static final SessionManager INSTANCE = new SessionManager();
+
     private UUID loggedInUserId;
 
-    // Private constructor to prevent instantiation
+    // Private constructor
     private SessionManager() {}
 
     /**
-     * Get the single instance of the SessionManager.
-     *
-     * @return the single instance of SessionManager.
+     * @return the single SessionManager instance
      */
     public static SessionManager getInstance() {
-        if (instance == null) {
-            instance = new SessionManager();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     /**
-     * Sets the logged-in user's ID.
-     *
-     * @param userId the UUID of the currently logged-in user.
+     * Log a user in by their UUID.
+     * @param userId the UUID of the user logging in (must not be null)
      */
-    public void setLoggedInUserId(UUID userId) {
-        this.loggedInUserId = userId;
+    public void login(UUID userId) {
+        this.loggedInUserId = Objects.requireNonNull(userId, "userId cannot be null");
     }
 
     /**
-     * Gets the logged-in user's ID.
-     *
-     * @return the UUID of the currently logged-in user.
+     * @return true if a user is currently logged in.
+     */
+    public boolean isLoggedIn() {
+        return loggedInUserId != null;
+    }
+
+    /**
+     * Fetches the currently logged-in user's ID.
+     * @return the UUID of the logged-in user
+     * @throws IllegalStateException if no user is logged in
      */
     public UUID getLoggedInUserId() {
+        if (loggedInUserId == null) {
+            throw new IllegalStateException("No user is currently logged in.");
+        }
         return loggedInUserId;
     }
 
     /**
-     * Clears the session, typically used during logout.
+     * Clears the current session (logs out).
      */
-    public void clearSession() {
+    public void logout() {
         loggedInUserId = null;
+    }
+
+    public void setLoggedInUserId(UUID userId) {
     }
 }

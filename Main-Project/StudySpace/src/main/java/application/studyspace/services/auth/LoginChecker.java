@@ -1,6 +1,8 @@
 package application.studyspace.services.auth;
 
+
 import application.studyspace.services.DataBase.DatabaseConnection;
+
 
 import java.nio.ByteBuffer;
 import java.sql.Connection;
@@ -9,11 +11,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+
 import static application.studyspace.services.DataBase.UUIDHelper.BytesToUUID;
+
 
 public class LoginChecker {
 
+
     private static UUID loggedInUserUUID;
+
 
     /**
      * Verifies the login credentials by comparing the given email and password
@@ -25,39 +31,49 @@ public class LoginChecker {
      * @return true if the email and password match an entry in the database, false otherwise
      */
 
+
     public static boolean checkLogin(String emailInput, String passwordInput) {
         try {
             Connection connection = new DatabaseConnection().getConnection();
+
 
             String sql = "SELECT user_id, password_hash, salt FROM users WHERE email = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, emailInput); // fill in the username
 
+
             ResultSet result = statement.executeQuery();
+
 
             if (result.next()) {
                 String savedHash = result.getString("password_hash");
                 String savedSalt = result.getString("salt");
 
+
                 String newHash = PasswordHasher.hashPassword(passwordInput, savedSalt);
+
 
                 if (newHash.equals(savedHash)) {
                     byte[] uuidBytes = result.getBytes("user_id");
                     loggedInUserUUID = BytesToUUID(uuidBytes);
 
+
                     SessionManager.getInstance().setLoggedInUserId(loggedInUserUUID);
                     System.out.println("Login successful! Session for user " + loggedInUserUUID + " created.");
                     return true;
+
 
                 } else {
                     System.out.println("Wrong password.");
                     return false;
                 }
 
+
             } else {
                 System.out.println("User not found.");
                 return false;
             }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,15 +81,22 @@ public class LoginChecker {
         }
     }
 
+
     public static boolean autoLoginIfPossible() {
         String savedUsername = LoginSession.getSavedUsername();
         String token = LoginSession.getSavedToken();
 
+
         if (savedUsername != null && token != null) {
+
 
             return ValidationUtils.validateToken(savedUsername, token);
         }
         return false;
     }
 
+
 }
+
+
+
