@@ -1,31 +1,23 @@
-/* LOGIN AND REGISTER SCREEN — Login.css */
-
-/* Settingscontroller Text Styling */
+/* LOGIN AND REGISTER SCREEN — Stylesheet.css */
 .welcome-title {
     -fx-font-size: 22px;
     -fx-font-family: "Arial";
     -fx-text-fill: #333;
 }
-
 .form-label {
     -fx-font-size: 14px;
-    -fx-text-fill: #000000;
+    -fx-text-fill: #000;
     -fx-padding: 5 0 0 5;
 }
-
-/* Link text inside TextFlow */
 #linkText {
     -fx-fill: #3a56d8;
     -fx-underline: true;
     -fx-cursor: hand;
 }
-#linkText:hover {
-    -fx-fill: darkblue;
-}
+#linkText:hover { -fx-fill: darkblue; }
 
-/* TextField & PasswordField styling */
 .text-field, .password-field {
-    -fx-background-color: #becaff;
+    -fx-background-color: #c0c3d1;
     -fx-border-color: transparent;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -34,51 +26,37 @@
     -fx-text-fill: black;
     -fx-prompt-text-fill: #888;
 }
-
 .text-field:focused, .password-field:focused {
-    -fx-border-color: #b8aefd;
+    -fx-border-color: #827f91;
     -fx-border-width: 2px;
 }
 
-/* Login/Register Button */
 .button {
-    -fx-background-color: #e2e4ff;
+    -fx-background-color: #c0c1cd;
     -fx-background-radius: 20;
     -fx-font-size: 16px;
     -fx-padding: 10 25;
     -fx-cursor: hand;
 }
-.button:hover {
-    -fx-background-color: #cfd3ff;
-}
+.button:hover { -fx-background-color: #90919e; }
 
-/* Custom Checkbox */
-.custom-checkbox .box {
-    -fx-background-color: white;
-    -fx-border-color: #444;
-    -fx-border-width: 2px;
-    -fx-shape: "M0,0 H12 V12 H0 Z";
-    -fx-background-insets: 0;
-    -fx-padding: 2;
+.menu-button {
+    -fx-background-color: #fff;
+    -fx-background-radius: 20;
+    -fx-font-size: 16px;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
 }
-.custom-checkbox:selected .box {
-    -fx-background-color: green;
-    -fx-border-color: black;
-}
-.custom-checkbox .mark {
-    -fx-background-color: white;
-}
+.menu-button:hover { -fx-background-color: #dddde4; }
+
 .circle-label {
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 50%;
     -fx-border-radius: 50%;
-    -fx-font-weight: bold;
     -fx-alignment: center;
     -fx-text-fill: black;
     -fx-min-width: 20px;
     -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
     -fx-font-size: 14px;
     -fx-border-color: gray;
     -fx-border-width: 1;
@@ -87,33 +65,19 @@
 .tooltip-Label {
     -fx-background-color: #f6e18f;
     -fx-background-radius: 10;
-    -fx-border-radius: 10;
     -fx-padding: 5;
     -fx-text-fill: black;
     -fx-font-size: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.2, 0, 2); /* Subtle shadow for better visibility */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1),5,0.2,0,2);
 }
-
-.tooltip-Label-Error {
+.tooltip-Label-Error, .tooltip-Label-Error-Autocorrect {
     -fx-background-color: #f68f8f;
     -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 5;
-    -fx-text-fill: black;
-    -fx-font-size: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.2, 0, 2); /* Subtle shadow for better visibility */
-}
-
-.tooltip-Label-Error-Autocorrect {
-    -fx-background-color: #f68f8f;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
     -fx-padding: 5;
     -fx-text-fill: black;
     -fx-font-size: 12px;
 }
 
-/* TextField & PasswordField styling */
 .text-field-error, .password-field-error {
     -fx-background-color: #ffbebe;
     -fx-border-color: #d63f3f;
@@ -123,7 +87,6 @@
     -fx-padding: 10 15;
     -fx-font-size: 14px;
     -fx-text-fill: black;
-    -fx-prompt-text-fill: #888;
 }
 
 .text-field-correct {
@@ -135,10 +98,8 @@
     -fx-padding: 10 15;
     -fx-font-size: 14px;
     -fx-text-fill: black;
-    -fx-prompt-text-fill: #888;
 }
 
-/* Styling for "Execute" Button */
 .execute-button {
     -fx-background-color: #4caf50;
     -fx-text-fill: white;
@@ -147,12 +108,8 @@
     -fx-padding: 5 10;
     -fx-cursor: hand;
 }
+.execute-button:hover { -fx-background-color: #45a049; }
 
-.execute-button:hover {
-    -fx-background-color: #45a049;
-}
-
-/* Styling for Close Button (Red "X") */
 .close-button {
     -fx-background-color: #d32f2f;
     -fx-background-radius: 50%;
@@ -161,10 +118,6 @@
     -fx-pref-width: 20px;
     -fx-pref-height: 20px;
     -fx-alignment: center;
-    -fx-padding: 0;
     -fx-cursor: hand;
 }
-
-.close-button:hover {
-    -fx-background-color: #c62828;
-}
+.close-button:hover { -fx-background-color: #c62828; }
