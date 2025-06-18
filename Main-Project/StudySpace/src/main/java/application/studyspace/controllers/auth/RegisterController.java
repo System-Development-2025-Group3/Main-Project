@@ -58,35 +58,47 @@ public class RegisterController {
                     applyErrorStyle(RegisterEmailField, "text-field-error");
                     toolTipService.showTooltipForDurationX(
                             emailTooltip,
-                            "You did not enter an email address! Please enter a valid email address:\n• The format should be like example@domain.com.",
+                            "You did not enter an email address! Please enter a valid email address:\n" +
+                                    "• The format should be like example@domain.com.",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(RegisterEmailField, "text-field-error", "text-field"))
-                            .play();
+                    // <-- fix here
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e ->
+                            resetFieldStyle(RegisterEmailField, "text-field-error", "text-field")
+                    );
+                    delay.play();
                 }
+
                 case "INVALID_EMAIL" -> {
                     applyErrorStyle(RegisterEmailField, "text-field-error");
                     toolTipService.showTooltipForDurationX(
                             emailTooltip,
-                            "You did not enter a valid email address! Please do so next time.\n• The format should be like example@domain.com.",
+                            "You did not enter a valid email address! Please do so next time.\n" +
+                                    "• The format should be like example@domain.com.",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> resetFieldStyle(RegisterEmailField, "text-field-error", "text-field"))
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e ->
+                            resetFieldStyle(RegisterEmailField, "text-field-error", "text-field")
+                    );
+                    delay.play();
                 }
+
                 case "DUPLICATE_EMAIL" -> {
                     toolTipService.showAutocorrectPopup(
                             emailTooltip,
-                            "The E-Mail you entered is already associated with an account.\nWould you instead like to log in?",
+                            "The E-Mail you entered is already associated with an account.\n" +
+                                    "Would you instead like to log in?",
                             "tooltip-Label-Error-Autocorrect",
                             0,
                             () -> ViewManager.show("/application/studyspace/auth/Login.fxml")
                     );
                 }
+
+                // both EMPTY_PASSWORD and REGISTER_PASSWORD_INVALID share the same styling logic
                 case "EMPTY_PASSWORD", "REGISTER_PASSWORD_INVALID" -> {
                     applyErrorStyle(RegisterPassword_1, "password-field-error");
                     applyErrorStyle(RegisterPassword_2, "password-field-error");
@@ -94,17 +106,22 @@ public class RegisterController {
                             passwordTooltip1,
                             validationState.equals("EMPTY_PASSWORD")
                                     ? "You did not enter both passwords!"
-                                    : "Invalid Password! Please make sure that your password fulfills the following conditions:\n• At least 12 characters long\n• Includes at least one uppercase letter\n• Includes at least one number\n• Includes at least one special character (%, &, !, ?, #, _, -, $)",
+                                    : "Invalid Password! Please make sure that your password fulfills the following conditions:\n" +
+                                    "• At least 12 characters long\n" +
+                                    "• Includes at least one uppercase letter\n" +
+                                    "• Includes at least one number\n" +
+                                    "• Includes at least one special character (%, &, !, ?, #, _, -, $)",
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> {
-                                resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
-                                resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
-                            })
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> {
+                        resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
+                        resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
+                    });
+                    delay.play();
                 }
+
                 case "NOT_MATCHING_PASSWORDS" -> {
                     applyErrorStyle(RegisterPassword_1, "password-field-error");
                     applyErrorStyle(RegisterPassword_2, "password-field-error");
@@ -114,15 +131,16 @@ public class RegisterController {
                             "tooltip-Label-Error",
                             duration
                     );
-                    new PauseTransition(Duration.seconds(duration))
-                            .setOnFinished(e -> {
-                                resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
-                                resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
-                            })
-                            .play();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+                    delay.setOnFinished(e -> {
+                        resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
+                        resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
+                    });
+                    delay.play();
                 }
             }
         } else {
+            // all valid → save and go
             saveToDatabase(RegisterEmailField.getText(), RegisterPassword_1.getText());
             ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
         }

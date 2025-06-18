@@ -55,4 +55,7 @@ public class SessionManager {
     public void logout() {
         loggedInUserId = null;
     }
+
+    public void setLoggedInUserId(UUID userId) {
+    }
 }

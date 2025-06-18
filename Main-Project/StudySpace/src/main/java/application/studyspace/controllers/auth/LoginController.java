@@ -4,9 +4,11 @@ import application.studyspace.controllers.onboarding.OnboardingPage1Controller;
 import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.auth.AutoLoginHandler;
 import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
+import application.studyspace.services.auth.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -147,6 +149,7 @@ public class LoginController {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            SessionManager.getInstance().login(userUUID);
             if (stayLoggedInCheckbox.isSelected()) {
                 AutoLoginHandler.activateAutoLogin(userUUID.toString());
             }
@@ -154,7 +157,7 @@ public class LoginController {
             ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
             ViewManager.showOverlay(
                     "/application/studyspace/onboarding/OnboardingPage1.fxml",
-                    (OnboardingPage1Controller c) -> c.setUserUUID(userUUID)
+                    null
             );
         }
     }
