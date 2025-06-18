@@ -9,6 +9,7 @@ import application.studyspace.services.auth.LoginChecker;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
 import application.studyspace.services.auth.SessionManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -217,4 +218,7 @@ public class LoginController {
     }
 
     public void handleSettingsClick() { /* no-op */ }
+
+    public void handleContactClick(ActionEvent actionEvent) {
+    }
 }
