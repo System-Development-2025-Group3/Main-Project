@@ -58,7 +58,7 @@ public class LoginChecker {
                     loggedInUserUUID = BytesToUUID(uuidBytes);
 
 
-                    SessionManager.getInstance().setLoggedInUserId(loggedInUserUUID);
+                    SessionManager.getInstance().login(loggedInUserUUID);
                     System.out.println("Login successful! Session for user " + loggedInUserUUID + " created.");
                     return true;
 
@@ -83,8 +83,8 @@ public class LoginChecker {
 
 
     public static boolean autoLoginIfPossible() {
-        String savedUsername = LoginSession.getSavedUsername();
-        String token = LoginSession.getSavedToken();
+        String savedUsername = SessionManager.getInstance().getSavedUsername();
+        String token = SessionManager.getInstance().getSavedToken();
 
 
         if (savedUsername != null && token != null) {

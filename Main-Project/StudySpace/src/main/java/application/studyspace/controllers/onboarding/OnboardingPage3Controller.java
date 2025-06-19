@@ -35,6 +35,8 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import application.studyspace.services.calendar.CalendarHelper;
+import com.calendarfx.view.CalendarView;
 
 public class OnboardingPage3Controller implements Initializable {
 
@@ -192,6 +194,14 @@ public class OnboardingPage3Controller implements Initializable {
         }
 
         ViewManager.closeTopOverlay();
+        CalendarView calendarView = SessionManager.getInstance().getUserCalendar();
+        if (calendarView != null) {
+            CalendarHelper.updateUserCalendar(calendarView);
+            calendarView.refreshData();
+            calendarView.requestLayout();
+        } else {
+            System.out.println("⚠️ CalendarView in SessionManager is null. Calendar not updated.");
+        }
     }
 
     private void saveExam(UUID userId) {
@@ -252,4 +262,5 @@ public class OnboardingPage3Controller implements Initializable {
         if (colorPurple.isSelected()) return Style.STYLE5;
         return Style.STYLE1;
     }
+
 }

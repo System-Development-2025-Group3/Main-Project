@@ -111,4 +111,9 @@ public class CalendarHelper {
             }
         }
     }
+
+    public static void updateUserCalendar(CalendarView calendarView) {
+        calendarView.getCalendarSources().clear();
+        setupUserCalendar(calendarView); // re-apply data
+    }
 }
