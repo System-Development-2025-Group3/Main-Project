@@ -59,7 +59,7 @@ public class OnboardingPage1Controller {
         SpinnerValueFactory<LocalTime> startFactory =
                 new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         startFactory.setConverter(timeFmt);
-        startFactory.setValue(LocalTime.of(8, 0)); // default
+        startFactory.setValue(LocalTime.of(0, 0)); // default
         startTimeSpinner.setValueFactory(startFactory);
         startTimeSpinner.setEditable(true);
 
@@ -67,7 +67,7 @@ public class OnboardingPage1Controller {
         SpinnerValueFactory<LocalTime> endFactory =
                 new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         endFactory.setConverter(timeFmt);
-        endFactory.setValue(LocalTime.of(20, 0)); // default
+        endFactory.setValue(LocalTime.of(23, 59)); // default
         endTimeSpinner.setValueFactory(endFactory);
         endTimeSpinner.setEditable(true);
 

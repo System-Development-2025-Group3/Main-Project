@@ -136,8 +136,7 @@
                 </StackPane>
             </VBox>
 
-            <!-- RIGHT CARD (Preview) -->
-            <!-- RIGHT CARD (Preview) -->
+            <!-- CALENDAR PREVIEW -->
             <VBox spacing="0"
                   alignment="TOP_CENTER"
                   styleClass="card-box"
@@ -145,9 +144,6 @@
                   HBox.hgrow="ALWAYS"
                   VBox.vgrow="ALWAYS">
 
-                <!-- (Optional header removed) -->
-
-                <!-- Directly put the calendar container here and let it grow -->
                 <StackPane fx:id="calendarPreviewContainer"
                            styleClass="calendar-wrapper"
                            HBox.hgrow="ALWAYS"

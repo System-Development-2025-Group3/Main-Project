@@ -40,4 +40,5 @@ module application.studyspace {
     exports application.studyspace.services.Styling;
     exports application.studyspace.services.Scenes;
     exports application.studyspace.services.calendar;
+
 }

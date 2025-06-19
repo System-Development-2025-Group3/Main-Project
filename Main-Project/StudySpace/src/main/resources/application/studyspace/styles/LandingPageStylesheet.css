@@ -142,3 +142,21 @@
   -fx-background-color: transparent !important;
   -fx-border-color: transparent !important;
 }
+/* ============ Floating Rectangular Add Button ============ */
+.floating-add-button {
+    -fx-background-color: #000;                       /* solid black */
+    -fx-background-radius: 8px;                       /* soft rounded corners */
+    -fx-min-height: 48px;
+    -fx-min-width: 120px;                             /* or auto grow with padding */
+    -fx-padding: 0 16px;                              /* vertical 0, horizontal 16px */
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-text-fill: white;                             /* label (if any) */
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.3, 0, 2);
+    -fx-transition: opacity 150ms ease-in-out;
+}
+.floating-add-button:hover {
+    -fx-opacity: 0.85;
+}
