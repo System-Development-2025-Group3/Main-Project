@@ -1,133 +1,22 @@
-/* === CALENDAR CONTAINER & GRID === */
-.calendar-grid {
-    -fx-hgap: 10;
-    -fx-vgap: 10;
-    -fx-padding: 20;
+/* calendar.css */
+
+/* make the disabled hours a very light shade */
+.calendar-view .time-grid .hour-cell.disabled {
+  -fx-background-color: rgba(0, 0, 0, 0.03);  /* subtle gray */
 }
 
-/* === CALENDAR HEADER (Weekday labels) === */
-.calendar-day-header {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
+/* make weekend columns gently tinted */
+.calendar-view .day-view .time-grid .day-column.weekend {
+  -fx-background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* === INDIVIDUAL DAY BOXES === */
-.calendar-day-box {
-    -fx-background-color: #fdfdff;
-    -fx-border-color:   #d6dbf5;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 2, 0.2, 0, 1);
-    -fx-cursor: hand;
-}
-/* Manual hover — triggered by adding “hover” class in code */
-.calendar-day-box.hover {
-    -fx-background-color: #eef2ff;
+/* hide the vertical grid lines for a cleaner look */
+.calendar-view .time-grid .v-grid-lines {
+  -fx-stroke: transparent;
 }
 
-/* === DAY NUMBER INSIDE EACH BOX === */
-.calendar-day-number {
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-}
-
-/* === HOUR LABELS (Left side of day/week view) === */
-.calendar-hour-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #777;
-    -fx-padding: 4 8;
-}
-
-/* === CELLS IN HOUR GRID (Day/Week view) === */
-.calendar-hour-cell {
-    -fx-background-color: #ffffff;
-    -fx-border-color:     #efefef;
-    -fx-border-width:     0 0 1 0;
-    -fx-padding:          6;
-}
-
-/* === CALENDAR TITLE === */
-.calendar-title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1f2b3e;
-    -fx-font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-    -fx-padding: 16 0 10 0;
-    -fx-alignment: center;
-}
-
-/* === BOLD LABELS IN TOPBAR === */
-.topbar-bold {
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e1e1e;
-    -fx-font-size: 12px;
-}
-
-/* === NAVIGATION & VIEW BUTTONS === */
-.button {
-    -fx-background-color: #e7ecff;
-    -fx-background-radius: 8;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1f3a93;
-    -fx-cursor: hand;
-}
-/* Manual hover for nav buttons */
-.button.hover {
-    -fx-background-color: #d0dbff;
-}
-
-/* === EVENTS INSIDE CELLS (modern, pastel-outline pills) === */
-.calendar-event {
-    /* shared pill look */
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-font-size: 11px;
-    -fx-font-weight: 500;
-    -fx-padding: 4px 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
-    -fx-text-fill: rgba(0,0,0,0.85);
-}
-
-/* Pastel fill + matching border for each EventColor */
-.calendar-event.event-red {
-    -fx-background-color: rgba(244,67,54,0.1);
-    -fx-border-color:       rgba(244,67,54,0.8);
-}
-.calendar-event.event-blue {
-    -fx-background-color: rgba(66,165,245,0.1);
-    -fx-border-color:       rgba(66,165,245,0.8);
-}
-.calendar-event.event-green {
-    -fx-background-color: rgba(102,187,106,0.1);
-    -fx-border-color:       rgba(102,187,106,0.8);
-}
-.calendar-event.event-yellow {
-    -fx-background-color: rgba(255,235,59,0.1);
-    -fx-border-color:       rgba(255,235,59,0.8);
-}
-.calendar-event.event-purple {
-    -fx-background-color: rgba(171,71,188,0.1);
-    -fx-border-color:       rgba(171,71,188,0.8);
-}
-
-/* Manual hover — explicit per color */
-.calendar-event.event-red.hover {
-    -fx-background-color: rgba(244,67,54,0.15);
-}
-.calendar-event.event-blue.hover {
-    -fx-background-color: rgba(66,165,245,0.15);
-}
-.calendar-event.event-green.hover {
-    -fx-background-color: rgba(102,187,106,0.15);
-}
-.calendar-event.event-yellow.hover {
-    -fx-background-color: rgba(255,235,59,0.15);
-}
-.calendar-event.event-purple.hover {
-    -fx-background-color: rgba(171,71,188,0.15);
+/* thin out the horizontal hour lines */
+.calendar-view .time-grid .h-grid-lines {
+  -fx-stroke-width: 0.5;
+  -fx-stroke: #ccc;
 }

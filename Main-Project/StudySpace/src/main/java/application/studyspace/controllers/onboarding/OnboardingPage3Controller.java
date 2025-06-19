@@ -159,14 +159,38 @@ public class OnboardingPage3Controller implements Initializable {
 
     @FXML private void handlePage3() {}
 
-    @FXML private void handleSave(ActionEvent e) {
+    @FXML
+    private void handleSave(ActionEvent e) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
+
         try {
-            if (examToggle.isSelected()) saveExam(userId);
-            else                         saveBlocker(userId);
+            if (examToggle.isSelected()) {
+                // Only save if both exam dates and estimated minutes are provided
+                if (exStartDate.getValue() != null
+                    && exEndDate.getValue()   != null
+                    && !estimatedMinutesField.getText().isBlank()) {
+
+                    saveExam(userId);
+                } else {
+                    System.out.println("ℹ️ No exam details entered; skipping saveExam().");
+                }
+
+            } else {
+                // Only save a blocker if start date is provided and,
+                // either it's all-day or an end date is provided
+                if (evtStartDate.getValue() != null
+                    && (evtAllDay.isSelected() || evtEndDate.getValue() != null)) {
+
+                    saveBlocker(userId);
+                } else {
+                    System.out.println("ℹ️ No exam details entered; skipping saveExam().");
+                }
+            }
+
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Error in handleSave", ex);
         }
+
         ViewManager.closeTopOverlay();
     }
 

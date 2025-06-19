@@ -3,10 +3,15 @@ package application.studyspace.controllers.onboarding;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.onboarding.InputStudyPreferences;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
+import javafx.util.StringConverter;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class OnboardingPage1Controller {
@@ -19,6 +24,8 @@ public class OnboardingPage1Controller {
     @FXML private Label sessionLengthLabel;
     @FXML private Slider breakLengthSlider;
     @FXML private Label breakLengthLabel;
+    @FXML private Spinner<LocalTime> startTimeSpinner;
+    @FXML private Spinner<LocalTime> endTimeSpinner;
 
     @FXML private ToggleButton monBtn;
     @FXML private ToggleButton tueBtn;
@@ -30,7 +37,39 @@ public class OnboardingPage1Controller {
 
     @FXML
     private void initialize() {
-        preferredTimeBox.getItems().addAll("Morning", "Afternoon", "Evening");
+        ObservableList<LocalTime> times = FXCollections.observableArrayList();
+        LocalTime t = LocalTime.of(6, 0);
+        while (!t.isAfter(LocalTime.of(22, 0))) {
+            times.add(t);
+            t = t.plusMinutes(30);
+        }
+
+        // helper to show "HH:mm" in the spinner
+        StringConverter<LocalTime> timeFmt = new StringConverter<>() {
+            private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+            @Override public String toString(LocalTime lt) {
+                return lt == null ? "" : fmt.format(lt);
+            }
+            @Override public LocalTime fromString(String str) {
+                return (str == null || str.isEmpty()) ? null : LocalTime.parse(str, fmt);
+            }
+        };
+
+        // configure start spinner
+        SpinnerValueFactory<LocalTime> startFactory =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+        startFactory.setConverter(timeFmt);
+        startFactory.setValue(LocalTime.of(8, 0)); // default
+        startTimeSpinner.setValueFactory(startFactory);
+        startTimeSpinner.setEditable(true);
+
+        // configure end spinner
+        SpinnerValueFactory<LocalTime> endFactory =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+        endFactory.setConverter(timeFmt);
+        endFactory.setValue(LocalTime.of(20, 0)); // default
+        endTimeSpinner.setValueFactory(endFactory);
+        endTimeSpinner.setEditable(true);
 
         sessionLengthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             int rounded = (int) (Math.round(newVal.doubleValue() / 5) * 5);
@@ -72,8 +111,11 @@ public class OnboardingPage1Controller {
 
     @FXML
     private void handleSave(ActionEvent event) {
+
+        // get user session
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
 
+        // get blocked days
         String blockedDays = "";
         if (monBtn.isSelected()) blockedDays += "Monday ";
         if (tueBtn.isSelected()) blockedDays += "Tuesday ";
@@ -84,9 +126,16 @@ public class OnboardingPage1Controller {
         if (sunBtn.isSelected()) blockedDays += "Sunday ";
         blockedDays = blockedDays.trim();
 
+        //get allowed study time range
+        LocalTime start = startTimeSpinner.getValue();
+        LocalTime end   = endTimeSpinner.getValue();
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+        String preferredRange = start.format(fmt) + "-" + end.format(fmt);
+
         InputStudyPreferences prefs = new InputStudyPreferences(
                 userUUID,
-                preferredTimeBox.getValue(),
+                preferredRange,
                 (int) sessionLengthSlider.getValue(),
                 (int) breakLengthSlider.getValue(),
                 blockedDays

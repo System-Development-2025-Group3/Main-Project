@@ -1,7 +1,7 @@
 package application.studyspace.services.auth;
 
-
 import application.studyspace.services.DataBase.DatabaseConnection;
+import application.studyspace.services.auth.LoginChecker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,219 +12,144 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
-
+/**
+ * Utility methods for validating user input (email, password) and
+ * for checking against stored data (known emails, login credentials).
+ */
 public class ValidationUtils {
 
-
     /**
-     * A regular expression pattern used for validating the format of email addresses.
-     * This pattern ensures that the email follows the standard structure, which includes:
-     * - A combination of alphanumeric characters, dots, underscores, percent signs, plus, and hyphens
-     *   as the local part of the email (before the "@" symbol).
-     * - A valid domain name composed of alphanumeric characters, dots, and hyphens.
-     * - A top-level domain (TLD) with at least two alphabetic characters.
-
-
-     * Examples of valid email formats:
-     * - example@example.com
-     * - user.name+tag@sub.domain.org
-
-
-     * Note: This pattern does not guarantee that the domain or email exists; it only checks
-     * the syntactic correctness of the email address.
+     * Results of validation routines.
      */
+    public enum ValidationResult {
+        EMPTY_EMAIL,
+        INVALID_EMAIL,
+        UNKNOWN_EMAIL,       // login only
+        DUPLICATE_EMAIL,     // register only
+        EMPTY_PASSWORD,
+        PASSWORD_MISMATCH,   // register only
+        PASSWORD_INVALID,
+        INVALID_CREDENTIALS, // login only
+        OK
+    }
 
+    // Precompile email regex once
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
-    private static final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-
+    // Levenshtein for autocorrect suggestions
+    private static final LevenshteinDistance LEVENSHTEIN = new LevenshteinDistance();
 
     /**
-     * Validates whether a given email string matches the standard email format.
-     *
-     * @param email The email to validate
-     * @return true if the email is valid, false otherwise
+     * Checks if the email string has a valid format.
      */
     public static boolean isValidEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return true;
-        }
-        return !Pattern.compile(EMAIL_PATTERN).matcher(email).matches();
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
     }
 
-
     /**
-     * Checks whether the provided email exists in the database.
-     *
-     * @param email the email address to check for existence in the database
-     * @return true if the email exists, false otherwise
+     * Checks if the given email is already registered.
      */
     public static boolean isKnownEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return false;
-        }
-
-
-        String sql = """
-           SELECT email FROM users u WHERE email = ?;""";
-
-
+        if (email == null || email.isEmpty()) return false;
+        String sql = "SELECT email FROM users WHERE email = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-
-            ps.setString(1, email); // Bind the email parameter to the query
-
-
+            ps.setString(1, email.trim());
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    // If a row is returned, the email exists in the database
-                    return true;
-                }
+                return rs.next();
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-
-        return false;
     }
 
     /**
-     * Checks whether the given input email is similar to any email in the provided list
-     * based on the specified Levenshtein distance threshold. This method normalizes
-     * the input email and list of emails by converting them to lowercase and trimming
-     * any leading or trailing whitespace. It then compares the Levenshtein distance
-     * between the input email and each email in the list, returning true if a similar
-     * email is found within the threshold.
-     *
-     * @param inputEmail The email address to be checked for similarity.
-     * @param emailList A list of email addresses to compare against.
-     * @param threshold The maximum allowable Levenshtein distance for two emails to be considered similar.
-     * @return true if a similar email is found within the given threshold, false otherwise.
-     */
-    public static boolean isSimilarEmail(String inputEmail, List<String> emailList, int threshold) {
-        if (inputEmail == null || emailList == null || emailList.isEmpty()) return false;
-
-
-        LevenshteinDistance distanceCalculator = new LevenshteinDistance(threshold);
-
-
-        inputEmail = inputEmail.toLowerCase().trim(); // Normalize input email
-
-
-        for (String email : emailList) {
-            String normalizedEmail = email.toLowerCase().trim(); // Normalize emails in list
-            int distance = distanceCalculator.apply(inputEmail, normalizedEmail);
-
-
-            if (distance != -1 && distance <= threshold) { // Ensure distance is valid
-                System.out.println("Similar email found: " + email + " (distance: " + distance + ")");
-                return true;
-            }
-        }
-        System.out.println("No similar email found within the threshold: " + threshold);
-        return false;
-    }
-
-
-    /**
-     * Retrieves a list of known email addresses from the database.
-     * This method queries the "users" table in the database to fetch all
-     * email addresses and returns them as a list of strings.
-     *
-     * @return a List of strings containing email addresses retrieved from the database
+     * Retrieves all known emails from the database.
      */
     public static List<String> listOfKnownEmails() {
-        List<String> emailList = new ArrayList<>();
-
-
-        String sql = """
-       SELECT email FROM users u;
-   """;
-
-
+        List<String> emails = new ArrayList<>();
+        String sql = "SELECT email FROM users";
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
-
             while (rs.next()) {
-                emailList.add(rs.getString("email"));
+                emails.add(rs.getString("email"));
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        return emailList;
+        return emails;
     }
-
 
     /**
-     * Validates the strength of a given password based on predefined criteria.
-     * The method checks if the password meets the following requirements:
-     * - At least 12 characters long
-     * - Contains at least one uppercase letter
-     * - Contains at least one numeric digit
-     * - Contains at least one special character from the set [%&!?#_-\\$]
-
-
-     * If any requirement is not met, the method returns a validation state indicating
-     * the first unmet criterion ("NOT_LONG_ENOUGH", "NO_UPPERCASE", "NO_NUMBER", or
-     * "NO_SPECIAL_CHAR"). If all criteria are satisfied, it returns "VALID".
-     *
-     * @param password the password string to validate
-     * @return a string representing the validation result. "VALID" if the password
-     *         meets all criteria, or a specific validation state string if it does not.
+     * Returns true if inputEmail is within the Levenshtein threshold of any known email.
      */
-    public static String isValidPassword(String password){
-
-
-        String ValidationState = "VALID";
-
-
-        if(!(password.length() >=12)){
-            ValidationState = "NOT_LONG_ENOUGH";
+    public static boolean isSimilarEmail(String inputEmail, List<String> emailList, int threshold) {
+        if (inputEmail == null || emailList == null || emailList.isEmpty()) return false;
+        String norm = inputEmail.trim().toLowerCase();
+        for (String email : emailList) {
+            String e2 = email.trim().toLowerCase();
+            Integer dist = LEVENSHTEIN.apply(norm, e2);
+            if (dist != null && dist <= threshold) {
+                return true;
+            }
         }
-
-
-        // Check for at least one uppercase letter
-        if (!password.matches(".*[A-Z].*")) {
-            ValidationState = "NO_UPPERCASE";
-        }
-
-
-        // Check for at least one number
-        if (!password.matches(".*[0-9].*")) {
-            ValidationState = "NO_NUMBER";
-        }
-
-
-        // Check for at least one special character
-        if (!password.matches(".*[%&!?#_\\-\\$].*")) {
-            ValidationState = "NO_SPECIAL_CHAR";
-        }
-
-
-        return ValidationState;
-    }
-
-
-    static boolean validateToken(String savedUsername, String token) {
         return false;
     }
 
+    /**
+     * Validates login input: email and password.
+     */
+    public static ValidationResult validateLogin(String email, String password) {
+        if (email == null || email.isBlank()) return ValidationResult.EMPTY_EMAIL;
+        if (!isValidEmail(email))           return ValidationResult.INVALID_EMAIL;
+        if (!isKnownEmail(email))           return ValidationResult.UNKNOWN_EMAIL;
+        if (password == null || password.isEmpty()) return ValidationResult.EMPTY_PASSWORD;
+        if (!LoginChecker.checkLogin(email, password))
+            return ValidationResult.INVALID_CREDENTIALS;
+        return ValidationResult.OK;
+    }
 
+    /**
+     * Validates registration input: email, password, and confirmation.
+     */
+    public static ValidationResult validateRegistration(String email,
+                                                        String password,
+                                                        String confirm) {
+        if (email == null || email.isBlank())    return ValidationResult.EMPTY_EMAIL;
+        if (!isValidEmail(email))                return ValidationResult.INVALID_EMAIL;
+        if (isKnownEmail(email))                 return ValidationResult.DUPLICATE_EMAIL;
+        if (password == null || confirm == null || password.isEmpty() || confirm.isEmpty())
+            return ValidationResult.EMPTY_PASSWORD;
+        if (!password.equals(confirm))           return ValidationResult.PASSWORD_MISMATCH;
+        if (!isStrongPassword(password))         return ValidationResult.PASSWORD_INVALID;
+        return ValidationResult.OK;
+    }
+
+    /**
+     * Checks password strength: ≥12 chars, ≥1 uppercase, ≥1 digit, ≥1 special.
+     */
+    private static boolean isStrongPassword(String pw) {
+        return pw.length() >= 12
+               && pw.chars().anyMatch(Character::isUpperCase)
+               && pw.chars().anyMatch(Character::isDigit)
+               && pw.matches(".*[%&!?#_\\-$].*");
+    }
+
+    /**
+     * Generates a new random UUID token (e.g. for password reset).
+     */
     public static UUID generateToken() {
         return UUID.randomUUID();
     }
 
+    /**
+     * Placeholder for future token validation logic.
+     */
+    public static boolean validateToken(String username, String token) {
+        // implement as needed
+        return false;
+    }
 }
-
-
-
-

@@ -40,16 +40,17 @@
             <Label text="Let us know your study preferences" styleClass="subtitle"/>
         </VBox>
 
-        <!-- MODULE 1: Preferred study time -->
+        <!-- MODULE 1: Preferred study time (time-range) -->
         <VBox spacing="8"
               alignment="TOP_LEFT"
               styleClass="card-box"
               prefWidth="350">
             <Label text="Preferred study time" styleClass="field-label-bold"/>
-            <ComboBox fx:id="preferredTimeBox"
-                      promptText="e.g. Evening"
-                      styleClass="styled-combo"
-                      prefWidth="350"/>
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <Spinner fx:id="startTimeSpinner" prefWidth="120" />
+                <Label text="to" />
+                <Spinner fx:id="endTimeSpinner" prefWidth="120" />
+            </HBox>
         </VBox>
 
         <!-- MODULE 2: Study/session lengths -->
