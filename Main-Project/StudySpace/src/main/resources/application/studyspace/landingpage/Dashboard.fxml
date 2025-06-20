@@ -99,40 +99,15 @@
                     </VBox>
                 </StackPane>
 
-                <StackPane fx:id="box2" GridPane.columnIndex="1" styleClass="dashboard-box">
-                </StackPane>
+                <StackPane fx:id="box2" GridPane.columnIndex="1" styleClass="dashboard-box"/>
 
-                <StackPane fx:id="box3" GridPane.columnIndex="2" styleClass="dashboard-box">
-                </StackPane>
+                <StackPane fx:id="box3" GridPane.columnIndex="2" styleClass="dashboard-box"/>
 
-                <StackPane fx:id="box4" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" styleClass="dashboard-box">
-                    <VBox>
-                        <Tile fx:id="PreferredStudyHoursTile"
-                              skinType="SMOOTHED_CHART"
-                              title="Completed Items per Week"
-                              unit="items"
-                              StackPane.alignment="CENTER"
-                              maxWidth="Infinity"
-                              maxHeight="Infinity"
-                              VBox.vgrow="ALWAYS"
-                              smoothing="true"
-                        />
-                    </VBox>
-                </StackPane>
+                <StackPane fx:id="box4" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                           styleClass="dashboard-box"/>
 
-                <StackPane fx:id="box5" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="dashboard-box">
-                    <VBox>
-                        <Tile fx:id="lineChartTile"
-                              skinType="SMOOTHED_CHART"
-                              title="Completed Items per Week"
-                              unit="items"
-                              StackPane.alignment="CENTER"
-                              maxWidth="Infinity"
-                              maxHeight="Infinity"
-                              VBox.vgrow="ALWAYS"
-                        />
-                    </VBox>
-                </StackPane>
+                <StackPane fx:id="box5" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"
+                           styleClass="dashboard-box"/>
 
                 <StackPane fx:id="box6" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2"
                            styleClass="dashboard-box"/>

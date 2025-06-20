@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -58,29 +59,23 @@ public class DashboardController {
         series3.getData().add(new XYChart.Data<>("SA", 3));
         series3.getData().add(new XYChart.Data<>("SU", 5));
 
-        lineChartTile.setSeries(series2, series3);
-        lineChartTile.setAnimated(true);
-        box1.setPadding(new Insets(10, 10, 10, 10));
-        lineChartTile.setPrefSize(300, 200);
-        lineChartTile.setStrokeWithGradient(true); // Optional
-        lineChartTile.setValueColor(Color.BLACK);
-        lineChartTile.prefWidthProperty().bind(box2.widthProperty());  // Adjust dynamically
-        lineChartTile.prefHeightProperty().bind(box2.heightProperty());
-        lineChartTile.setBackgroundColor(Color.WHITE);
+        lineChartTile = TileBuilder.create()
+                .skinType(Tile.SkinType.SMOOTHED_CHART)
+                .title("SmoothedChart Tile")
+                .animated(true)
+                .smoothing(false)
+                .series(series2, series3)
+                .titleColor(Color.BLACK)
+                .backgroundColor(Color.WHITE)
+                .valueColor(Color.BLACK)
+                .chartGridColor(Color.LIGHTGRAY)
+                .smoothing(true)
+                .build();
 
-        Node chartNode = lineChartTile.lookup(".chart");
+        box5.getChildren().add(lineChartTile);
 
-        if (chartNode instanceof SmoothedChart smoothedChart) {
-
-            smoothedChart.setHorizontalGridLinesVisible(false);
-            smoothedChart.getXAxis().setTickLabelFill(Color.BLACK);
-            smoothedChart.getYAxis().setTickLabelFill(Color.BLACK);
-            smoothedChart.getXAxis().setLabel("Week");
-            smoothedChart.getYAxis().setLabel("Study Hours");
-            smoothedChart.setXAxisTickLabelFill(Color.BLACK);
-            smoothedChart.getXAxis().setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
-            smoothedChart.getYAxis().setTickLabelFill(Color.BLACK);
-        }
+        lineChartTile.getXAxis().setTickLabelFill(Color.BLACK);
+        lineChartTile.getYAxis().setTickLabelFill(Color.BLACK);
 
         //Chart -- Box3 --
         Tile countdownTile = TileBuilder.create()
@@ -135,29 +130,22 @@ public class DashboardController {
         series5.getData().add(new XYChart.Data<>("06 PM", 3));
         series5.getData().add(new XYChart.Data<>("07 PM", 5));
 
-        PreferredStudyHoursTile.setSeries(series4, series5);
-        PreferredStudyHoursTile.setAnimated(true);
-        box4.setPadding(new Insets(10, 10, 10, 10));
-        PreferredStudyHoursTile.setPrefSize(300, 200);
-        PreferredStudyHoursTile.setStrokeWithGradient(true); // Optional
-        PreferredStudyHoursTile.setValueColor(Color.BLACK);
-        PreferredStudyHoursTile.prefWidthProperty().bind(box2.widthProperty());  // Adjust dynamically
-        PreferredStudyHoursTile.prefHeightProperty().bind(box2.heightProperty());
-        PreferredStudyHoursTile.setBackgroundColor(Color.WHITE);
+        lineChartTile = TileBuilder.create()
+                .skinType(Tile.SkinType.SMOOTHED_CHART)
+                .title("SmoothedChart Tile")
+                .animated(true)
+                .smoothing(false)
+                .series(series4, series5)
+                .titleColor(Color.BLACK)
+                .backgroundColor(Color.WHITE)
+                .valueColor(Color.BLACK)
+                .chartGridColor(Color.LIGHTGRAY)
+                .build();
 
-        Node chartNode2 = PreferredStudyHoursTile.lookup(".chart");
+        box4.getChildren().add(lineChartTile);
 
-        if (chartNode2 instanceof SmoothedChart smoothedChart1) {
-
-            smoothedChart1.setHorizontalGridLinesVisible(false);
-            smoothedChart1.getXAxis().setTickLabelFill(Color.BLACK);
-            smoothedChart1.getYAxis().setTickLabelFill(Color.BLACK);
-            smoothedChart1.getXAxis().setLabel("Time of Day");
-            smoothedChart1.getYAxis().setLabel("Intensity");
-            smoothedChart1.setXAxisTickLabelFill(Color.BLACK);
-            smoothedChart1.getXAxis().setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
-            smoothedChart1.getYAxis().setTickLabelFill(Color.BLACK);
-        }
+       lineChartTile.getXAxis().setTickLabelFill(Color.BLACK);
+       lineChartTile.getYAxis().setTickLabelFill(Color.BLACK);
 
         //Chart -- Box5 --
         HappinessIndicator happy   = new HappinessIndicator(HappinessIndicator.Happiness.HAPPY, 0.67);
@@ -274,4 +262,16 @@ public class DashboardController {
         ViewManager.show("/application/studyspace/landingpage/Settings.fxml");
     }
 
+    private SmoothedChart findSmoothedChart(Node node) {
+        if (node instanceof SmoothedChart) {
+            return (SmoothedChart) node;
+        }
+        if (node instanceof Parent) {
+            for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
+                SmoothedChart result = findSmoothedChart(child);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
 }

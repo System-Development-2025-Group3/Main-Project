@@ -31,7 +31,6 @@ public class LandingpageController implements Initializable {
         blockerForm.managedProperty().bind(blockerToggle.selectedProperty());
     }
 
-    // when opening, ensure exam is selected
     @FXML
     public void openAddOverlay() {
         examToggle.setSelected(true);
