@@ -1,0 +1,204 @@
+/* ============ GLOBAL ============ */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #FFFFFF;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;      /* subtle right border */
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 32 16;
+}
+.sidebar-title {
+    -fx-text-fill: #111827;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 24 0;
+}
+.sidebar-button {
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-background-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.sidebar-button:hover {
+    -fx-background-color: #F3F4F6;
+}
+.sidebar-button:selected {
+    -fx-background-color: #E5E7EB;
+    -fx-text-fill: #111827;
+}
+
+/* ============ HEADER BAR ============ */
+.header-box {
+    -fx-padding: 16 24;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+.nav-button:hover {
+    -fx-background-color: #F3F4F6;
+    -fx-background-radius: 4;
+}
+.content-title {
+    -fx-text-fill: #111827;
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+.create-event-button {
+    -fx-background-color: #111827;
+    -fx-text-fill: white;
+    -fx-padding: 6 16;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+}
+.create-event-button:hover {
+    -fx-background-color: #374151;
+}
+
+/* ============ VIEW TOGGLE ============ */
+.view-toggle {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-alignment: CENTER_LEFT;
+}
+.view-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-padding: 6 12;
+    -fx-background-radius: 6;
+}
+.view-button:selected {
+    -fx-background-color: #111827;
+    -fx-text-fill: #FFFFFF;
+}
+.view-button:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+/* ============ CALENDAR WRAPPER ============ */
+.calendar-wrapper {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 16;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+/* ============ CalendarFX OVERRIDES ============ */
+/* (targets its default classes) */
+.calendar-view {
+    -fx-background-color: transparent;
+}
+.calendar-header-view,
+.calendar-toolbar,
+.calendar-secondary-toolbar {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.day-header-text {
+    -fx-text-fill: #374151;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+.hour-text {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 10px;
+}
+.day-cell {
+    -fx-border-color: #E5E7EB;
+}
+.today {
+    -fx-background-color: #F9FAFB;
+}
+.entry {
+    -fx-background-color: #374151;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 4;
+    -fx-padding: 2 4;
+}
+.entry:hover {
+    -fx-background-color: #1F2937;
+}
+.calendar-view .page-toolbar,
+.calendar-view .page-toolbar-button {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+}
+.dashboard-grid {
+    -fx-padding: 20;
+    -fx-background-color: #dcdcdc;
+}
+
+.dashboard-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0.1, 0, 2);
+    -fx-alignment: center;
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+}
+
+.dashboard-inner-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-alignment: center;
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+}
+
+.legend-box {
+    -fx-background-color: rgba(0, 0, 0, 0.05); /* Subtle background */
+    -fx-padding: 15; /* Internal padding */
+    -fx-border-radius: 12; /* Smooth rounded edges */
+    -fx-background-radius: 12; /* Smooth rounded background */
+    -fx-alignment: center; /* Align legend items */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.1, 0, 2); /* Subtle shadow */
+}
+
+/* Description Box Styling */
+.description-box {
+    -fx-background-color: #374151; /* Dark gray background */
+    -fx-text-fill: white;          /* White text color */
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;             /* Space around text */
+    -fx-background-radius: 12;    /* Rounded corners */
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0.2, 0, 2); /* Subtle shadow */
+}
+
+.tile-unit {
+    -fx-font-size: 20px !important; /* or any size you want */
+}
+
+.tile .axis-label {
+    -fx-text-fill: black;
+}
+
+.tile .text {
+    -fx-font-size: 14px;       /* adjust font size */
+    -fx-text-fill: #555555;    /* change text color */
+    -fx-font-style: italic;    /* optional: style text */
+    -fx-wrap-text: true;       /* allow long text wrapping */
+}
+
+

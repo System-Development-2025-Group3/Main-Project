@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import eu.hansolo.tilesfx.Tile?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -15,37 +16,130 @@
     <!-- Sidebar -->
     <left>
         <AnchorPane>
-            <children>
-                <VBox styleClass="sidebar"
-                      AnchorPane.topAnchor="0"
-                      AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0"
-                      AnchorPane.rightAnchor="0">
-                    <Label text="Study Planner" styleClass="sidebar-title"/>
-                    <ToggleButton text="📅 Calendar"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarCalendar"/>
-                    <ToggleButton text="📊 Dashboard"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  selected="true"
-                                  onAction="#handleSidebarDashboard"/>
-                    <ToggleButton text="⚙ Settings"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarSettings"/>
-                </VBox>
-            </children>
+            <VBox styleClass="sidebar"
+                  AnchorPane.topAnchor="0"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0">
+                <Label text="Study Planner" styleClass="sidebar-title"/>
+                <ToggleButton text="📅 Calendar"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"
+                              onAction="#handleSidebarCalendar"/>
+                <ToggleButton text="📊 Dashboard"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"
+                              selected="true"
+                              onAction="#handleSidebarDashboard"/>
+                <ToggleButton text="⚙ Settings"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"
+                              onAction="#handleSidebarSettings"/>
+            </VBox>
         </AnchorPane>
     </left>
 
-    <!-- Main dashboard content -->
+    <!-- Main Dashboard Content -->
     <center>
-        <StackPane style="-fx-padding: 40;">
-            <Label text="📊 Dashboard Page"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-        </StackPane>
-    </center>
+        <AnchorPane stylesheets="@../styles/DashBoardStyleSheet.css">
+            <GridPane
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"
+                    hgap="50"
+                    vgap="50"
+                    styleClass="dashboard-grid">
 
+                <!-- Column Constraints -->
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="33"/>
+                    <ColumnConstraints percentWidth="33"/>
+                    <ColumnConstraints percentWidth="34"/>
+                </columnConstraints>
+
+                <!-- Row Constraints -->
+                <rowConstraints>
+                    <RowConstraints percentHeight="25"/>
+                    <RowConstraints percentHeight="25"/>
+                    <RowConstraints percentHeight="25"/>
+                    <RowConstraints percentHeight="25"/>
+                </rowConstraints>
+
+                <!-- Boxes -->
+                <StackPane fx:id="box1"
+                           styleClass="dashboard-inner-box"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="0"
+                           GridPane.rowSpan="2"
+                           style="-fx-background-color: white; -fx-padding: 16;">
+
+                    <VBox GridPane.vgrow="ALWAYS" StackPane.alignment="CENTER" alignment="CENTER" spacing="16" styleClass="dashboard-inner-box">
+
+                        <!-- GAUGE Tile -->
+                        <Tile fx:id="totalProgressTile"
+                              VBox.vgrow="ALWAYS"
+                              skinType="GAUGE"
+                              title="Overall Progress"
+                              titleColor="black"
+                              chartGridColor="#ffffff"
+                              unit=" %"
+                              unitColor="black"
+                              textColor="black"
+                              barColor="gainsboro"
+                              valueColor="black"
+                              needleColor="gainsboro">
+                        </Tile>
+
+                        <!-- Description Box (Below the Gauge) -->
+                        <Label
+                                VBox.vgrow="NEVER"
+                                text="Value 1: 0.00, Value 2: 0.00"
+                                styleClass="description-box"/>
+                    </VBox>
+                </StackPane>
+
+                <StackPane fx:id="box2" GridPane.columnIndex="1" styleClass="dashboard-box">
+                </StackPane>
+
+                <StackPane fx:id="box3" GridPane.columnIndex="2" styleClass="dashboard-box">
+                </StackPane>
+
+                <StackPane fx:id="box4" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" styleClass="dashboard-box">
+                    <VBox>
+                        <Tile fx:id="PreferredStudyHoursTile"
+                              skinType="SMOOTHED_CHART"
+                              title="Completed Items per Week"
+                              unit="items"
+                              StackPane.alignment="CENTER"
+                              maxWidth="Infinity"
+                              maxHeight="Infinity"
+                              VBox.vgrow="ALWAYS"
+                              smoothing="true"
+                        />
+                    </VBox>
+                </StackPane>
+
+                <StackPane fx:id="box5" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="dashboard-box">
+                    <VBox>
+                        <Tile fx:id="lineChartTile"
+                              skinType="SMOOTHED_CHART"
+                              title="Completed Items per Week"
+                              unit="items"
+                              StackPane.alignment="CENTER"
+                              maxWidth="Infinity"
+                              maxHeight="Infinity"
+                              VBox.vgrow="ALWAYS"
+                        />
+                    </VBox>
+                </StackPane>
+
+                <StackPane fx:id="box6" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2"
+                           styleClass="dashboard-box"/>
+
+                <StackPane fx:id="box7" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2"
+                           styleClass="dashboard-box"/>
+            </GridPane>
+        </AnchorPane>
+    </center>
 </BorderPane>
