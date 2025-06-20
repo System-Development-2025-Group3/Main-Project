@@ -317,3 +317,16 @@
 .type-toggle:hover {
   -fx-background-color: #e0e2e7;
 }
+
+#addExamBtn {
+  -fx-background-color: #000000;
+  -fx-text-fill: #ffffff;
+  -fx-background-radius: 999;
+  -fx-padding: 6 14;
+  -fx-min-width: 32px;
+  -fx-min-height: 32px;
+}
+#addExamBtn:hover {
+  -fx-background-color: #222222;
+  -fx-text-fill: #ffffff;
+}

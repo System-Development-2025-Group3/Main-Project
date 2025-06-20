@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 /**
  * Utility methods for validating user input (email, password) and
@@ -31,6 +34,18 @@ public class ValidationUtils {
         PASSWORD_INVALID,
         INVALID_CREDENTIALS, // login only
         OK
+    }
+
+    /**
+     * Results of exam validation routines.
+     */
+    public enum ExamValidationResult {
+        OK,
+        EMPTY_NAME,
+        INVALID_DATES,
+        END_BEFORE_START,
+        END_TIME_BEFORE_START_TIME_SAME_DAY,
+        INVALID_MINUTES
     }
 
     // Precompile email regex once
@@ -151,5 +166,34 @@ public class ValidationUtils {
     public static boolean validateToken(String username, String token) {
         // implement as needed
         return false;
+    }
+
+    /**
+     * Validates exam fields: name, dates, times, and minutes.
+     */
+    public static ExamValidationResult validateExamFields(String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String minutesText) {
+        if (name == null || name.isBlank()) {
+            return ExamValidationResult.EMPTY_NAME;
+        }
+        if (startDate == null || endDate == null || startTime == null || endTime == null) {
+            return ExamValidationResult.INVALID_DATES;
+        }
+        ZonedDateTime start = ZonedDateTime.of(startDate, startTime, java.time.ZoneId.systemDefault());
+        ZonedDateTime end = ZonedDateTime.of(endDate, endTime, java.time.ZoneId.systemDefault());
+        if (!end.isAfter(start)) {
+            return ExamValidationResult.END_BEFORE_START;
+        }
+        if (startDate.equals(endDate) && endTime.isBefore(startTime)) {
+            return ExamValidationResult.END_TIME_BEFORE_START_TIME_SAME_DAY;
+        }
+        try {
+            int minutes = Integer.parseInt(minutesText);
+            if (minutes <= 0) {
+                return ExamValidationResult.INVALID_MINUTES;
+            }
+        } catch (NumberFormatException ex) {
+            return ExamValidationResult.INVALID_MINUTES;
+        }
+        return ExamValidationResult.OK;
     }
 }

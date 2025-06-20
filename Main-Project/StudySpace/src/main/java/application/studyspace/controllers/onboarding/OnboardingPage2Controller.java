@@ -5,6 +5,7 @@ import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarEventMapper;
 import application.studyspace.services.calendar.CalendarEventRepository;
+import application.studyspace.services.calendar.CalendarHelper;
 import application.studyspace.services.onboarding.CalendarImportHelper;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
@@ -30,17 +31,18 @@ public class OnboardingPage2Controller implements Initializable {
 
     @FXML private StackPane calendarContainer;
 
-    private LocalDate currentDate;
-    private Calendar userCalendar;
-    private CalendarView calendarView;
+    private LocalDate     currentDate;
+    private Calendar      userCalendar;
+    private CalendarView  calendarView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         currentDate = LocalDate.now();
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
 
+        // --- set up CalendarView preview ---
         calendarView = new CalendarView();
-        calendarView.setDate(LocalDate.now());
+        calendarView.setDate(currentDate);
         calendarView.showWeekPage();
 
         calendarView.setShowToolBar(false);
@@ -52,7 +54,7 @@ public class OnboardingPage2Controller implements Initializable {
         calendarView.setShowToday(false);
 
         userCalendar = new Calendar("Imported");
-        userCalendar.setStyle(Calendar.Style.STYLE1.name());
+        userCalendar.setStyle(Calendar.Style.STYLE1);
 
         CalendarSource source = new CalendarSource("Planify Onboard");
         source.getCalendars().add(userCalendar);
@@ -60,16 +62,23 @@ public class OnboardingPage2Controller implements Initializable {
 
         calendarContainer.getChildren().setAll(calendarView);
 
+        // **NEW** apply visible‐hours & blocked‐days prefs
+        CalendarHelper.applyStudyPreferences(calendarView);
+
+        // drag‐and‐drop handlers
         calendarContainer.setOnDragOver(this::onDragOver);
         calendarContainer.setOnDragDropped(this::onDragDropped);
 
+        // initial load
         refreshCalendar(userUUID);
     }
 
     private void refreshCalendar(UUID userUUID) {
         if (userUUID == null || userCalendar == null) return;
 
+        // clear out old entries
         userCalendar.clear();
+
         try {
             List<CalendarEvent> events = new CalendarEventRepository().findByUser(userUUID);
             for (CalendarEvent e : events) {
@@ -79,6 +88,9 @@ public class OnboardingPage2Controller implements Initializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        // **RE‐APPLY** prefs in case user changed them during import
+        CalendarHelper.applyStudyPreferences(calendarView);
     }
 
     @FXML
@@ -86,8 +98,7 @@ public class OnboardingPage2Controller implements Initializable {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select ICS or CSV File");
-
-        chooser.getExtensionFilters().addAll(
+        chooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("iCalendar Files (*.ics)", "*.ics")
         );
 
@@ -98,20 +109,20 @@ public class OnboardingPage2Controller implements Initializable {
         if (window != null) {
             File selectedFile = chooser.showOpenDialog(window);
             if (selectedFile != null && selectedFile.exists()) {
-                CalendarImportHelper importer = new CalendarImportHelper(userUUID);
-                boolean success = importer.importFromFile(selectedFile.getAbsolutePath());
+                boolean success = new CalendarImportHelper(userUUID)
+                        .importFromFile(selectedFile.getAbsolutePath());
 
                 if (success) {
-                    System.out.println("✅ File imported successfully: " + selectedFile.getName());
+                    System.out.println("✅ File imported: " + selectedFile.getName());
                     refreshCalendar(userUUID);
                 } else {
-                    System.err.println("❌ Failed to import file: " + selectedFile.getName());
+                    System.err.println("❌ Import failed: " + selectedFile.getName());
                 }
             } else {
-                System.out.println("⚠️ File selection was cancelled or file does not exist.");
+                System.out.println("⚠️ No file selected or file not found.");
             }
         } else {
-            System.err.println("❌ No valid window available to open FileChooser.");
+            System.err.println("❌ Cannot open FileChooser—no window available.");
         }
     }
 
@@ -126,7 +137,8 @@ public class OnboardingPage2Controller implements Initializable {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         var files = e.getDragboard().getFiles();
         if (!files.isEmpty()) {
-            boolean ok = new CalendarImportHelper(userUUID).importFromFile(files.get(0).getAbsolutePath());
+            boolean ok = new CalendarImportHelper(userUUID)
+                    .importFromFile(files.get(0).getAbsolutePath());
             if (ok) {
                 refreshCalendar(userUUID);
             }
@@ -135,20 +147,21 @@ public class OnboardingPage2Controller implements Initializable {
         e.consume();
     }
 
-    @FXML
-    private void handlePage1(ActionEvent event) {
+    @FXML private void handlePage1(ActionEvent event) {
         ViewManager.closeTopOverlay();
-        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", controller -> {});
+        ViewManager.showOverlay(
+                "/application/studyspace/onboarding/OnboardingPage1.fxml",
+                controller -> {});
     }
 
-    @FXML
-    private void handlePage2(ActionEvent event) {
-        // Already on Page 2 — no action
+    @FXML private void handlePage2(ActionEvent event) {
+        // no‐op, already here
     }
 
-    @FXML
-    private void handlePage3(ActionEvent event) {
+    @FXML private void handlePage3(ActionEvent event) {
         ViewManager.closeTopOverlay();
-        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage3.fxml", controller -> {});
+        ViewManager.showOverlay(
+                "/application/studyspace/onboarding/OnboardingPage3.fxml",
+                controller -> {});
     }
 }

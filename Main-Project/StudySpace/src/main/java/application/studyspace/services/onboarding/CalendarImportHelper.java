@@ -5,16 +5,18 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
 import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.CalendarEventRepository;
+import application.studyspace.services.calendar.CalendarRepository;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.time.*;
-import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CalendarImportHelper {
@@ -26,85 +28,87 @@ public class CalendarImportHelper {
     }
 
     /**
-     * Parses the .ics at filePath, maps each VEVENT into a CalendarEvent,
-     * and saves it using CalendarEventRepository.
+     * Imports VEVENTs from an .ics file into the user’s Blockers calendar,
+     * skipping duplicates.
      */
     public boolean importFromFile(String filePath) {
         try (InputStream in = new FileInputStream(filePath)) {
-            System.out.println("📥 Starting calendar import: " + filePath);
+            CalendarBuilder builder    = new CalendarBuilder();
+            Calendar        calendarIcs = builder.build(in);
 
-            CalendarBuilder builder = new CalendarBuilder();
-            Calendar calendar = builder.build(in);
+            CalendarEventRepository evtRepo     = new CalendarEventRepository();
+            CalendarRepository      calRepo     = new CalendarRepository();
+            UUID blockerCalId = calRepo.getOrCreateBlockersCalendar(userUUID);
 
-            int totalEvents = calendar.getComponents(Component.VEVENT).size();
-            System.out.println("🔍 Events found in file: " + totalEvents);
+            int added = 0;
+            int total = calendarIcs.getComponents(Component.VEVENT).size();
+            for (Object o : calendarIcs.getComponents(Component.VEVENT)) {
+                VEvent v = (VEvent) o;
 
-            CalendarEventRepository repo = new CalendarEventRepository();
-            int savedCount = 0;
+                // summary
+                Optional<Property> optSummary = v.getProperties(Property.SUMMARY).stream().findFirst();
+                String summary = optSummary.map(Property::getValue).orElse("");
 
-            for (Object obj : calendar.getComponents(Component.VEVENT)) {
-                VEvent event = (VEvent) obj;
+                // description
+                Optional<Property> optDesc = v.getProperties(Property.DESCRIPTION).stream().findFirst();
+                String description = optDesc.map(Property::getValue).orElse("");
 
-                String summary     = event.getProperty(Property.SUMMARY)
-                        .map(Property::getValue)
-                        .orElse("");
-                String description = event.getProperty(Property.DESCRIPTION)
-                        .map(Property::getValue)
-                        .orElse("");
-                String location    = event.getProperty(Property.LOCATION)
-                        .map(Property::getValue)
-                        .orElse("");
+                // location
+                Optional<Property> optLoc = v.getProperties(Property.LOCATION).stream().findFirst();
+                String location = optLoc.map(Property::getValue).orElse("");
 
-                ZonedDateTime start = event.getProperty(Property.DTSTART)
-                        .map(p -> (DtStart) p)
-                        .map(DtStart::getDate)
+                // start
+                Optional<Property> optDtStart = v.getProperties(Property.DTSTART).stream().findFirst();
+                ZonedDateTime start = optDtStart
+                        .filter(p -> p instanceof DtStart)
+                        .map(p -> ((DtStart) p).getDate())
                         .map(CalendarImportHelper::toZonedDateTime)
                         .orElse(null);
 
-                ZonedDateTime end = event.getProperty(Property.DTEND)
-                        .map(p -> (DtEnd) p)
-                        .map(DtEnd::getDate)
+                // end
+                Optional<Property> optDtEnd = v.getProperties(Property.DTEND).stream().findFirst();
+                ZonedDateTime end = optDtEnd
+                        .filter(p -> p instanceof DtEnd)
+                        .map(p -> ((DtEnd) p).getDate())
                         .map(CalendarImportHelper::toZonedDateTime)
                         .orElse(null);
 
-                CalendarEvent ev = new CalendarEvent(
-                        userUUID,
-                        summary,
-                        description,
-                        location,
-                        start,
-                        end
-                );
+                if (start == null || end == null) {
+                    continue;
+                }
 
-                if (!repo.exists(userUUID, summary, start, end)) {
-                    repo.save(ev);
-                    savedCount++;
-                } else {
-                    System.out.println("⚠️ Skipped duplicate: " + summary + " (" + start + ")");
+                if (!evtRepo.exists(userUUID, summary, start, end)) {
+                    CalendarEvent ev = new CalendarEvent(
+                            userUUID,
+                            summary,
+                            description,
+                            location,
+                            start,
+                            end
+                    );
+                    ev.setCalendarId(blockerCalId);
+                    evtRepo.save(ev);
+                    added++;
                 }
             }
 
-            System.out.println("✅ Successfully added " + savedCount + " of " + totalEvents + " event(s) to the database");
+            System.out.printf("Imported %d of %d events.%n", added, total);
             return true;
 
         } catch (Exception e) {
-            System.err.println("❌ Calendar import failed: " + e.getMessage());
+            System.err.println("Calendar import failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public static ZonedDateTime toZonedDateTime(Object value) {
-        if (value instanceof ZonedDateTime) {
-            return (ZonedDateTime) value;
-        } else if (value instanceof OffsetDateTime) {
-            return ((OffsetDateTime) value).toZonedDateTime();
-        } else if (value instanceof java.util.Date) {
-            return ZonedDateTime.ofInstant(((java.util.Date) value).toInstant(), ZoneId.systemDefault());
-        } else if (value instanceof TemporalAccessor) {
-            return ZonedDateTime.from((TemporalAccessor) value);
+    private static ZonedDateTime toZonedDateTime(Object dateObj) {
+        if (dateObj instanceof TemporalAccessor) {
+            return ZonedDateTime.from((TemporalAccessor) dateObj);
+        } else if (dateObj instanceof java.util.Date) {
+            return ZonedDateTime.ofInstant(((java.util.Date) dateObj).toInstant(), ZoneId.systemDefault());
         } else {
-            throw new IllegalArgumentException("Unsupported temporal type: " + value.getClass());
+            throw new IllegalArgumentException("Unsupported date type: " + dateObj.getClass());
         }
     }
 }

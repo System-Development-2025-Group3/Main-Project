@@ -10,9 +10,8 @@
            style="-fx-background-color: transparent; -fx-padding: 40;"
            prefWidth="1600" prefHeight="1000">
 
+    <!-- put the ToggleGroup back -->
     <fx:define>
-        <ToggleGroup fx:id="paginationGroup"/>
-        <ToggleGroup fx:id="colorGroup"/>
         <ToggleGroup fx:id="typeToggleGroup"/>
     </fx:define>
 
@@ -33,7 +32,7 @@
                 <Label text="Add your exams and blockers"
                        style="-fx-font-size:22px; -fx-font-weight:bold;"/>
 
-                <!-- Type toggles (wider) -->
+                <!-- re-attach the ToggleGroup here -->
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <ToggleButton fx:id="examToggle"
                                   text="Exam"
@@ -50,73 +49,54 @@
 
                     <!-- Exam form -->
                     <VBox fx:id="examForm" spacing="12" visible="false" managed="false">
+                        <!-- your original fields: examNameField, descriptionArea, etc. -->
                         <Label text="Exam Name" styleClass="field-label"/>
-                        <TextField fx:id="examNameField"
-                                   promptText="e.g. Calculus"
-                                   styleClass="styled-text-field"/>
+                        <TextField fx:id="examNameField" promptText="e.g. Calculus" styleClass="styled-text-field"/>
 
                         <Label text="Description" styleClass="field-label"/>
-                        <TextArea fx:id="descriptionArea"
-                                  promptText="e.g. Covers chapters 1-5"
-                                  prefRowCount="4"
-                                  styleClass="styled-text-area"/>
+                        <TextArea fx:id="descriptionArea" prefRowCount="4" styleClass="styled-text-area"/>
 
-                        <Label text="Start Date" styleClass="field-label"/>
-                        <DatePicker fx:id="exStartDate"
-                                    promptText="Select start"
-                                    styleClass="styled-combo"/>
+                        <Label text="Start" styleClass="field-label"/>
+                        <HBox spacing="6">
+                            <DatePicker fx:id="exStartDate" styleClass="styled-combo"/>
+                            <Spinner fx:id="exStartTime" editable="true"/>
+                        </HBox>
 
-                        <Label text="End Date" styleClass="field-label"/>
-                        <DatePicker fx:id="exEndDate"
-                                    promptText="Select end"
-                                    styleClass="styled-combo"/>
+                        <Label text="End" styleClass="field-label"/>
+                        <HBox spacing="6">
+                            <DatePicker fx:id="exEndDate" styleClass="styled-combo"/>
+                            <Spinner fx:id="exEndTime" editable="true"/>
+                        </HBox>
 
-                        <Label text="Estimated Study Minutes" styleClass="field-label"/>
-                        <TextField fx:id="estimatedMinutesField"
-                                   promptText="e.g. 120"
-                                   styleClass="styled-text-field"/>
-
-                        <!-- New Difficulty slider -->
-                        <Label text="Difficulty" styleClass="field-label"/>
-                        <Slider fx:id="difficultySlider"
-                                min="1" max="10" value="5"
-                                majorTickUnit="1" minorTickCount="0"
-                                blockIncrement="1" snapToTicks="true"
-                                styleClass="styled-slider"/>
-                        <Label fx:id="difficultyLabel"
-                               text="5"
-                               styleClass="slider-value"/>
-
-                        <!-- New Number of Topics field -->
                         <Label text="Number of Topics" styleClass="field-label"/>
-                        <TextField fx:id="topicsField"
-                                   promptText="e.g. 5"
-                                   styleClass="styled-text-field"/>
+                        <TextField fx:id="topicsField" styleClass="styled-text-field"/>
 
-                        <!-- New Grade Weight slider -->
+                        <Label text="Difficulty (1–10)" styleClass="field-label"/>
+                        <TextField fx:id="difficultyField" promptText="e.g. 7" styleClass="styled-text-field"/>
+
+                        <Label text="Estimated Minutes" styleClass="field-label"/>
+                        <TextField fx:id="estimatedMinutesField" styleClass="styled-text-field"/>
+
                         <Label text="Grade Weight (%)" styleClass="field-label"/>
                         <Slider fx:id="weightSlider"
                                 min="0" max="100" value="50"
-                                majorTickUnit="10" minorTickCount="9"
-                                blockIncrement="1" snapToTicks="true"
+                                snapToTicks="true"
                                 styleClass="styled-slider"/>
-                        <Label fx:id="weightLabel"
-                               text="50%"
-                               styleClass="slider-value"/>
+                        <Label fx:id="weightLabel" styleClass="slider-value"/>
 
+                        <Button fx:id="addExamBtn"
+                                text="Add Exam"
+                                styleClass="page-button"
+                                alignment="CENTER_RIGHT"/>
                     </VBox>
 
                     <!-- Blocker/Event form -->
                     <VBox fx:id="blockerForm" spacing="12" visible="false" managed="false">
                         <Label text="Event Title" styleClass="field-label"/>
-                        <TextField fx:id="evtTitleField"
-                                   promptText="e.g. Team Meeting"
-                                   styleClass="styled-text-field"/>
+                        <TextField fx:id="evtTitleField" styleClass="styled-text-field"/>
 
                         <Label text="Location" styleClass="field-label"/>
-                        <TextField fx:id="evtLocationField"
-                                   promptText="e.g. Room 101"
-                                   styleClass="styled-text-field"/>
+                        <TextField fx:id="evtLocationField" styleClass="styled-text-field"/>
 
                         <Label text="Start" styleClass="field-label"/>
                         <HBox spacing="6">
@@ -132,18 +112,12 @@
 
                         <CheckBox fx:id="evtAllDay" text="All day"/>
                     </VBox>
-
                 </StackPane>
             </VBox>
 
             <!-- CALENDAR PREVIEW -->
-            <VBox spacing="0"
-                  alignment="TOP_CENTER"
-                  styleClass="card-box"
-                  prefWidth="900"
-                  HBox.hgrow="ALWAYS"
-                  VBox.vgrow="ALWAYS">
-
+            <VBox spacing="0" alignment="TOP_CENTER" styleClass="card-box"
+                  prefWidth="900" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                 <StackPane fx:id="calendarPreviewContainer"
                            styleClass="calendar-wrapper"
                            HBox.hgrow="ALWAYS"
@@ -155,16 +129,18 @@
 
         <!-- Bottom pager + Save -->
         <HBox spacing="12" alignment="CENTER">
-            <Button text="1" fx:id="page1Btn" onAction="#handlePage1" styleClass="page-button"/>
-            <Button text="2" fx:id="page2Btn" onAction="#handlePage2" styleClass="page-button"/>
-            <Button text="3" fx:id="page3Btn" onAction="#handlePage3" styleClass="page-button-selected"/>
+            <Button fx:id="page1Btn" text="1" onAction="#handlePage1" styleClass="page-button"/>
+            <Button fx:id="page2Btn" text="2" onAction="#handlePage2" styleClass="page-button"/>
+            <Button fx:id="page3Btn" text="3" onAction="#handlePage3" styleClass="page-button-selected"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="SaveBtn" onAction="#handleSave" styleClass="page-button-selected" text="Generate Study Plan">
+            <Button fx:id="SaveBtn"
+                    onAction="#handleSave"
+                    styleClass="page-button-selected"
+                    text="Generate Study Plan">
                 <graphic>
                     <FontIcon iconLiteral="fas-calendar" iconSize="18" iconColor="white"/>
                 </graphic>
             </Button>
         </HBox>
-
     </VBox>
 </StackPane>
