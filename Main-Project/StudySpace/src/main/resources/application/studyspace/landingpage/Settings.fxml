@@ -1,51 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="application.studyspace.controllers.landingpage.SettingsController"
             stylesheets="@../styles/LandingPageStylesheet.css"
             style="-fx-background-color: white;">
 
+    <!-- ================= ToggleGroup definitions ================= -->
     <fx:define>
         <ToggleGroup fx:id="navGroup"/>
+        <ToggleGroup fx:id="typeToggleGroup"/>
     </fx:define>
 
-    <!-- Sidebar -->
+
+    <!-- ===== Sidebar ===== -->
     <left>
         <AnchorPane>
-            <children>
-                <VBox styleClass="sidebar"
-                      AnchorPane.topAnchor="0"
-                      AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0"
-                      AnchorPane.rightAnchor="0">
-                    <Label text="Study Planner" styleClass="sidebar-title"/>
-                    <ToggleButton text="📅 Calendar"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarCalendar"/>
-                    <ToggleButton text="📊 Dashboard"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  onAction="#handleSidebarDashboard"/>
-                    <ToggleButton text="⚙ Settings"
-                                  styleClass="sidebar-button"
-                                  toggleGroup="$navGroup"
-                                  selected="true"
-                                  onAction="#handleSidebarSettings"/>
-                </VBox>
-            </children>
+            <VBox styleClass="sidebar"
+                  AnchorPane.topAnchor="0"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0">
+                <Label styleClass="sidebar-title" text="Study Planner"/>
+                <ToggleButton text="📅 Calendar"
+                              onAction="#handleSidebarCalendar"
+                              selected="true"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"/>
+                <ToggleButton text="📊 Dashboard"
+                              onAction="#handleSidebarDashboard"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"/>
+                <ToggleButton text="⚙ Settings"
+                              onAction="#handleSidebarSettings"
+                              styleClass="sidebar-button"
+                              toggleGroup="$navGroup"/>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="exitButton"
+                        onAction="#handleExit"
+                        style="-fx-background-color: transparent; -fx-cursor: hand;">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-sign-out-alt"
+                                  iconSize="18"
+                                  iconColor="black"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="Sign out"/>
+                    </tooltip>
+                </Button>
+            </VBox>
         </AnchorPane>
     </left>
 
-    <!-- Main settings content -->
+
+    <!-- Main content -->
     <center>
-        <StackPane style="-fx-padding: 40;">
-            <Label text="⚙ Settings Page"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-        </StackPane>
+        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20;">
+            
+            <!-- Study Preferences -->
+            <VBox spacing="20"
+                  style="
+                    -fx-background-color: white; 
+                    -fx-padding: 30; 
+                    -fx-background-radius: 15; 
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
+                  ">
+                <Label text="Study Preferences" styleClass="main-title"/>
+
+                <!-- Preferred study time -->
+                <VBox spacing="8">
+                    <Label text="Preferred study time" styleClass="field-label-bold"/>
+                    <HBox spacing="8">
+                        <Spinner fx:id="startTimeSpinner" prefWidth="150"/>
+                        <Label text="to" />
+                        <Spinner fx:id="endTimeSpinner" prefWidth="150"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Study session length -->
+                <VBox spacing="8">
+                    <Label text="Study session length" styleClass="field-label"/>
+                    <Slider fx:id="sessionLengthSlider"
+                            min="10" max="180" value="30"
+                            majorTickUnit="10"
+                            snapToTicks="true"
+                            blockIncrement="5"
+                            styleClass="styled-slider"/>
+                    <Label fx:id="sessionLengthLabel" text="30 min" styleClass="slider-value"/>
+                </VBox>
+
+                <!-- Break length -->
+                <VBox spacing="8">
+                    <Label text="Break length" styleClass="field-label"/>
+                    <Slider fx:id="breakLengthSlider"
+                            min="5" max="60" value="10"
+                            majorTickUnit="5"
+                            snapToTicks="true"
+                            blockIncrement="5"
+                            styleClass="styled-slider"/>
+                    <Label fx:id="breakLengthLabel" text="10 min" styleClass="slider-value"/>
+                </VBox>
+
+                <!-- Submit Button -->
+                <Button text="Submit Preferences"
+                        fx:id="submitPreferencesBtn"
+                        onAction="#handleSave"
+                        styleClass="button"/>
+            </VBox>
+
+            <!-- Settings -->
+            <VBox spacing="20"
+                  style="
+                    -fx-background-color: white; 
+                    -fx-padding: 30; 
+                    -fx-background-radius: 15; 
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
+                  ">
+                <Label text="Settings" styleClass="main-title"/>
+
+                <!-- Light/Dark Mode -->
+                <VBox spacing="10">
+                    <Label text="Theme" styleClass="field-label-bold"/>
+                    <ToggleButton fx:id="themeSwitch" text="Light Mode"
+                                  styleClass="menu-button"/>
+                </VBox>
+
+                <!-- Reset Password -->
+                <VBox spacing="8">
+                    <Label text="Reset Your Password" styleClass="field-label-bold"/>
+                    <TextField fx:id="newPasswortField"
+                               promptText="Enter new password"
+                               styleClass="text-field"/>
+                    <TextField fx:id="ConfirmPasswordField"
+                               promptText="Confirm new password"
+                               styleClass="text-field"/>
+                    <Button text="Reset Password"
+                            fx:id="resetPasswordBtn"
+                            onAction="#handleResetPassword"
+                            styleClass="button"/>
+                </VBox>
+            </VBox>
+        </HBox>
     </center>
 
 </BorderPane>

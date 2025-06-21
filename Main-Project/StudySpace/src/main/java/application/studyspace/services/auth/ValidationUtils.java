@@ -131,7 +131,7 @@ public class ValidationUtils {
     /**
      * Checks password strength: ≥12 chars, ≥1 uppercase, ≥1 digit, ≥1 special.
      */
-    private static boolean isStrongPassword(String pw) {
+    public static boolean isStrongPassword(String pw) {
         return pw.length() >= 12
                && pw.chars().anyMatch(Character::isUpperCase)
                && pw.chars().anyMatch(Character::isDigit)
