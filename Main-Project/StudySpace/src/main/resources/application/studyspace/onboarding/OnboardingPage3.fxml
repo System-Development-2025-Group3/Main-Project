@@ -134,7 +134,7 @@
             <Button fx:id="page3Btn" text="3" onAction="#handlePage3" styleClass="page-button-selected"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="SaveBtn"
-                    onAction="#handleSave"
+                    onAction="#generateStudyPlan"
                     styleClass="page-button-selected"
                     text="Generate Study Plan">
                 <graphic>
@@ -144,3 +144,4 @@
         </HBox>
     </VBox>
 </StackPane>
+

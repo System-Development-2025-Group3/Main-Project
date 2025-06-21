@@ -2,7 +2,7 @@ package application.studyspace.controllers.onboarding;
 
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
-import application.studyspace.services.onboarding.InputStudyPreferences;
+import application.studyspace.services.onboarding.StudyPreferences;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -133,7 +133,7 @@ public class OnboardingPage1Controller {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
         String preferredRange = start.format(fmt) + "-" + end.format(fmt);
 
-        InputStudyPreferences prefs = new InputStudyPreferences(
+        StudyPreferences prefs = new StudyPreferences(
                 userUUID,
                 preferredRange,
                 (int) sessionLengthSlider.getValue(),

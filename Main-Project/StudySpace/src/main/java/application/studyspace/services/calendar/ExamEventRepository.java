@@ -21,21 +21,11 @@ import java.util.logging.Logger;
 public class ExamEventRepository {
 
     private static final Logger logger = Logger.getLogger(ExamEventRepository.class.getName());
-    private static ExamEventRepository instance;
-
-    private ExamEventRepository() {}
-
-    public static synchronized ExamEventRepository getInstance() {
-        if (instance == null) {
-            instance = new ExamEventRepository();
-        }
-        return instance;
-    }
 
     /**
      * Saves (or updates) an ExamEvent, including its calendarId.
      */
-    public void save(ExamEvent e) {
+    public static void save(ExamEvent e) {
         String sql = """
             INSERT INTO exam_events (
               exam_id, calendar_id, user_id, title, description, location,
@@ -87,7 +77,7 @@ public class ExamEventRepository {
     /**
      * Loads all ExamEvents belonging to the given calendar.
      */
-    public List<ExamEvent> findByCalendarId(UUID calendarId) throws SQLException {
+    public static List<ExamEvent> findByCalendarId(UUID calendarId) throws SQLException {
         String sql = """
             SELECT 
               exam_id, user_id, title, description, location,

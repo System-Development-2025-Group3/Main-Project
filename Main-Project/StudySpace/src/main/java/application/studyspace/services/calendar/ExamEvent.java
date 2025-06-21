@@ -8,20 +8,10 @@ import java.util.UUID;
  * Represents a scheduled exam with relevant data for generating personalized study plans.
  * The title now fully serves as the subject.
  */
-public class ExamEvent {
-
-    private final UUID id;
-    private final UUID userId;
-    private UUID calendarId;
-    private String title;
-    private String description;
-    private String location;
-    private ZonedDateTime start;
-    private ZonedDateTime end;
+public class ExamEvent extends CalendarEvent {
     private double gradeWeight;
     private int difficulty;
     private int priority;
-    private boolean hidden;
     private int numberOfTopics;
     private int minutesPerTopic;
     private Duration totalEstimatedStudyTime;
@@ -37,18 +27,12 @@ public class ExamEvent {
                      int difficulty,
                      int numberOfTopics,
                      int minutesPerTopic) {
-        this.id                      = UUID.randomUUID();
-        this.userId                  = userId;
-        this.title                   = title;
-        this.description             = description;
-        this.location                = location;
-        this.start                   = start;
-        this.end                     = end;
-        this.gradeWeight             = gradeWeight;
-        this.difficulty              = difficulty;
-        this.priority                = computePriority(gradeWeight, difficulty);
-        this.numberOfTopics          = numberOfTopics;
-        this.minutesPerTopic         = minutesPerTopic;
+        super(userId, title, description, location, start, end);
+        this.gradeWeight = gradeWeight;
+        this.difficulty = difficulty;
+        this.priority = computePriority(gradeWeight, difficulty);
+        this.numberOfTopics = numberOfTopics;
+        this.minutesPerTopic = minutesPerTopic;
         this.totalEstimatedStudyTime = computeStudyTime(numberOfTopics, minutesPerTopic);
     }
 
@@ -65,25 +49,15 @@ public class ExamEvent {
                      int difficulty,
                      int numberOfTopics,
                      int minutesPerTopic) {
-        this.id                      = id;
-        this.userId                  = userId;
-        this.calendarId              = calendarId;
-        this.title                   = title;
-        this.description             = description;
-        this.location                = location;
-        this.start                   = start;
-        this.end                     = end;
-        this.gradeWeight             = gradeWeight;
-        this.difficulty              = difficulty;
-        this.priority                = computePriority(gradeWeight, difficulty);
-        this.numberOfTopics          = numberOfTopics;
-        this.minutesPerTopic         = minutesPerTopic;
+        super(id, userId, title, description, location, start, end, false, false, null, null, null, null, null);
+        this.setCalendarId(calendarId);
+        this.gradeWeight = gradeWeight;
+        this.difficulty = difficulty;
+        this.priority = computePriority(gradeWeight, difficulty);
+        this.numberOfTopics = numberOfTopics;
+        this.minutesPerTopic = minutesPerTopic;
         this.totalEstimatedStudyTime = computeStudyTime(numberOfTopics, minutesPerTopic);
     }
-
-    // --- calendarId accessor ---
-    public UUID getCalendarId() { return calendarId; }
-    public void setCalendarId(UUID calendarId) { this.calendarId = calendarId; }
 
     // --- computation helpers ---
     private int computePriority(double weight, int difficulty) {
@@ -94,24 +68,6 @@ public class ExamEvent {
     }
 
     // --- getters & setters ---
-    public UUID getId() { return id; }
-    public UUID getUserId() { return userId; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
-    public ZonedDateTime getStart() { return start; }
-    public void setStart(ZonedDateTime start) { this.start = start; }
-
-    public ZonedDateTime getEnd() { return end; }
-    public void setEnd(ZonedDateTime end) { this.end = end; }
-
     public double getGradeWeight() { return gradeWeight; }
     public void setGradeWeight(double gradeWeight) {
         this.gradeWeight = gradeWeight;
@@ -128,9 +84,6 @@ public class ExamEvent {
     }
 
     public int getPriority() { return priority; }
-
-    public boolean isHidden() { return hidden; }
-    public void setHidden(boolean hidden) { this.hidden = hidden; }
 
     public int getNumberOfTopics() { return numberOfTopics; }
     public void setNumberOfTopics(int numberOfTopics) {

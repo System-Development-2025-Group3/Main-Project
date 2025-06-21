@@ -88,7 +88,7 @@ public class CalendarEventRepository {
     /**
      * Load all events for a given calendar.
      */
-    public List<CalendarEvent> findByCalendarId(UUID calId) throws SQLException {
+    public static List<CalendarEvent> findByCalendarId(UUID calId) throws SQLException {
         return loadByClause("calendar_id = ?", UUIDHelper.uuidToBytes(calId));
     }
 
@@ -100,7 +100,7 @@ public class CalendarEventRepository {
     }
 
     // Shared loader to avoid duplication
-    private List<CalendarEvent> loadByClause(String where, byte[] param) throws SQLException {
+    private static List<CalendarEvent> loadByClause(String where, byte[] param) throws SQLException {
         String sql = "SELECT * FROM calendar_events WHERE " + where;
         List<CalendarEvent> list = new ArrayList<>();
         try (Connection conn = new DatabaseConnection().getConnection();

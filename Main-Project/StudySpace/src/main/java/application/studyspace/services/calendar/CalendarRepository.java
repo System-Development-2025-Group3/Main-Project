@@ -19,7 +19,7 @@ public class CalendarRepository {
     /**
      * Fetches all calendars belonging to a user.
      */
-    public List<CalendarModel> findByUser(UUID userId) throws SQLException {
+    public static List<CalendarModel> findByUser(UUID userId) throws SQLException {
         String sql = "SELECT calendar_id, name, style FROM calendars WHERE user_id = ?";
         List<CalendarModel> out = new ArrayList<>();
 

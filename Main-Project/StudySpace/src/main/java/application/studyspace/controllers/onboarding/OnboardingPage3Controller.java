@@ -5,6 +5,7 @@ import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.ValidationUtils;
 import application.studyspace.services.auth.ValidationUtils.ExamValidationResult;
 import application.studyspace.services.calendar.*;
+import application.studyspace.services.onboarding.StudyPreferences;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.CalendarView;
@@ -52,7 +53,7 @@ public class OnboardingPage3Controller implements Initializable {
 
     private final CalendarEventMapper     mapper   = new CalendarEventMapper();
     private final CalendarEventRepository calRepo  = new CalendarEventRepository();
-    private final ExamEventRepository     exRepo   = ExamEventRepository.getInstance();
+    private final ExamEventRepository     exRepo   = new ExamEventRepository();
     private final CalendarRepository      calDef   = new CalendarRepository();
 
     @Override
@@ -73,7 +74,7 @@ public class OnboardingPage3Controller implements Initializable {
         setupTimeSpinners(exStartTime,  exEndTime);
 
         addExamBtn.setOnAction(this::handleAddExam);
-        SaveBtn   .setOnAction(this::handleSave);
+        SaveBtn   .setOnAction(this::generateStudyPlan);
 
         weightSlider.valueProperty().addListener((o, old, nu) ->
                 weightLabel.setText(String.format("%.0f%%", nu.doubleValue())));
@@ -101,23 +102,52 @@ public class OnboardingPage3Controller implements Initializable {
 
     private void setupTimeSpinners(Spinner<LocalTime> start, Spinner<LocalTime> end) {
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
-        for (int h = 0; h < 24; h++) {
-            times.add(LocalTime.of(h,0));
-            times.add(LocalTime.of(h,30));
+        // From 01:00 to 24:00 (use 00:00 next day for 24:00, or display "24:00")
+        for (int h = 1; h <= 23; h++) {
+            times.add(LocalTime.of(h, 0));
+            times.add(LocalTime.of(h, 30));
         }
+        // Optionally add 24:00 as LocalTime.MIDNIGHT (next day)
+        times.add(LocalTime.MIDNIGHT);
+
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
         StringConverter<LocalTime> conv = new StringConverter<>() {
-            public String toString(LocalTime t)  { return t==null?"":t.format(fmt); }
-            public LocalTime fromString(String s){ return LocalTime.parse(s, fmt); }
+            public String toString(LocalTime t)  {
+                if (t == null) return "";
+                if (t.equals(LocalTime.MIDNIGHT)) return "24:00";
+                return t.format(fmt);
+            }
+            public LocalTime fromString(String s) {
+                if (s.equals("24:00")) return LocalTime.MIDNIGHT;
+                return LocalTime.parse(s, fmt);
+            }
         };
+
         SpinnerValueFactory<LocalTime> sf1 = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         SpinnerValueFactory<LocalTime> sf2 = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         sf1.setConverter(conv);
         sf2.setConverter(conv);
         start.setValueFactory(sf1);
-        end  .setValueFactory(sf2);
+        end.setValueFactory(sf2);
         start.setEditable(true);
         end.setEditable(true);
+
+        // Always keep end >= start
+        start.valueProperty().addListener((obs, oldStart, newStart) -> {
+            LocalTime endTime = end.getValue();
+            // If end < start, set end = start
+            if (endTime != null && newStart != null && endTime.isBefore(newStart)) {
+                end.getValueFactory().setValue(newStart);
+            }
+        });
+
+        end.valueProperty().addListener((obs, oldEnd, newEnd) -> {
+            LocalTime startTime = start.getValue();
+            // If end < start, set end = start
+            if (startTime != null && newEnd != null && newEnd.isBefore(startTime)) {
+                end.getValueFactory().setValue(startTime);
+            }
+        });
     }
 
     @FXML public void handlePage1() {
@@ -140,11 +170,12 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
-    @FXML public void handleSave(ActionEvent e) {
+    @FXML public void generateStudyPlan(ActionEvent e) {
         try {
             UUID userId = SessionManager.getInstance().getLoggedInUserId();
             if (examToggle.isSelected()) {
                 saveExam(userId);
+                StudyPlanGenerator.generateStudyPlan(userId);
             } else {
                 saveBlocker(userId);
             }

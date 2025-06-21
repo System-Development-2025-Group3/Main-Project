@@ -36,7 +36,7 @@ public class CalendarHelper {
         // repositories
         CalendarRepository      calRepo = new CalendarRepository();
         CalendarEventRepository evRepo  = new CalendarEventRepository();
-        ExamEventRepository     exRepo  = ExamEventRepository.getInstance();
+        ExamEventRepository     exRepo  = new ExamEventRepository();
 
         try {
             // fetch the list of service‐side CalendarModel objects
