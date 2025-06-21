@@ -1,17 +1,15 @@
-// CalendarEventMapper.java
 package application.studyspace.services.calendar;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 
-import java.time.LocalTime;
 import java.util.logging.Logger;
 
 public class CalendarEventMapper {
 
     private static final Logger logger = Logger.getLogger(CalendarEventMapper.class.getName());
 
-    /** Maps a CalendarEvent to a CalendarFX Entry. */
+    /** Maps a generic CalendarEvent to a CalendarFX Entry. */
     public static Entry<CalendarEvent> toEntry(CalendarEvent e, Calendar fxCalendar) {
         Entry<CalendarEvent> entry = new Entry<>(e.getTitle());
         entry.setId(e.getId().toString());
@@ -38,7 +36,7 @@ public class CalendarEventMapper {
         return entry;
     }
 
-    /** Maps an ExamEvent to a CalendarFX Entry. */
+    /** Maps an ExamEvent to a CalendarFX Entry, showing only the title. */
     public static Entry<ExamEvent> toEntry(ExamEvent e, Calendar fxCalendar) {
         Entry<ExamEvent> entry = new Entry<>(e.getTitle());
         entry.setId(e.getId().toString());
@@ -53,7 +51,8 @@ public class CalendarEventMapper {
         );
         entry.setFullDay(false);
         entry.setLocation(e.getLocation());
-        entry.setTitle(e.getTitle() + " (" + e.getSubject() + ")");
+
+        entry.setTitle(e.getTitle());
 
         logger.info("Mapped ExamEvent to Entry: " + e.getId());
         return entry;
