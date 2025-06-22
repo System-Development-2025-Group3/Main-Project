@@ -5,31 +5,16 @@ import application.studyspace.services.onboarding.StudyPreferences;
 
 import java.sql.SQLException;
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class StudyPlanGenerator {
 
-    // Builds a list of allowed time slots based on user preferences.
-    private static List<LocalDateTime> buildAllowedSlots(
-            StudyPreferences prefs,
-            LocalDate startDate,
-            LocalDate endDate
-    ) {
-        System.out.println("[DEBUG] buildAllowedSlots from " + startDate + " to " + endDate);
-        List<LocalDateTime> slots = new ArrayList<>();
-        LocalTime windowStart = prefs.getStartTime();
-        LocalTime windowEnd   = prefs.getEndTime();
-        Set<DayOfWeek> blocked = prefs.getBlockedDays();
-
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            if (blocked.contains(date.getDayOfWeek())) continue;
-            LocalDateTime a = LocalDateTime.of(date, windowStart);
-            LocalDateTime b = LocalDateTime.of(date, windowEnd);
-            if (b.isAfter(a)) slots.add(a);
-        }
-        System.out.println("[DEBUG] total allowed slots: " + slots.size());
-        return slots;
+    // Helper: Checks if a slot overlaps a calendar event
+    private static boolean overlaps(LocalDateTime slot, int length, CalendarEvent ev) {
+        LocalDateTime end = slot.plusMinutes(length);
+        LocalDateTime es  = ev.getStart().toLocalDateTime();
+        LocalDateTime ee  = ev.getEnd().toLocalDateTime();
+        return !end.isBefore(es) && !slot.isAfter(ee);
     }
 
     /**
@@ -52,23 +37,32 @@ public class StudyPlanGenerator {
                 ? CalendarEventRepository.findByCalendarId(blockerCal.getId())
                 : List.of();
 
-        // Clear old sessions
-        for (CalendarModel cal : examCals) {
-            var events = CalendarEventRepository.findByCalendarId(cal.getId());
+        // For ALL exams, process one by one
+        // Maintain a master occupied list as you go
+        List<CalendarEvent> occupied = new ArrayList<>(blockerEvents);
+        // Map each date to exams on that day
+        Map<LocalDate, Set<UUID>> examDateToCalendarIds = new HashMap<>();
+
+        for (CalendarModel examCal : examCals) {
+            List<ExamEvent> exams = ExamEventRepository.findByCalendarId(examCal.getId());
+            if (exams.isEmpty()) continue;
+            ExamEvent exam = exams.get(0);
+            LocalDate examDate = exam.getEnd().toLocalDate();
+            examDateToCalendarIds.computeIfAbsent(examDate, d -> new HashSet<>()).add(examCal.getId());
+        }
+
+        for (CalendarModel examCal : examCals) {
+            // 1. Clear only this calendar's own old sessions
+            var events = CalendarEventRepository.findByCalendarId(examCal.getId());
             for (CalendarEvent ev : events) {
                 if (ev.getTitle().contains(" Session ") || ev.getTitle().endsWith(" Practice")) {
                     CalendarEventRepository.delete(ev.getId());
                 }
             }
-        }
+            // After deletion, remove them from occupied
+            occupied.removeIf(ev -> ev.getCalendarId().equals(examCal.getId()) &&
+                    (ev.getTitle().contains(" Session ") || ev.getTitle().endsWith(" Practice")));
 
-        // Gather occupied events
-        List<CalendarEvent> occupied = new ArrayList<>(blockerEvents);
-        for (CalendarModel cal : examCals) {
-            occupied.addAll(CalendarEventRepository.findByCalendarId(cal.getId()));
-        }
-
-        for (CalendarModel examCal : examCals) {
             System.out.println("[DEBUG] Scheduling for exam calendar " + examCal.getId());
             List<ExamEvent> exams = ExamEventRepository.findByCalendarId(examCal.getId());
             if (exams.isEmpty()) continue;
@@ -81,10 +75,6 @@ public class StudyPlanGenerator {
 
             LocalDate from = LocalDate.now();
             LocalDate to   = exam.getEnd().toLocalDate();
-
-            // Build and filter slots with multiple exam-time constraints
-            List<LocalDateTime> slots = new ArrayList<>();
-            LocalDateTime now = LocalDateTime.now();
 
             // Gather other exams (for inter-exam buffers)
             List<ExamEvent> otherExamEvents = new ArrayList<>();
@@ -101,8 +91,19 @@ public class StudyPlanGenerator {
             LocalDateTime thisExamEnd   = exam.getEnd().toLocalDateTime();
             LocalDate thisExamDate      = thisExamStart.toLocalDate();
 
+            List<LocalDateTime> slots = new ArrayList<>();
+            LocalDateTime now = LocalDateTime.now();
+
             for (LocalDate date = from; !date.isAfter(to); date = date.plusDays(1)) {
                 if (prefs.getBlockedDays().contains(date.getDayOfWeek())) continue;
+
+                // Prevent scheduling sessions for this exam the day before a different exam
+                LocalDate tomorrow = date.plusDays(1);
+                Set<UUID> tomorrowExams = examDateToCalendarIds.getOrDefault(tomorrow, Collections.emptySet());
+                if (!tomorrowExams.isEmpty() && !tomorrowExams.contains(examCal.getId())) {
+                    // There is at least one exam tomorrow, and it is NOT this exam → skip today for this exam
+                    continue;
+                }
 
                 // Skip own exam day entirely
                 if (date.equals(thisExamDate)) continue;
@@ -181,6 +182,14 @@ public class StudyPlanGenerator {
                         fits = false;
                         break;
                     }
+                    // Check for overlap with any existing event in occupied
+                    for (CalendarEvent ev : occupied) {
+                        if (overlaps(sessionStart, sessionLen, ev)) {
+                            fits = false;
+                            break;
+                        }
+                    }
+                    if (!fits) break;
                 }
                 if (fits) validGroupStarts.add(candidateStart);
             }
@@ -189,28 +198,43 @@ public class StudyPlanGenerator {
             // -------------------------------------------------------------------------------
 
             int numGroups = needed / groupSize + ((needed % groupSize == 0) ? 0 : 1);
-            int slotCount = slots.size();
             int sessionCreated = 0;
 
+            // Make a copy to avoid ConcurrentModification if you need to use slots elsewhere
+            List<LocalDateTime> availableGroupStarts = new ArrayList<>(slots);
+
             for (int g = 0; g < numGroups; g++) {
-                // Evenly distribute groups across available slots
+                if (availableGroupStarts.isEmpty()) break; // no more starts available
+
+                // Distribute evenly
                 int idx = (numGroups == 1)
                         ? 0
-                        : (int) Math.round(g * (slotCount - 1) / (double)(numGroups - 1));
-                LocalDateTime groupStart = slots.get(idx);
+                        : (int) Math.round(g * (availableGroupStarts.size() - 1) / (double)(numGroups - 1));
+                LocalDateTime groupStart = availableGroupStarts.get(idx);
+
+                // Remove the used slot so it can't be re-used!
+                availableGroupStarts.remove(idx);
 
                 // Number of sessions in this group (handle last group which may be smaller)
                 int sessionsThisGroup = Math.min(groupSize, needed - sessionCreated);
 
                 for (int s = 0; s < sessionsThisGroup; s++) {
                     int sessionNum = sessionCreated + 1;
-                    String title = (sessionNum >= needed - 2)
-                            ? exam.getTitle() + " Practice"
-                            : exam.getTitle() + " Session " + sessionNum;
+                    String title = exam.getTitle() + " Session " + sessionNum;
 
                     LocalDateTime sessionStart = groupStart.plusMinutes(
                             (sessionLen + breakLen) * s
                     );
+
+                    // Final overlap check before creating the event, just to be safe
+                    boolean hasOverlap = false;
+                    for (CalendarEvent ev : occupied) {
+                        if (overlaps(sessionStart, sessionLen, ev)) {
+                            hasOverlap = true;
+                            break;
+                        }
+                    }
+                    if (hasOverlap) continue;
 
                     System.out.println("[DEBUG] Creating session " + title + " at " + sessionStart);
 
@@ -225,19 +249,13 @@ public class StudyPlanGenerator {
                     se.setCalendarId(examCal.getId());
                     CalendarEventRepository.save(se);
 
+                    // Immediately add to occupied
+                    occupied.add(se);
+
                     sessionCreated++;
                 }
             }
         }
         System.out.println("[DEBUG] generateStudyPlan completed.");
-    }
-
-
-
-    private static boolean overlaps(LocalDateTime slot, int length, CalendarEvent ev) {
-        LocalDateTime end = slot.plusMinutes(length);
-        LocalDateTime es  = ev.getStart().toLocalDateTime();
-        LocalDateTime ee  = ev.getEnd().toLocalDateTime();
-        return !end.isBefore(es) && !slot.isAfter(ee);
     }
 }
