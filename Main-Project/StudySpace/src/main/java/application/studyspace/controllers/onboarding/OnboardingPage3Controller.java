@@ -170,18 +170,15 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
-    @FXML public void generateStudyPlan(ActionEvent e) {
+    @FXML
+    public void generateStudyPlan(ActionEvent e) {
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
         try {
-            UUID userId = SessionManager.getInstance().getLoggedInUserId();
-            if (examToggle.isSelected()) {
-                saveExam(userId);
-                StudyPlanGenerator.generateStudyPlan(userId);
-            } else {
-                saveBlocker(userId);
-            }
-            logger.info("✅ Event saved successfully");
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "❌ Failed to save event", ex);
+            StudyPlanGenerator.generateStudyPlan(userId);
+            System.out.println("Successfully generated study plan.");
+        } catch (SQLException ex) {
+            System.out.println("Failed to generate study plan: " + ex.getMessage());
+            ex.printStackTrace();
         }
         ViewManager.closeTopOverlay();
         CalendarHelper.updateUserCalendar(SessionManager.getInstance().getUserCalendar());

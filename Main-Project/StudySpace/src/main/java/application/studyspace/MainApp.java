@@ -7,11 +7,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.util.Locale;
 
 public class MainApp extends Application {
 
     @Override
     public void start(Stage ignoredPrimaryStage) {
+        Locale.setDefault(Locale.ENGLISH);
         Stage splashStage = new Stage();
         SplashScreenAnimator.showSplash(splashStage, () -> {
             try {

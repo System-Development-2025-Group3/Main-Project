@@ -19,7 +19,7 @@ public class CalendarEventRepository {
     /**
      * Save or update a CalendarEvent, including its calendarId.
      */
-    public void save(CalendarEvent e) throws SQLException {
+    public static void save(CalendarEvent e) throws SQLException {
         String sql = """
             INSERT INTO calendar_events (
               event_id, calendar_id, user_id, title, description, location,
@@ -61,6 +61,21 @@ public class CalendarEventRepository {
             ps.setTimestamp(14, e.getRecurrenceId() == null ? null : Timestamp.from(e.getRecurrenceId().toInstant()));
             ps.setBytes(15, e.getTagUuid() == null ? null : UUIDHelper.uuidToBytes(e.getTagUuid()));
             ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Delete a CalendarEvent by its UUID.
+     */
+    public static void delete(UUID eventId) throws SQLException {
+        String sql = "DELETE FROM calendar_events WHERE event_id = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(eventId));
+            int affected = ps.executeUpdate();
+            if (affected == 0) {
+                throw new SQLException("No calendar event found with id " + eventId);
+            }
         }
     }
 
@@ -108,7 +123,6 @@ public class CalendarEventRepository {
             ps.setBytes(1, param);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    // map all columns
                     UUID id         = UUIDHelper.BytesToUUID(rs.getBytes("event_id"));
                     UUID userId     = UUIDHelper.BytesToUUID(rs.getBytes("user_id"));
                     UUID calId      = UUIDHelper.BytesToUUID(rs.getBytes("calendar_id"));
@@ -135,7 +149,6 @@ public class CalendarEventRepository {
                             ? null
                             : UUIDHelper.BytesToUUID(rs.getBytes("tag_uuid"));
 
-                    // use full constructor
                     CalendarEvent e = new CalendarEvent(
                             id, userId, title, desc, loc,
                             start, end, fullDay, hidden,
