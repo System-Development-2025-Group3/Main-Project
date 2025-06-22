@@ -10,7 +10,7 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="application.studyspace.controllers.auth.RegisterController"
            style="-fx-background-color: transparent;"
-           stylesheets="@../styles/Stylesheet.css">
+           stylesheets="@../styles/general/Stylesheet.css">
 
 
     <!-- Background Image -->

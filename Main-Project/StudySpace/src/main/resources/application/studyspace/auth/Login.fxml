@@ -11,7 +11,7 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="application.studyspace.controllers.auth.LoginController"
            style="-fx-background-color: transparent; -fx-padding: 0"
-           stylesheets="@../styles/Stylesheet.css"
+           stylesheets="@../styles/general/Stylesheet.css"
            pickOnBounds="false">
 
 
