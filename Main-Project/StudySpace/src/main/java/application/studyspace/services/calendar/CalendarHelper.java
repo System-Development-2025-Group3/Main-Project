@@ -24,6 +24,10 @@ public class CalendarHelper {
      * loads all calendars and their events, then applies study-time limits and blocked days.
      */
     public static void setupUserCalendar(CalendarView calendarView) {
+        setupUserCalendar(calendarView, "week");
+    }
+
+    public static void setupUserCalendar(CalendarView calendarView, String viewType) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
 
         // clear any existing calendars
@@ -64,8 +68,14 @@ public class CalendarHelper {
             ex.printStackTrace();
         }
 
-        // default to week view
-        calendarView.showWeekPage();
+        // default to chosen view type
+        if ("week".equalsIgnoreCase(viewType)) {
+            calendarView.showWeekPage();
+        } else if ("day".equalsIgnoreCase(viewType)) {
+            calendarView.showDayPage();
+        } else { // default or "week"
+            calendarView.showWeekPage();
+        }
 
         // apply study preferences (visible hours + blocked days)
         applyStudyPreferences(calendarView);

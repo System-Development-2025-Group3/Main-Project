@@ -40,7 +40,7 @@ public class OnboardingPage3Controller implements Initializable {
     @FXML private ToggleButton examToggle, blockerToggle;
     @FXML private TextField examNameField, topicsField, difficultyField, estimatedMinutesField;
     @FXML private TextArea descriptionArea;
-    @FXML private DatePicker exStartDate, exEndDate, evtStartDate, evtEndDate;
+    @FXML private DatePicker exStartDate, evtStartDate, evtEndDate;
     @FXML private Spinner<LocalTime> exStartTime, exEndTime, evtStartTime, evtEndTime;
     @FXML private CheckBox evtAllDay;
     @FXML private Slider weightSlider;
@@ -82,7 +82,6 @@ public class OnboardingPage3Controller implements Initializable {
 
     private void setupPreview() {
         calendarView = new CalendarView();
-        calendarView.showDayPage();
         calendarView.setShowToolBar(false);
         calendarView.setShowAddCalendarButton(false);
         calendarView.setShowPageSwitcher(false);
@@ -90,14 +89,9 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
-        defaultCalendar = new Calendar("Blockers");
-        defaultCalendar.setStyle(Style.STYLE1);
-        calendarView.getCalendarSources().get(0).getCalendars().add(defaultCalendar);
+        CalendarHelper.setupUserCalendar(calendarView, "day");
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
-
-        // <-- Apply study‐time limits and blocked days -->
-        CalendarHelper.applyStudyPreferences(calendarView);
     }
 
     private void setupTimeSpinners(Spinner<LocalTime> start, Spinner<LocalTime> end) {
@@ -170,6 +164,16 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
+    @FXML public void handleAddBlocker(ActionEvent e) {
+        try {
+            saveBlocker(SessionManager.getInstance().getLoggedInUserId());
+            resetExamForm();
+            logger.info("✅ Exam added successfully");
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "❌ Failed to add exam", ex);
+        }
+    }
+
     @FXML
     public void generateStudyPlan(ActionEvent e) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
@@ -205,11 +209,11 @@ public class OnboardingPage3Controller implements Initializable {
     }
 
     private void saveExam(UUID userId) throws SQLException {
-        // validation
+        // validation (update the ValidationUtils method to match these params)
         ExamValidationResult vr = ValidationUtils.validateExamFields(
                 examNameField.getText(),
                 exStartDate.getValue(), exStartTime.getValue(),
-                exEndDate.getValue(),   exEndTime.getValue(),
+                exEndTime.getValue(),
                 estimatedMinutesField.getText()
         );
         if (vr != ExamValidationResult.OK) {
@@ -217,9 +221,8 @@ public class OnboardingPage3Controller implements Initializable {
             return;
         }
 
-        // build event
         ZonedDateTime start = ZonedDateTime.of(exStartDate.getValue(), exStartTime.getValue(), ZoneId.systemDefault());
-        ZonedDateTime end   = ZonedDateTime.of(exEndDate.getValue(),   exEndTime.getValue(),   ZoneId.systemDefault());
+        ZonedDateTime end   = ZonedDateTime.of(exStartDate.getValue(), exEndTime.getValue(), ZoneId.systemDefault());
 
         int topics     = Integer.parseInt(topicsField.getText());
         int difficulty = Integer.parseInt(difficultyField.getText());
@@ -254,7 +257,6 @@ public class OnboardingPage3Controller implements Initializable {
         examNameField.clear();
         descriptionArea.clear();
         exStartDate.setValue(null);
-        exEndDate.setValue(null);
         exStartTime.getValueFactory().setValue(LocalTime.of(8,0));
         exEndTime  .getValueFactory().setValue(LocalTime.of(10,0));
         topicsField.clear();

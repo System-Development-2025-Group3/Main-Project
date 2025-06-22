@@ -1,7 +1,6 @@
 package application.studyspace.services.auth;
 
 import application.studyspace.services.DataBase.DatabaseConnection;
-import application.studyspace.services.auth.LoginChecker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +153,7 @@ public class ValidationUtils {
     }
 
     /**
-     * Generates a new random UUID token (e.g. for password reset).
+     * Generates a new random UUID token (eg. for password reset).
      */
     public static UUID generateToken() {
         return UUID.randomUUID();
@@ -171,21 +170,24 @@ public class ValidationUtils {
     /**
      * Validates exam fields: name, dates, times, and minutes.
      */
-    public static ExamValidationResult validateExamFields(String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String minutesText) {
+    public static ExamValidationResult validateExamFields(
+            String name,
+            LocalDate startDate,
+            LocalTime startTime,
+            LocalTime endTime,
+            String minutesText
+    ) {
         if (name == null || name.isBlank()) {
             return ExamValidationResult.EMPTY_NAME;
         }
-        if (startDate == null || endDate == null || startTime == null || endTime == null) {
+        if (startDate == null || startTime == null || endTime == null) {
             return ExamValidationResult.INVALID_DATES;
         }
-        ZonedDateTime start = ZonedDateTime.of(startDate, startTime, java.time.ZoneId.systemDefault());
-        ZonedDateTime end = ZonedDateTime.of(endDate, endTime, java.time.ZoneId.systemDefault());
-        if (!end.isAfter(start)) {
-            return ExamValidationResult.END_BEFORE_START;
+
+        if (!endTime.isAfter(startTime)) {
+            return ExamValidationResult.END_BEFORE_START; // Or rename to END_TIME_BEFORE_START_TIME
         }
-        if (startDate.equals(endDate) && endTime.isBefore(startTime)) {
-            return ExamValidationResult.END_TIME_BEFORE_START_TIME_SAME_DAY;
-        }
+
         try {
             int minutes = Integer.parseInt(minutesText);
             if (minutes <= 0) {
