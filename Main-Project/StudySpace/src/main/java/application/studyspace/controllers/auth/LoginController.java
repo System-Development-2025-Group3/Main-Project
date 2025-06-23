@@ -5,6 +5,7 @@ import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.Styling.StylingUtility;
 import application.studyspace.services.auth.ValidationUtils;
+import application.studyspace.services.auth.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -14,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import application.studyspace.services.auth.SessionManager;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -23,13 +23,13 @@ import static application.studyspace.services.auth.AutoLoginHandler.activateAuto
 
 public class LoginController {
 
-    @FXML private TextField   InputEmailTextfield;
-    @FXML private PasswordField InputPassword;
-    @FXML private Label         passwordTooltip, emailTooltip;
-    @FXML private CheckBox      stayLoggedInCheckbox;
-    @FXML private StackPane     stackPane;
-    @FXML private VBox          LoginCard;
-    @FXML private ImageView     Image03;
+    @FXML private TextField      InputEmailTextfield;
+    @FXML private PasswordField   InputPassword;
+    @FXML private Label           passwordTooltip, emailTooltip;
+    @FXML private CheckBox        stayLoggedInCheckbox;
+    @FXML private StackPane       stackPane;
+    @FXML private VBox            LoginCard;
+    @FXML private ImageView       Image03;
 
     private final CreateToolTip toolTipService = new CreateToolTip();
 
@@ -62,7 +62,7 @@ public class LoginController {
     }
 
     @FXML
-    private void handleSubmitLoginButtonClick(MouseEvent event) throws SQLException {
+    private void handleSubmitLoginButtonClick(MouseEvent event) {
         String email = InputEmailTextfield.getText();
         String pw    = InputPassword.getText();
         ValidationUtils.ValidationResult result = ValidationUtils.validateLogin(email, pw);
@@ -79,17 +79,11 @@ public class LoginController {
                     "Invalid email! Format: example@domain.com.",
                     "tooltip-Label-Error", "text-field-error", "text-field", secs);
 
-            case UNKNOWN_EMAIL -> {
-                if (ValidationUtils.isSimilarEmail(email, ValidationUtils.listOfKnownEmails(), 3)) {
-                    // autocorrect suggestion could go here
-                } else {
-                    StylingUtility.showError(
-                            InputEmailTextfield, toolTipService, emailTooltip,
-                            "Email not found! Try again.",
-                            "tooltip-Label-Error", "text-field-error", "text-field", secs
-                    );
-                }
-            }
+            case UNKNOWN_EMAIL -> StylingUtility.showError(
+                    InputEmailTextfield, toolTipService, emailTooltip,
+                    "Email not found! Try again.",
+                    "tooltip-Label-Error", "text-field-error", "text-field", secs
+            );
 
             case EMPTY_PASSWORD -> StylingUtility.showError(
                     InputPassword, toolTipService, passwordTooltip,
@@ -103,15 +97,23 @@ public class LoginController {
 
             case OK -> {
                 DatabaseHelper dbHelper = new DatabaseHelper();
-                UUID userUUID = dbHelper.getUserUUIDByEmail(email);
-                SessionManager.getInstance().login(userUUID);
+                try {
+                    UUID userUUID = dbHelper.getUserUUIDByEmail(email);
+                    SessionManager.getInstance().login(userUUID);
 
-                if (stayLoggedInCheckbox.isSelected()) {
-                    activateAutoLogin(userUUID.toString());
+                    if (stayLoggedInCheckbox.isSelected()) {
+                        activateAutoLogin(userUUID.toString());
+                    }
+
+                    ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
+                    ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", null);
+                } catch (SQLException e) {
+                    StylingUtility.showError(
+                            InputEmailTextfield, toolTipService, emailTooltip,
+                            "Database error. Please try again later.",
+                            "tooltip-Label-Error", "text-field-error", "text-field", secs);
+                    e.printStackTrace();
                 }
-
-                ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
-                ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", null);
             }
         }
     }
@@ -123,11 +125,11 @@ public class LoginController {
 
     @FXML
     public void handleSettingsClick() {
-        /* no-op */
+        // no-op
     }
 
     @FXML
     public void handleContactClick() {
-        /* no-op */
+        // no-op
     }
 }
