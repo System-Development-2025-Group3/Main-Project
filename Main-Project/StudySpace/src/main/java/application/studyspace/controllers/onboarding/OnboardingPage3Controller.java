@@ -61,6 +61,8 @@ public class OnboardingPage3Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setupPreview();
+        closeOverlayButton.setDisable(true);
+        closeOverlayButton.setVisible(false);
 
         // toggle between exam/blocker
         typeToggleGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
@@ -175,6 +177,14 @@ public class OnboardingPage3Controller implements Initializable {
             logger.log(Level.SEVERE, "❌ Failed to add exam", ex);
         }
     }
+    // Close the overlay when the user clicks the close button
+    @FXML
+    public Button closeOverlayButton;
+    @FXML
+    public void handleCloseOverlay(ActionEvent event) {
+        ViewManager.closeTopOverlay();
+    }
+
 
     @FXML
     public void generateStudyPlan(ActionEvent e) {
@@ -227,7 +237,6 @@ public class OnboardingPage3Controller implements Initializable {
         ZonedDateTime end   = ZonedDateTime.of(exStartDate.getValue(), exEndTime.getValue(), ZoneId.systemDefault());
 
         int topics     = Integer.parseInt(topicsField.getText());
-        int difficulty = Integer.parseInt(difficultyField.getText());
         int minutes    = Integer.parseInt(estimatedMinutesField.getText());
         double weight  = weightSlider.getValue();
 
@@ -237,7 +246,7 @@ public class OnboardingPage3Controller implements Initializable {
                 descriptionArea.getText(),
                 "",
                 start, end,
-                weight, difficulty,
+                weight, 1,
                 topics, minutes
         );
 

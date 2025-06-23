@@ -74,6 +74,11 @@ public class LandingpageController implements Initializable {
                     ctrl.page1Btn.setVisible(false);
                     ctrl.page2Btn.setVisible(false);
                     ctrl.page3Btn.setVisible(false);
+
+                    ctrl.closeOverlayButton.setDisable(false);
+                    ctrl.closeOverlayButton.setVisible(true);
+                    ctrl.closeOverlayButton.setManaged(true);
+                    ctrl.closeOverlayButton.toFront();
                 }
         );
     }
