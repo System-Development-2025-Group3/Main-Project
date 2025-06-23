@@ -6,7 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="application.studyspace.controllers.landingpage.DashboardController"
-            stylesheets="@../styles/LandingPageStylesheet.css"
+            stylesheets="@../styles/LandingPage/LandingPageStylesheet.css"
             style="-fx-background-color: white;">
 
     <fx:define>
@@ -41,7 +41,7 @@
 
     <!-- Main Dashboard Content -->
     <center>
-        <AnchorPane stylesheets="@../styles/DashBoardStyleSheet.css">
+        <AnchorPane stylesheets="@../styles/DashBoard/DashBoardStyleSheet.css">
             <GridPane
                     AnchorPane.topAnchor="0"
                     AnchorPane.bottomAnchor="0"

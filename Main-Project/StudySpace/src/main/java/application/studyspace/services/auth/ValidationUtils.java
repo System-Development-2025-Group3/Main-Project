@@ -127,6 +127,27 @@ public class ValidationUtils {
     }
 
     /**
+     * Validates a new password and its confirmation.
+     *
+     * @param newPassword     The new password to validate.
+     * @param confirmPassword The confirmation of the new password.
+     * @return A {@link ValidationResult} indicating the outcome.
+     */
+    public static ValidationResult validatePasswordUpdate(String newPassword, String confirmPassword) {
+        if (newPassword == null || newPassword.isBlank()) {
+            return ValidationResult.EMPTY_PASSWORD;
+        }
+        if (!isStrongPassword(newPassword)) {
+            return ValidationResult.PASSWORD_INVALID;
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            return ValidationResult.PASSWORD_MISMATCH;
+        }
+        return ValidationResult.OK;
+    }
+
+
+    /**
      * Validates registration input: email, password, and confirmation.
      */
     public static ValidationResult validateRegistration(String email,
@@ -145,7 +166,7 @@ public class ValidationUtils {
     /**
      * Checks password strength: ≥12 chars, ≥1 uppercase, ≥1 digit, ≥1 special.
      */
-    private static boolean isStrongPassword(String pw) {
+    public static boolean isStrongPassword(String pw) {
         return pw.length() >= 12
                && pw.chars().anyMatch(Character::isUpperCase)
                && pw.chars().anyMatch(Character::isDigit)

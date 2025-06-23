@@ -70,4 +70,50 @@ public class PasswordHasher {
             return null;
         }
     }
+
+    /**
+     * Updates the password for an existing user identified by their email.
+     * A new salt is generated for the new password to enhance security.
+     *
+     * @param email       The email of the user whose password needs to be updated.
+     * @param newPassword The new plaintext password.
+     * @return            {@code true} if the password was updated successfully,
+     *                    {@code false} otherwise (e.g., user not found, database error).
+     */
+    public static boolean updatePassword(String email, String newPassword) {
+        if (email == null || email.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+            System.err.println("Email or password cannot be null or empty.");
+            return false;
+        }
+
+        String salt = generateSalt();
+        String hashedPassword = hashPassword(newPassword, salt);
+
+        String sql = "UPDATE users SET password_hash = ?, salt = ? WHERE email = ?";
+
+        try (Connection connection = new DatabaseConnection().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, hashedPassword);
+            ps.setString(2, salt);
+            ps.setString(3, email);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Successfully updated password for user: " + email);
+                return true;
+            } else {
+                System.err.println("Failed to update password. User not found with email: " + email);
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error updating password due to a database issue: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 }

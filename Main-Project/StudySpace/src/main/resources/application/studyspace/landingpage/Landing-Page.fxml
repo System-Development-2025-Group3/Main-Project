@@ -10,7 +10,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
-            stylesheets="@../styles/LandingPageStylesheet.css">
+            stylesheets="@../styles/LandingPage/LandingPageStylesheet.css">
 
     <!-- ================= ToggleGroup definitions ================= -->
     <fx:define>
@@ -66,7 +66,7 @@
 
         <!-- ===== Calendar Content ===== -->
         <center>
-            <VBox spacing="8" styleClass="content-root">
+            <VBox spacing="8" styleClass="content-root" style="-fx-background-color: lightgrey">
                 <StackPane styleClass="calendar-wrapper" VBox.vgrow="ALWAYS">
                     <CalendarView fx:id="calendarView"
                                   selectionMode="SINGLE"
@@ -77,7 +77,7 @@
                                   showSourceTrayButton="false"
                                   showToday="false"
                                   showToolBar="false"
-                                  stylesheets="@../styles/calendarfx-overrides.css">
+                                  stylesheets="@../styles/calendar/calendarfx-overrides.css">
                         <availabilityFill>
                             <RadialGradient centerX="0.5"
                                             centerY="0.5"
@@ -156,7 +156,7 @@
                               toggleGroup="$typeToggleGroup"/>
             </HBox>
 
-            <!-- Forms stack; visibility & managed are bound in controller -->
+            <!-- Forms stack; visibility and managed are bound in controller -->
             <StackPane prefWidth="500" prefHeight="400">
 
                 <!-- Exam Form -->

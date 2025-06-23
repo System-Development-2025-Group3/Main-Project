@@ -14,7 +14,7 @@ public class DatabaseHelper {
      * @param uuid the UUID to convert
      * @return byte array representing the UUID
      */
-    public byte[] uuidToBytes(UUID uuid) {
+    public static byte[] uuidToBytes(UUID uuid) {
         ByteBuffer buffer = ByteBuffer.allocate(16);
         buffer.putLong(uuid.getMostSignificantBits());
         buffer.putLong(uuid.getLeastSignificantBits());
@@ -49,6 +49,37 @@ public class DatabaseHelper {
                 return null;
             }
         }
+    }
+
+    /**
+     * Retrieves the email associated with a given UUID from the users table.
+     *
+     * @param userId The UUID of the user whose email needs to be fetched.
+     * @return The email if found, null otherwise.
+     * @throws SQLException If there is an issue with the database connectivity or query execution.
+     */
+    public static String getEmailByUUID(UUID userId) throws SQLException {
+        String email = null;
+        String query = "SELECT email FROM users WHERE user_id = ?";
+
+        try (Connection connection = new DatabaseConnection().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            // Convert UUID to a byte array if it's stored as binary(16) in the database.
+            statement.setBytes(1, uuidToBytes(userId));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    email = resultSet.getString("email");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error while retrieving email for UUID: " + userId);
+            e.printStackTrace();
+            throw e; // Re-throw the exception for further handling if needed.
+        }
+
+        return email;
     }
 
 
