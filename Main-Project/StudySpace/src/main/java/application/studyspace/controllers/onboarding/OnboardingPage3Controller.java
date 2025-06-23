@@ -48,6 +48,8 @@ public class OnboardingPage3Controller implements Initializable {
     @FXML private Button addExamBtn, SaveBtn;
     @FXML private TextField evtTitleField, evtLocationField;
 
+    @FXML public Button page1Btn, page2Btn, page3Btn;
+
     private CalendarView calendarView;
     private Calendar     defaultCalendar;
 

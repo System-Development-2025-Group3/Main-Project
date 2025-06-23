@@ -1,5 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
+import application.studyspace.controllers.onboarding.OnboardingPage3Controller;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.*;
@@ -66,9 +67,15 @@ public class LandingpageController implements Initializable {
     /** Opens the overlay for adding a new exam or blocker; defaults to exam. */
     @FXML
     public void openAddOverlay() {
-        examToggle.setSelected(true);
-        addOverlayPane.setVisible(true);
-        addOverlayPane.setManaged(true);
+        ViewManager.showOverlay(
+                "/application/studyspace/onboarding/OnboardingPage3.fxml",
+                (OnboardingPage3Controller ctrl) -> {
+                    // hide the built-in pagination controls
+                    ctrl.page1Btn.setVisible(false);
+                    ctrl.page2Btn.setVisible(false);
+                    ctrl.page3Btn.setVisible(false);
+                }
+        );
     }
 
     /** Closes the add‐new overlay without saving. */
