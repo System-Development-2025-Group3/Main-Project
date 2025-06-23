@@ -1,5 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
+import application.studyspace.services.DataBase.SkipSplashScreenManager;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.PasswordHasher;
 import application.studyspace.services.auth.SessionManager;
@@ -26,12 +27,14 @@ public class SettingsController {
     @FXML private PasswordField NewPasswordField;
     @FXML private PasswordField ConfirmPasswordField;
     @FXML private Label passwordTooltip1, passwordTooltip2;
+    @FXML private ToggleButton skipTrueButton, skipFalseButton;
     @FXML private Slider sessionLengthSlider;
     @FXML private Label sessionLengthLabel;
     @FXML private Slider breakLengthSlider;
     @FXML private Label breakLengthLabel;
     @FXML private Spinner<LocalTime> startTimeSpinner;
     @FXML private Spinner<LocalTime> endTimeSpinner;
+    @FXML private Slider skipSplashScreenSlider;
 
     @FXML private ToggleButton monBtn;
     @FXML private ToggleButton tueBtn;
@@ -109,7 +112,78 @@ public class SettingsController {
             breakLengthSlider.setValue(rounded);
             breakLengthLabel.setText(rounded + " min");
         });
+
+        updateSkipSplashScreenButtons(true); // Default: True selected
+
+        // Event Handlers
+        skipTrueButton.setOnAction(event -> handleSkipSplashScreenTrue());
+        skipFalseButton.setOnAction(event -> handleSkipSplashScreenFalse());
+
     }
+
+    /**
+     * Updates the Skip Splash Screen preference to False.
+     */
+    @FXML
+    private void handleSkipSplashScreenFalse() {
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
+        SkipSplashScreenManager manager = new SkipSplashScreenManager();
+
+        boolean success = manager.updateSkipSplashScreen(userUUID, false);
+        if (success) {
+            SessionManager.getInstance().saveSkipSplashScreenPreference(false);
+            System.out.println("Skip Splash Screen updated to: False");
+            updateSkipSplashScreenButtons(false);
+        } else {
+            System.err.println("Failed to update Skip Splash Screen setting to False.");
+        }
+    }
+
+    /**
+     * Updates the Skip Splash Screen preference to True.
+     */
+    @FXML
+    private void handleSkipSplashScreenTrue() {
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
+        SkipSplashScreenManager manager = new SkipSplashScreenManager();
+
+        boolean success = manager.updateSkipSplashScreen(userUUID, true);
+        if (success) {
+            SessionManager.getInstance().saveSkipSplashScreenPreference(true);
+            System.out.println("Skip Splash Screen updated to: True");
+            updateSkipSplashScreenButtons(true);
+        } else {
+            System.err.println("Failed to update Skip Splash Screen setting to True.");
+        }
+    }
+
+    /**
+     * Updates the visual style of the skip splash screen toggle buttons based on their selection state.
+     *
+     * @param skipSplashScreen Whether the skip splash screen preference is enabled (`true = skip splash screen`).
+     */
+    private void updateSkipSplashScreenButtons(boolean skipSplashScreen) {
+        // Update selection state
+        skipTrueButton.setSelected(skipSplashScreen);
+        skipFalseButton.setSelected(!skipSplashScreen);
+
+        // Update styles for selected/unselected buttons
+        if (skipSplashScreen) {
+            skipTrueButton.getStyleClass().removeAll("toggle-button-unselected");
+            skipTrueButton.getStyleClass().add("toggle-button-selected");
+
+            skipFalseButton.getStyleClass().removeAll("toggle-button-selected");
+            skipFalseButton.getStyleClass().add("toggle-button-unselected");
+        } else {
+            skipTrueButton.getStyleClass().removeAll("toggle-button-selected");
+            skipTrueButton.getStyleClass().add("toggle-button-unselected");
+
+            skipFalseButton.getStyleClass().removeAll("toggle-button-unselected");
+            skipFalseButton.getStyleClass().add("toggle-button-selected");
+        }
+    }
+
+
 
     @FXML
     private void handleResetPassword(ActionEvent event) throws SQLException {
@@ -229,4 +303,5 @@ public class SettingsController {
     private void handleExit() {
         Platform.exit();
     }
+
 }

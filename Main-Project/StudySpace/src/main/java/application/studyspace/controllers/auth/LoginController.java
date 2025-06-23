@@ -1,6 +1,7 @@
 package application.studyspace.controllers.auth;
 
 import application.studyspace.services.DataBase.DatabaseHelper;
+import application.studyspace.services.DataBase.SkipSplashScreenManager;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.Styling.StylingUtility;
@@ -85,6 +86,13 @@ public class LoginController {
                 }
                 ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
                 ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", null);
+
+                // Load the skip splash preference from the database
+                boolean skipSplashDatabase = new SkipSplashScreenManager().loadSkipSplashScreenFromDatabase(userUUID);
+
+                // Sync the preference in SessionManager when user logs in
+                SessionManager.getInstance().setSkipSplashScreen(skipSplashDatabase);
+
             }
         }
     }

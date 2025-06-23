@@ -82,6 +82,33 @@ public class DatabaseHelper {
         return email;
     }
 
+    /**
+     * Updates the "skip_splash_screen" column in the database for a given user.
+     *
+     * @param userUUID The UUID of the user.
+     * @param skipValue The boolean value to set (1 for true, 0 for false).
+     * @return True if the update was successful, false otherwise.
+     */
+    public boolean updateSkipSplashScreen(UUID userUUID, boolean skipValue) {
+        String sql = "UPDATE users SET skip_splash_screen = ? WHERE user_id = ?";
+        int valueToSet = skipValue ? 1 : 0;
+
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, valueToSet);
+            stmt.setBytes(2, uuidToBytes(userUUID));
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating skip_splash_screen value: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * Executes a SELECT query with optional WHERE clause and returns formatted results.

@@ -12,6 +12,7 @@
     <fx:define>
         <ToggleGroup fx:id="navGroup"/>
         <ToggleGroup fx:id="typeToggleGroup"/>
+        <ToggleGroup fx:id="skipSplashToggleGroup" />
     </fx:define>
 
 
@@ -136,12 +137,27 @@
                   ">
                     <Label text="Settings" styleClass="main-title"/>
 
-                    <!-- Light/Dark Mode -->
+
+                    <!-- Skip SplashScreen -->
                     <VBox spacing="10">
-                        <Label text="Theme" styleClass="field-label-bold"/>
-                        <ToggleButton fx:id="themeSwitch" text="Light Mode"
-                                      styleClass="menu-button"/>
+                        <Label text="Skip SplashScreen" styleClass="field-label-bold"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <ToggleButton fx:id="skipTrueButton"
+                                          text="True"
+                                          toggleGroup="$skipSplashToggleGroup"
+                                          styleClass="toggle-button-unselected"
+                                          onAction="#handleSkipSplashScreenTrue" />
+
+                            <ToggleButton fx:id="skipFalseButton"
+                                          text="False"
+                                          toggleGroup="$skipSplashToggleGroup"
+                                          styleClass="toggle-button-unselected"
+                                          onAction="#handleSkipSplashScreenFalse" />
+                        </HBox>
+
                     </VBox>
+
+
 
                     <!-- Reset Password -->
                     <VBox spacing="8">

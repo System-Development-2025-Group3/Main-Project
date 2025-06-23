@@ -52,7 +52,7 @@ public class AutoLoginHandler {
         SessionManager session = SessionManager.getInstance();
 
         String token = ValidationUtils.generateToken().toString();
-        session.saveLogin(uuidOfUser, token);
+        session.saveLogin(uuidOfUser, token, false);
 
         String sql = "UPDATE users SET login_token = ?, timestamp_token = ? WHERE user_id = ?";
 

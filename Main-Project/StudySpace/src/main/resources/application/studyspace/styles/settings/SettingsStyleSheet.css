@@ -361,3 +361,89 @@
     -fx-background-color: #E5E7EB;
     -fx-text-fill: #111827;
 }
+
+/* Light/Dark Mode Toggle Buttons */
+.toggle-button-light {
+    -fx-background-color: white;
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-pref-width: 130;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-color: #000000;
+    -fx-border-width: 2;
+}
+
+.toggle-button-light:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+
+/* Skip SplashScreen True Button */
+.toggle-button-true {
+    -fx-background-color: #121417;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-pref-width: 80;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-color: #121417;
+    -fx-border-width: 2;
+}
+
+.toggle-button-true:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+
+/* Skip SplashScreen False Button */
+.toggle-button-false {
+    -fx-background-color: white;
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-pref-width: 80;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-color: #121417;
+    -fx-border-width: 2;
+}
+
+.toggle-button-false:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+
+/* Style for the ToggleButton when selected */
+.toggle-button-selected {
+    -fx-background-color: black; /* Black background */
+    -fx-text-fill: white; /* White text */
+    -fx-font-weight: bold;
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+}
+
+/* Style for the ToggleButton when not selected */
+.toggle-button-unselected {
+    -fx-background-color: white; /* White background */
+    -fx-text-fill: black; /* Black text */
+    -fx-font-weight: bold;
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+}
+
+/* Hover effect for unselected buttons */
+.toggle-button-unselected:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
+}
+
+/* Hover effect for selected buttons */
+.toggle-button-selected:hover {
+    -fx-background-color: black; /* Ensure hover state persists */
+    -fx-text-fill: white;
+}

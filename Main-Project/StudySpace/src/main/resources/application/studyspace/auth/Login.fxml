@@ -36,11 +36,9 @@
                       spacing="10" alignment="CENTER_LEFT"
                       AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20">
 
-
                     <padding>
                         <Insets top="10" right="30" bottom="10" left="30"/>
                     </padding>
-
 
                     <!-- LOGO -->
                     <ImageView fitHeight="80" preserveRatio="true">

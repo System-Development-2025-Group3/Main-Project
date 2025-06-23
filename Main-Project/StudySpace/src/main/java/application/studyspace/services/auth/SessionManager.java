@@ -18,6 +18,8 @@ public class SessionManager {
 
     private UUID loggedInUserId;
     private CalendarView userCalendar;
+    private boolean skipSplashScreen = false;
+
 
     private SessionManager() {}
 
@@ -45,11 +47,21 @@ public class SessionManager {
         userCalendar = null;
     }
 
-    // --- Persistent login (Preferences) ---
-    public void saveLogin(String username, String token) {
+    public void saveLogin(String username, String token, boolean skipSplashScreen) {
         Preferences prefs = Preferences.userRoot().node(PREF_NODE);
         prefs.put(KEY_USERNAME, username);
         prefs.put(KEY_TOKEN, token);
+        prefs.putBoolean("SKIP_SPLASH_SCREEN", skipSplashScreen); // Save preference persistently
+    }
+
+    public boolean loadSkipSplashScreenPreference() {
+        Preferences prefs = Preferences.userRoot().node(PREF_NODE);
+        return prefs.getBoolean("SKIP_SPLASH_SCREEN", false); // Default to false
+    }
+
+    public void saveSkipSplashScreenPreference(boolean skipSplashScreen) {
+        Preferences prefs = Preferences.userRoot().node(PREF_NODE);
+        prefs.putBoolean("SKIP_SPLASH_SCREEN", skipSplashScreen); // Save the preference independently
     }
 
     public String getSavedUsername() {
@@ -65,6 +77,15 @@ public class SessionManager {
         prefs.remove(KEY_USERNAME);
         prefs.remove(KEY_TOKEN);
     }
+
+    public boolean shouldSkipSplashScreen() {
+        return skipSplashScreen;
+    }
+
+    public void setSkipSplashScreen(boolean skip) {
+        this.skipSplashScreen = skip;
+    }
+
 
     // --- Calendar session (in-memory reference) ---
     public CalendarView getUserCalendar() {
