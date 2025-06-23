@@ -185,4 +185,6 @@ public class CalendarEvent {
     public void setTagUuid(UUID tagUuid) {
         this.tagUuid = tagUuid;
     }
+
+
 }

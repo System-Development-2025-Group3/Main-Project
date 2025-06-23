@@ -285,7 +285,7 @@ public class SettingsController {
     /** Handler for clicking the “Calendar” item in the sidebar. */
     @FXML
     private void handleSidebarCalendar() {
-        ViewManager.show("/application/studyspace/landingpage/Landingpage.fxml");
+        ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
     }
 
     @FXML

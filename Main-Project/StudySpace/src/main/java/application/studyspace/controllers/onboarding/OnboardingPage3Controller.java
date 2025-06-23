@@ -40,13 +40,15 @@ public class OnboardingPage3Controller implements Initializable {
     @FXML private ToggleButton examToggle, blockerToggle;
     @FXML private TextField examNameField, topicsField, difficultyField, estimatedMinutesField;
     @FXML private TextArea descriptionArea;
-    @FXML private DatePicker exStartDate, exEndDate, evtStartDate, evtEndDate;
+    @FXML private DatePicker exStartDate, evtStartDate, evtEndDate;
     @FXML private Spinner<LocalTime> exStartTime, exEndTime, evtStartTime, evtEndTime;
     @FXML private CheckBox evtAllDay;
     @FXML private Slider weightSlider;
     @FXML private Label  weightLabel;
     @FXML private Button addExamBtn, SaveBtn;
     @FXML private TextField evtTitleField, evtLocationField;
+
+    @FXML public Button page1Btn, page2Btn, page3Btn;
 
     private CalendarView calendarView;
     private Calendar     defaultCalendar;
@@ -59,6 +61,8 @@ public class OnboardingPage3Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setupPreview();
+        closeOverlayButton.setDisable(true);
+        closeOverlayButton.setVisible(false);
 
         // toggle between exam/blocker
         typeToggleGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
@@ -82,7 +86,6 @@ public class OnboardingPage3Controller implements Initializable {
 
     private void setupPreview() {
         calendarView = new CalendarView();
-        calendarView.showDayPage();
         calendarView.setShowToolBar(false);
         calendarView.setShowAddCalendarButton(false);
         calendarView.setShowPageSwitcher(false);
@@ -90,14 +93,9 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
-        defaultCalendar = new Calendar("Blockers");
-        defaultCalendar.setStyle(Style.STYLE1);
-        calendarView.getCalendarSources().get(0).getCalendars().add(defaultCalendar);
+        CalendarHelper.setupWeekCalendarAsync(calendarView);
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
-
-        // <-- Apply study‐time limits and blocked days -->
-        CalendarHelper.applyStudyPreferences(calendarView);
     }
 
     private void setupTimeSpinners(Spinner<LocalTime> start, Spinner<LocalTime> end) {
@@ -170,21 +168,36 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
-    @FXML public void generateStudyPlan(ActionEvent e) {
+    @FXML public void handleAddBlocker(ActionEvent e) {
         try {
-            UUID userId = SessionManager.getInstance().getLoggedInUserId();
-            if (examToggle.isSelected()) {
-                saveExam(userId);
-                StudyPlanGenerator.generateStudyPlan(userId);
-            } else {
-                saveBlocker(userId);
-            }
-            logger.info("✅ Event saved successfully");
+            saveBlocker(SessionManager.getInstance().getLoggedInUserId());
+            resetExamForm();
+            logger.info("✅ Exam added successfully");
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "❌ Failed to save event", ex);
+            logger.log(Level.SEVERE, "❌ Failed to add exam", ex);
+        }
+    }
+    // Close the overlay when the user clicks the close button
+    @FXML
+    public Button closeOverlayButton;
+    @FXML
+    public void handleCloseOverlay(ActionEvent event) {
+        ViewManager.closeTopOverlay();
+    }
+
+
+    @FXML
+    public void generateStudyPlan(ActionEvent e) {
+        UUID userId = SessionManager.getInstance().getLoggedInUserId();
+        try {
+            StudyPlanGenerator.generateStudyPlan(userId);
+            System.out.println("Successfully generated study plan.");
+        } catch (SQLException ex) {
+            System.out.println("Failed to generate study plan: " + ex.getMessage());
+            ex.printStackTrace();
         }
         ViewManager.closeTopOverlay();
-        CalendarHelper.updateUserCalendar(SessionManager.getInstance().getUserCalendar());
+        CalendarHelper.updateUserCalendarAsync(SessionManager.getInstance().getUserCalendar());
     }
 
     private void saveBlocker(UUID userId) throws SQLException {
@@ -208,11 +221,11 @@ public class OnboardingPage3Controller implements Initializable {
     }
 
     private void saveExam(UUID userId) throws SQLException {
-        // validation
+        // validation (update the ValidationUtils method to match these params)
         ExamValidationResult vr = ValidationUtils.validateExamFields(
                 examNameField.getText(),
                 exStartDate.getValue(), exStartTime.getValue(),
-                exEndDate.getValue(),   exEndTime.getValue(),
+                exEndTime.getValue(),
                 estimatedMinutesField.getText()
         );
         if (vr != ExamValidationResult.OK) {
@@ -220,12 +233,10 @@ public class OnboardingPage3Controller implements Initializable {
             return;
         }
 
-        // build event
         ZonedDateTime start = ZonedDateTime.of(exStartDate.getValue(), exStartTime.getValue(), ZoneId.systemDefault());
-        ZonedDateTime end   = ZonedDateTime.of(exEndDate.getValue(),   exEndTime.getValue(),   ZoneId.systemDefault());
+        ZonedDateTime end   = ZonedDateTime.of(exStartDate.getValue(), exEndTime.getValue(), ZoneId.systemDefault());
 
         int topics     = Integer.parseInt(topicsField.getText());
-        int difficulty = Integer.parseInt(difficultyField.getText());
         int minutes    = Integer.parseInt(estimatedMinutesField.getText());
         double weight  = weightSlider.getValue();
 
@@ -235,7 +246,7 @@ public class OnboardingPage3Controller implements Initializable {
                 descriptionArea.getText(),
                 "",
                 start, end,
-                weight, difficulty,
+                weight, 1,
                 topics, minutes
         );
 
@@ -257,7 +268,6 @@ public class OnboardingPage3Controller implements Initializable {
         examNameField.clear();
         descriptionArea.clear();
         exStartDate.setValue(null);
-        exEndDate.setValue(null);
         exStartTime.getValueFactory().setValue(LocalTime.of(8,0));
         exEndTime  .getValueFactory().setValue(LocalTime.of(10,0));
         topicsField.clear();

@@ -17,6 +17,7 @@ module application.studyspace {
     requires ical4j.core;
     requires org.apache.commons.text;
     requires java.prefs;
+    requires com.zaxxer.hikari;
 
     // === Opens for FXML Reflection ===
     opens application.studyspace to javafx.fxml;
@@ -29,6 +30,8 @@ module application.studyspace {
     opens application.studyspace.services.DataBase to javafx.fxml;
     opens application.studyspace.services.Styling to javafx.fxml;
     opens application.studyspace.services.Scenes to javafx.fxml;
+    opens application.studyspace.controllers.customerInteraction to javafx.fxml;
+
 
     // === Exports for normal usage ===
     exports application.studyspace;

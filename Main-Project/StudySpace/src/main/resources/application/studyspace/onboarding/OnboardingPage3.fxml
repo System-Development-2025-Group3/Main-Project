@@ -15,6 +15,13 @@
         <ToggleGroup fx:id="typeToggleGroup"/>
     </fx:define>
 
+    <!-- ✕ close button -->
+    <Button fx:id="closeOverlayButton"
+            text="×"
+            styleClass="close-button"
+            onAction="#handleCloseOverlay"
+            StackPane.alignment="TOP_RIGHT"/>
+
     <VBox spacing="20" alignment="TOP_CENTER"
           style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15;
                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
@@ -49,41 +56,26 @@
 
                     <!-- Exam form -->
                     <VBox fx:id="examForm" spacing="12" visible="false" managed="false">
-                        <!-- your original fields: examNameField, descriptionArea, etc. -->
                         <Label text="Exam Name" styleClass="field-label"/>
                         <TextField fx:id="examNameField" promptText="e.g. Calculus" styleClass="styled-text-field"/>
-
                         <Label text="Description" styleClass="field-label"/>
                         <TextArea fx:id="descriptionArea" prefRowCount="4" styleClass="styled-text-area"/>
-
-                        <Label text="Start" styleClass="field-label"/>
+                        <Label text="Date and Time" styleClass="field-label"/>
                         <HBox spacing="6">
                             <DatePicker fx:id="exStartDate" styleClass="styled-combo"/>
                             <Spinner fx:id="exStartTime" editable="true"/>
-                        </HBox>
-
-                        <Label text="End" styleClass="field-label"/>
-                        <HBox spacing="6">
-                            <DatePicker fx:id="exEndDate" styleClass="styled-combo"/>
                             <Spinner fx:id="exEndTime" editable="true"/>
                         </HBox>
-
                         <Label text="Number of Topics" styleClass="field-label"/>
                         <TextField fx:id="topicsField" styleClass="styled-text-field"/>
-
-                        <Label text="Difficulty (1–10)" styleClass="field-label"/>
-                        <TextField fx:id="difficultyField" promptText="e.g. 7" styleClass="styled-text-field"/>
-
-                        <Label text="Estimated Minutes" styleClass="field-label"/>
+                        <Label text="Estimated Study Time per Topic(minutes)" styleClass="field-label"/>
                         <TextField fx:id="estimatedMinutesField" styleClass="styled-text-field"/>
-
                         <Label text="Grade Weight (%)" styleClass="field-label"/>
                         <Slider fx:id="weightSlider"
                                 min="0" max="100" value="50"
                                 snapToTicks="true"
                                 styleClass="styled-slider"/>
                         <Label fx:id="weightLabel" styleClass="slider-value"/>
-
                         <Button fx:id="addExamBtn"
                                 text="Add Exam"
                                 styleClass="page-button"
@@ -111,6 +103,12 @@
                         </HBox>
 
                         <CheckBox fx:id="evtAllDay" text="All day"/>
+
+                        <Button fx:id="handleAddBlocker"
+                                text="Save Blocker"
+                                styleClass="page-button"
+                                alignment="CENTER_RIGHT"
+                                onAction="#handleAddBlocker"/>
                     </VBox>
                 </StackPane>
             </VBox>
