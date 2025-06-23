@@ -109,7 +109,9 @@ public class ExamEventRepository {
                     int minsPt    = rs.getInt("minutes_per_topic");
 
                     ExamEvent exam = new ExamEvent(
+                            id,
                             userId,
+                            calendarId,
                             title,
                             desc,
                             loc,
@@ -120,12 +122,34 @@ public class ExamEventRepository {
                             topics,
                             minsPt
                     );
-                    // restore its calendar association
-                    exam.setCalendarId(UUIDHelper.BytesToUUID(rs.getBytes("calendar_id")));
                     out.add(exam);
                 }
             }
         }
         return out;
+    }
+
+    public void update(ExamEvent exam) throws SQLException {
+        String sql = """
+            UPDATE exam_events
+               SET start_datetime = ?,
+                   end_datetime   = ?,
+                   location       = ?
+             WHERE exam_id        = ?
+            """;
+
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.from(exam.getStart().toInstant()));
+            ps.setTimestamp(2, Timestamp.from(exam.getEnd().toInstant()));
+            ps.setString(3, exam.getLocation());
+            ps.setBytes(4, UUIDHelper.uuidToBytes(exam.getId()));
+
+            int updated = ps.executeUpdate();
+            if (updated == 0) {
+                throw new SQLException("No exam_event found with id " + exam.getId());
+            }
+        }
     }
 }

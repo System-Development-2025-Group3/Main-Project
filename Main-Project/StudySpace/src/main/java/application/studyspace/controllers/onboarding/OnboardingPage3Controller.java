@@ -89,7 +89,7 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
-        CalendarHelper.setupUserCalendar(calendarView, "day");
+        CalendarHelper.setupWeekCalendar(calendarView);
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
     }

@@ -3,15 +3,12 @@ package application.studyspace.services.calendar;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
 import application.studyspace.services.auth.SessionManager;
-import com.calendarfx.model.Calendar;            // FX Calendar
+import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
 import javafx.collections.ObservableSet;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
@@ -19,76 +16,48 @@ import java.util.UUID;
 
 public class CalendarHelper {
 
-    /**
-     * Initializes the CalendarView for the current user:
-     * loads all calendars and their events, then applies study-time limits and blocked days.
-     */
-    public static void setupUserCalendar(CalendarView calendarView) {
-        setupUserCalendar(calendarView, "week");
+    public static void setupWeekCalendar(CalendarView calendarView) {
+        setupCalendar(calendarView);
+        calendarView.showWeekPage();
     }
 
-    public static void setupUserCalendar(CalendarView calendarView, String viewType) {
+    public static void setupMonthCalendar(CalendarView calendarView) {
+        setupCalendar(calendarView);
+        calendarView.showMonthPage();
+    }
+
+    private static void setupCalendar(CalendarView calendarView) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
-
-        // clear any existing calendars
         calendarView.getCalendarSources().clear();
-
-        // one source to hold all user calendars
         CalendarSource source = new CalendarSource("Planify");
         calendarView.getCalendarSources().add(source);
 
-        // repositories
+        // load all your calendars + events exactly as before
         CalendarRepository      calRepo = new CalendarRepository();
         CalendarEventRepository evRepo  = new CalendarEventRepository();
         ExamEventRepository     exRepo  = new ExamEventRepository();
 
         try {
-            // fetch the list of service‐side CalendarModel objects
-            List<CalendarModel> calendarModels = calRepo.findByUser(userId);
-
-            for (CalendarModel cm : calendarModels) {
-                // build a CalendarFX Calendar per model
+            List<CalendarModel> models = calRepo.findByUser(userId);
+            for (CalendarModel cm : models) {
                 Calendar fxCal = new Calendar(cm.getName());
                 fxCal.setStyle(Calendar.Style.valueOf(cm.getStyle()));
-
-                // load generic calendar_events (blockers & study sessions)
-                for (CalendarEvent e : evRepo.findByCalendarId(cm.getId())) {
-                    fxCal.addEntry(CalendarEventMapper.toEntry(e, fxCal));
-                }
-
-                // load exam_events
-                for (ExamEvent ex : exRepo.findByCalendarId(cm.getId())) {
-                    fxCal.addEntry(CalendarEventMapper.toEntry(ex, fxCal));
-                }
-
+                evRepo.findByCalendarId(cm.getId())
+                        .forEach(e -> fxCal.addEntry(CalendarEventMapper.toEntry(e, fxCal)));
+                exRepo.findByCalendarId(cm.getId())
+                        .forEach(ex -> fxCal.addEntry(CalendarEventMapper.toEntry(ex, fxCal)));
                 source.getCalendars().add(fxCal);
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        // default to chosen view type
-        if ("week".equalsIgnoreCase(viewType)) {
-            calendarView.showWeekPage();
-        } else if ("day".equalsIgnoreCase(viewType)) {
-            calendarView.showDayPage();
-        } else { // default or "week"
-            calendarView.showWeekPage();
-        }
-
-        // apply study preferences (visible hours + blocked days)
         applyStudyPreferences(calendarView);
     }
 
-    /**
-     * Applies the current user's study-time limits (start/end) and blocked days
-     * to the given CalendarView.
-     */
     public static void applyStudyPreferences(CalendarView calendarView) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
         String sql = "SELECT start_time, end_time, blocked_days FROM study_preferences WHERE user_id = ?";
-
         try (Connection conn = new DatabaseConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -105,11 +74,10 @@ public class CalendarHelper {
                     ObservableSet<DayOfWeek> blockedDays = calendarView.getWeekendDays();
                     blockedDays.clear();
                     if (blockedCsv != null && !blockedCsv.isBlank()) {
-                        for (String d : blockedCsv.split("\\s+")) {
+                        for (String d : blockedCsv.split("\\s*,\\s*")) {
                             try {
-                                blockedDays.add(DayOfWeek.valueOf(d.toUpperCase()));
-                            } catch (IllegalArgumentException ignored) {
-                            }
+                                blockedDays.add(DayOfWeek.valueOf(d));
+                            } catch (IllegalArgumentException ignored) {}
                         }
                     }
                 }
@@ -119,8 +87,13 @@ public class CalendarHelper {
         }
     }
 
-    /** Clears and re-initializes the user's calendar view, including prefs. */
     public static void updateUserCalendar(CalendarView calendarView) {
-        setupUserCalendar(calendarView);
+        // remember current page
+        var page = calendarView.getSelectedPage();
+        switch (page) {
+            case DAY   -> setupWeekCalendar(calendarView);  // or call a dedicated setupDayCalendar if you make one
+            case MONTH -> setupMonthCalendar(calendarView);
+            default    -> setupWeekCalendar(calendarView);
+        }
     }
 }

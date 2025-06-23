@@ -161,4 +161,52 @@ public class CalendarEventRepository {
         }
         return list;
     }
+
+    /**
+     * Updates an existing CalendarEvent in the DB.
+     */
+    public void update(CalendarEvent e) throws SQLException {
+        String sql = """
+        UPDATE calendar_events
+           SET calendar_id      = ?,
+               user_id          = ?,
+               title            = ?,
+               description      = ?,
+               location         = ?,
+               start_datetime   = ?,
+               end_datetime     = ?,
+               full_day         = ?,
+               hidden           = ?,
+               min_duration     = ?,
+               recurrence_rule  = ?,
+               recurrence_source= ?,
+               recurrence_id    = ?,
+               tag_uuid         = ?
+         WHERE event_id        = ?
+        """;
+
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBytes(1,  UUIDHelper.uuidToBytes(e.getCalendarId()));
+            ps.setBytes(2,  UUIDHelper.uuidToBytes(e.getUserId()));
+            ps.setString(3, e.getTitle());
+            ps.setString(4, e.getDescription());
+            ps.setString(5, e.getLocation());
+            ps.setTimestamp(6, Timestamp.from(e.getStart().toInstant()));
+            ps.setTimestamp(7, Timestamp.from(e.getEnd().toInstant()));
+            ps.setBoolean(8, e.isFullDay());
+            ps.setBoolean(9, e.isHidden());
+            ps.setObject(10, e.getMinDuration() == null ? null : (int) e.getMinDuration().toMinutes());
+            ps.setString(11, e.getRecurrenceRule());
+            ps.setBytes(12, e.getRecurrenceSource() == null ? null : UUIDHelper.uuidToBytes(e.getRecurrenceSource()));
+            ps.setTimestamp(13, e.getRecurrenceId() == null
+                    ? null
+                    : Timestamp.from(e.getRecurrenceId().toInstant()));
+            ps.setBytes(14, e.getTagUuid() == null ? null : UUIDHelper.uuidToBytes(e.getTagUuid()));
+            ps.setBytes(15, UUIDHelper.uuidToBytes(e.getId()));
+
+            ps.executeUpdate();
+        }
+    }
 }

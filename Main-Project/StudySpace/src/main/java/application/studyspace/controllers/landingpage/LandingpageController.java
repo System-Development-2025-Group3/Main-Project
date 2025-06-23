@@ -2,7 +2,10 @@ package application.studyspace.controllers.landingpage;
 
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
-import application.studyspace.services.calendar.CalendarHelper;
+import application.studyspace.services.calendar.*;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarEvent;
+import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -11,8 +14,11 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
+
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LandingpageController implements Initializable {
@@ -49,7 +55,7 @@ public class LandingpageController implements Initializable {
     public void refreshCalendarView() {
         if (calendarView == null) return;
         try {
-            CalendarHelper.setupUserCalendar(calendarView);
+            CalendarHelper.setupWeekCalendar(calendarView);
             logger.info("Landing page calendar refreshed.");
         } catch (Exception e) {
             logger.severe("❌ Failed to refresh calendar view: " + e.getMessage());
@@ -98,17 +104,32 @@ public class LandingpageController implements Initializable {
 
     @FXML
     private void handleSidebarDashboard() {
+        try {
+            ReconciliationHelper.reconcileWeek(calendarView);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to sync before leaving calendar", e);
+            // optionally show the user an alert here
+        }
         ViewManager.show("/application/studyspace/landingpage/Dashboard.fxml");
     }
 
     @FXML
     private void handleSidebarSettings() {
+        try {
+            ReconciliationHelper.reconcileWeek(calendarView);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to sync before leaving calendar", e);
+        }
         ViewManager.show("/application/studyspace/landingpage/Settings.fxml");
     }
 
-    /** Exits the application. */
     @FXML
     private void handleExit() {
+        try {
+            ReconciliationHelper.reconcileWeek(calendarView);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to sync before exit", e);
+        }
         Platform.exit();
     }
 }
