@@ -56,7 +56,7 @@ public class LandingpageController implements Initializable {
     public void refreshCalendarView() {
         if (calendarView == null) return;
         try {
-            CalendarHelper.setupWeekCalendar(calendarView);
+            CalendarHelper.setupWeekCalendarAsync(calendarView);
             logger.info("Landing page calendar refreshed.");
         } catch (Exception e) {
             logger.severe("❌ Failed to refresh calendar view: " + e.getMessage());

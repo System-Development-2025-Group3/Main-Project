@@ -1,6 +1,7 @@
 package application.studyspace.services.auth;
 
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 
 
@@ -34,7 +35,7 @@ public class LoginChecker {
 
     public static boolean checkLogin(String emailInput, String passwordInput) {
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            Connection connection = DataSourceManager.getConnection();
 
 
             String sql = "SELECT user_id, password_hash, salt FROM users WHERE email = ?";

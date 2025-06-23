@@ -75,7 +75,12 @@
       <artifactId>ikonli-fontawesome5-pack</artifactId>
       <version>12.3.1</version>
     </dependency>
-
+    <!-- batch loading of db -->
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>5.0.1</version>
+    </dependency>
     <!-- SLF4J simple binding to silence warnings -->
     <dependency>
       <groupId>org.slf4j</groupId>

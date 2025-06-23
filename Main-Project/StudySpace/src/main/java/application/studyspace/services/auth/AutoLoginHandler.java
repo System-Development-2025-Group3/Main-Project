@@ -1,5 +1,6 @@
 package application.studyspace.services.auth;
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
 
@@ -24,7 +25,7 @@ public class AutoLoginHandler {
         UUID userId = UUIDHelper.stringToUUID(savedUsername);
         String sql = "SELECT login_token FROM users WHERE user_id = ?";
 
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBytes(1, uuidToBytes(userId));
@@ -56,7 +57,7 @@ public class AutoLoginHandler {
 
         String sql = "UPDATE users SET login_token = ?, timestamp_token = ? WHERE user_id = ?";
 
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, token);

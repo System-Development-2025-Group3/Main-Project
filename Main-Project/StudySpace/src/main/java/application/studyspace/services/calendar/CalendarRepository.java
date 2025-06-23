@@ -1,5 +1,6 @@
 package application.studyspace.services.calendar;
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
 
@@ -23,7 +24,7 @@ public class CalendarRepository {
         String sql = "SELECT calendar_id, name, style FROM calendars WHERE user_id = ?";
         List<CalendarModel> out = new ArrayList<>();
 
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
@@ -46,7 +47,7 @@ public class CalendarRepository {
         UUID calId = UUID.randomUUID();
         String sql = "INSERT INTO calendars (calendar_id, user_id, name, style) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(calId));
@@ -64,7 +65,7 @@ public class CalendarRepository {
      */
     public UUID getOrCreateBlockersCalendar(UUID userId) throws SQLException {
         String fetch = "SELECT calendar_id FROM calendars WHERE user_id = ? AND name = 'Blockers'";
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(fetch)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));

@@ -1,5 +1,6 @@
 package application.studyspace.services.auth;
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -67,7 +68,7 @@ public class ValidationUtils {
     public static boolean isKnownEmail(String email) {
         if (email == null || email.isEmpty()) return false;
         String sql = "SELECT email FROM users WHERE email = ?";
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email.trim());
             try (ResultSet rs = ps.executeQuery()) {
@@ -85,7 +86,7 @@ public class ValidationUtils {
     public static List<String> listOfKnownEmails() {
         List<String> emails = new ArrayList<>();
         String sql = "SELECT email FROM users";
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {

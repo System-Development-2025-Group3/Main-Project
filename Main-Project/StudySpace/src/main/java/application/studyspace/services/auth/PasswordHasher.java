@@ -1,5 +1,6 @@
 package application.studyspace.services.auth;
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
 
@@ -47,7 +48,7 @@ public class PasswordHasher {
 
         String sql = "INSERT INTO users(user_id, email, password_hash, salt) VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = new DatabaseConnection().getConnection();
+        try (Connection connection = DataSourceManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(newId));
@@ -91,7 +92,7 @@ public class PasswordHasher {
 
         String sql = "UPDATE users SET password_hash = ?, salt = ? WHERE email = ?";
 
-        try (Connection connection = new DatabaseConnection().getConnection();
+        try (Connection connection = DataSourceManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, hashedPassword);

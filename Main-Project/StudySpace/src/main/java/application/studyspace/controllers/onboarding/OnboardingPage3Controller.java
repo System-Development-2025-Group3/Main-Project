@@ -93,7 +93,7 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
-        CalendarHelper.setupWeekCalendar(calendarView);
+        CalendarHelper.setupWeekCalendarAsync(calendarView);
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
     }
@@ -197,7 +197,7 @@ public class OnboardingPage3Controller implements Initializable {
             ex.printStackTrace();
         }
         ViewManager.closeTopOverlay();
-        CalendarHelper.updateUserCalendar(SessionManager.getInstance().getUserCalendar());
+        CalendarHelper.updateUserCalendarAsync(SessionManager.getInstance().getUserCalendar());
     }
 
     private void saveBlocker(UUID userId) throws SQLException {

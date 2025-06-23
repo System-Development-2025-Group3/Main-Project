@@ -1,6 +1,7 @@
 // ── src/main/java/application/studyspace/services/onboarding/StudyPreferences.java ──
 package application.studyspace.services.onboarding;
 
+import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
 
@@ -67,7 +68,7 @@ public class StudyPreferences {
               FROM study_preferences
              WHERE user_id = ?
         """;
-        try (Connection c = new DatabaseConnection().getConnection();
+        try (Connection c = DataSourceManager.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
@@ -104,7 +105,7 @@ public class StudyPreferences {
               blocked_days   = VALUES(blocked_days)
             """;
 
-        try (Connection conn = new DatabaseConnection().getConnection();
+        try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
