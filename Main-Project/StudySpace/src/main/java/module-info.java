@@ -29,6 +29,8 @@ module application.studyspace {
     opens application.studyspace.services.DataBase to javafx.fxml;
     opens application.studyspace.services.Styling to javafx.fxml;
     opens application.studyspace.services.Scenes to javafx.fxml;
+    opens application.studyspace.controllers.customerInteraction to javafx.fxml;
+
 
     // === Exports for normal usage ===
     exports application.studyspace;

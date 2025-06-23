@@ -160,3 +160,9 @@
 .floating-add-button:hover {
     -fx-opacity: 0.85;
 }
+
+.entry-done {
+  -fx-background-color: #dddddd !important;
+  -fx-border-color: #999999 !important;
+  -fx-text-fill: #777777 !important;
+}
