@@ -3,7 +3,6 @@ package application.studyspace;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.SplashScreenAnimator;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
