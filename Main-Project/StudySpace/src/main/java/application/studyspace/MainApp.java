@@ -13,7 +13,7 @@ public class MainApp extends Application {
     public void start(Stage ignoredPrimaryStage) {
         try {
             // Load user preferences for skipping the splash screen
-            boolean skipSplash = fetchSkipSplashScreenPreference();
+            boolean skipSplash = SessionManager.getInstance().loadSkipSplashScreenPreference();
 
             if (skipSplash) {
                 // If the preference is enabled, directly load the main application
@@ -28,22 +28,6 @@ public class MainApp extends Application {
             // Optionally, fallback to showing the splash screen in case of errors
             Stage splashStage = new Stage();
             SplashScreenAnimator.showSplash(splashStage, this::loadMainApplication);
-        }
-    }
-
-    /**
-     * Fetches the user's preference to skip the splash screen.
-     * This preference is stored in the preferences database or a similar mechanism.
-     *
-     * @return True if the preference to skip the splash screen is enabled, false otherwise.
-     */
-    private boolean fetchSkipSplashScreenPreference() {
-        try {
-            return SessionManager.getInstance().loadSkipSplashScreenPreference();
-        } catch (Exception e) {
-            System.err.println("Error fetching skip splash screen preference: " + e.getMessage());
-            e.printStackTrace();
-            return false; // Default to false if the preference cannot be fetched
         }
     }
 

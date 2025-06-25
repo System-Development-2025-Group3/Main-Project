@@ -51,7 +51,7 @@ public class AboutUsController {
         cardCarousel.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.getStylesheets().add(
-                        getClass().getResource("/application/studyspace/styles/customerInteraction/AboutUs.css").toExternalForm()
+                        getClass().getResource("/application/studyspace/styles/LoginandRegister/customerInteraction/AboutUs.css").toExternalForm()
                 );
             }
         });

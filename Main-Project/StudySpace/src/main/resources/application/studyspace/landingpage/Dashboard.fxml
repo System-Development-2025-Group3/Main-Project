@@ -41,7 +41,7 @@
 
     <!-- Main Dashboard Content -->
     <center>
-        <AnchorPane stylesheets="@../styles/DashBoard/DashBoardStyleSheet.css">
+        <AnchorPane stylesheets="@../styles/LandingPage/DashBoardStyleSheet.css">
             <GridPane
                     AnchorPane.topAnchor="0"
                     AnchorPane.bottomAnchor="0"
