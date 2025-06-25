@@ -21,6 +21,10 @@ public class RegisterController {
     @FXML private void handleBackToLoginClick(MouseEvent event) {
         ViewManager.show("/application/studyspace/auth/Login.fxml");
     }
+    @FXML
+    public void handleCloseClick(javafx.scene.input.MouseEvent event) {
+        System.exit(0); // Cleanly exits the app
+    }
 
     @FXML private void handleSubmitRegistrationButtonClick(ActionEvent event) {
         // clear any previous error styling

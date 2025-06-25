@@ -58,10 +58,15 @@
               alignment="CENTER_LEFT">
             <Label text="▲ Planify Registration" styleClass="header-title"/>
             <Pane HBox.hgrow="ALWAYS" />
-            <Hyperlink text="AboutUs"
+            <Hyperlink fx:id="aboutUsLink"
+                       text="AboutUs"
                        styleClass="header-about"
                        onAction="#handleAboutUsClick"
                        focusTraversable="false"/>
+
+            <Label text="✖"
+                   styleClass="header-close"
+                   onMouseClicked="#handleCloseClick"/>
         </HBox>
     </AnchorPane>
 

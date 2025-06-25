@@ -30,6 +30,10 @@ public class LoginController {
     private void handleRegisterTextClick(MouseEvent event) {
         ViewManager.show("/application/studyspace/auth/Register.fxml");
     }
+    @FXML
+    public void handleCloseClick(javafx.scene.input.MouseEvent event) {
+        System.exit(0); // Cleanly exits the app
+    }
 
     @FXML
     private void handleSubmitLoginButtonClick(MouseEvent event) throws SQLException {

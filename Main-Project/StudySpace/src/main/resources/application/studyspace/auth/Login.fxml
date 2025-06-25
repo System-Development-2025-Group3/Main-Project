@@ -57,6 +57,10 @@
                        styleClass="header-about"
                        onAction="#handleAboutUsClick"
                        focusTraversable="false"/>
+
+            <Label text="✖"
+                   styleClass="header-close"
+                   onMouseClicked="#handleCloseClick"/>
         </HBox>
     </AnchorPane>
 </StackPane>
