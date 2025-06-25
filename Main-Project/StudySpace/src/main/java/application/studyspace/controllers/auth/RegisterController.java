@@ -1,116 +1,102 @@
 package application.studyspace.controllers.auth;
 
 import application.studyspace.services.Scenes.ViewManager;
-import application.studyspace.services.Styling.CreateToolTip;
-import application.studyspace.services.Styling.StylingUtility;
 import application.studyspace.services.auth.ValidationUtils;
-import application.studyspace.services.auth.ValidationUtils.ValidationResult;
 import javafx.animation.PauseTransition;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import javafx.event.ActionEvent;
 
 import static application.studyspace.services.auth.PasswordHasher.saveToDatabase;
 
 public class RegisterController {
     @FXML private TextField RegisterEmailField;
-    @FXML private PasswordField RegisterPassword_1, RegisterPassword_2;
-    @FXML private Label passwordTooltip1, emailTooltip;
-    @FXML private StackPane stackPane;
-    @FXML private ImageView Image03;
+    @FXML private PasswordField RegisterPassword_1;
+    @FXML private PasswordField RegisterPassword_2;
 
-    private final CreateToolTip toolTipService = new CreateToolTip();
-
-    @FXML private void handleBackToLoginClick(ActionEvent event) {
+    @FXML private void handleBackToLoginClick(MouseEvent event) {
         ViewManager.show("/application/studyspace/auth/Login.fxml");
     }
 
     @FXML private void handleSubmitRegistrationButtonClick(ActionEvent event) {
+        // clear any previous error styling
+        clearErrorStyle(RegisterEmailField);
+        clearErrorStyle(RegisterPassword_1);
+        clearErrorStyle(RegisterPassword_2);
+
         String email = RegisterEmailField.getText();
         String pw1   = RegisterPassword_1.getText();
         String pw2   = RegisterPassword_2.getText();
-        ValidationResult result = ValidationUtils.validateRegistration(email, pw1, pw2);
-        int secs = 5;
+        ValidationUtils.ValidationResult result = ValidationUtils.validateRegistration(email, pw1, pw2);
+
         switch (result) {
-            case EMPTY_EMAIL -> StylingUtility.showError(
-                    RegisterEmailField, toolTipService, emailTooltip,
-                    "You did not enter an email address! Format: example@domain.com.",
-                    "tooltip-Label-Error", "text-field-error", "text-field", secs);
+            case EMPTY_EMAIL ->
+                    showInlineError(RegisterEmailField, "Please enter your e-mail address");
 
-            case INVALID_EMAIL -> StylingUtility.showError(
-                    RegisterEmailField, toolTipService, emailTooltip,
-                    "Invalid email! Format: example@domain.com.",
-                    "tooltip-Label-Error", "text-field-error", "text-field", secs);
+            case INVALID_EMAIL ->
+                    showInlineError(RegisterEmailField, "That e-mail address isn't valid");
 
-            case DUPLICATE_EMAIL -> toolTipService.showAutocorrectPopup(
-                    RegisterEmailField,
-                    "The E-Mail you entered is already associated with an account. Would you like to log in instead?",
-                    "tooltip-Label-Error-Autocorrect",
-                    0,
-                    () -> ViewManager.show("/application/studyspace/auth/Login.fxml")
-            );
+            case DUPLICATE_EMAIL ->
+                    showInlineError(RegisterEmailField, "This e-mail is already registered");
 
-            case EMPTY_PASSWORD, PASSWORD_INVALID -> {
-                StylingUtility.applyErrorStyle(RegisterPassword_1, "password-field-error");
-                StylingUtility.applyErrorStyle(RegisterPassword_2, "password-field-error");
-                toolTipService.showTooltipForDurationX(
-                        passwordTooltip1,
-                        result == ValidationResult.EMPTY_PASSWORD
-                                ? "You did not enter both passwords!"
-                                : "Invalid Password! Must be ≥12 chars, include uppercase, number, special.",
-                        "tooltip-Label-Error",
-                        secs
-                );
-                PauseTransition delayPwd = new PauseTransition(Duration.seconds(secs));
-                delayPwd.setOnFinished(e -> {
-                    StylingUtility.resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
-                    StylingUtility.resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
-                });
-                delayPwd.play();
+            case EMPTY_PASSWORD -> {
+                showInlineError(RegisterPassword_1, "Please enter a password");
+                showInlineError(RegisterPassword_2, "Please enter a password");
+            }
+
+            case PASSWORD_INVALID -> {
+                showInlineError(RegisterPassword_1,
+                        "Password must be ≥12 chars, include uppercase, number, special");
+                showInlineError(RegisterPassword_2,
+                        "Password must be ≥12 chars, include uppercase, number, special");
             }
 
             case PASSWORD_MISMATCH -> {
-                StylingUtility.applyErrorStyle(RegisterPassword_1, "password-field-error");
-                StylingUtility.applyErrorStyle(RegisterPassword_2, "password-field-error");
-                toolTipService.showTooltipForDurationX(
-                        passwordTooltip1,
-                        "Passwords do not match! Please try again.",
-                        "tooltip-Label-Error",
-                        secs
-                );
-                PauseTransition delayMismatch = new PauseTransition(Duration.seconds(secs));
-                delayMismatch.setOnFinished(e -> {
-                    StylingUtility.resetFieldStyle(RegisterPassword_1, "password-field-error", "password-field");
-                    StylingUtility.resetFieldStyle(RegisterPassword_2, "password-field-error", "password-field");
-                });
-                delayMismatch.play();
+                showInlineError(RegisterPassword_1, "Passwords do not match");
+                showInlineError(RegisterPassword_2, "Passwords do not match");
             }
 
             case OK -> {
+                // persist new user and go to landing
                 saveToDatabase(email, pw1);
                 ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
             }
         }
     }
 
+    /**
+     * Inline error: clears field, shows message as prompt text in red, red border, then clears after 2s
+     */
+    private void showInlineError(TextInputControl field, String message) {
+        field.clear();
+        field.setPromptText(message);
+        field.setStyle(
+                "-fx-prompt-text-fill: red; " +
+                        "-fx-border-color: red; " +
+                        "-fx-border-width: 2;"
+        );
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(e -> {
+            field.setPromptText("");
+            clearErrorStyle(field);
+        });
+        delay.play();
+    }
+
+    /**
+     * Resets inline styles on a field.
+     */
+    private void clearErrorStyle(TextInputControl field) {
+        field.setStyle("");
+    }
+
     @FXML
-    private void initialize() {
-        String pwTip = """
-            Please enter a password that fulfills the following conditions:\s
-            • At least 12 characters long
-            • Includes at least one uppercase letter
-            • Includes at least one number
-            • Includes at least one special character (%, &, !, ?, #, _, -, $)
-            """;
-        toolTipService.createCustomTooltip(passwordTooltip1, pwTip, "tooltip-Label");
-
-        String emTip = "Please enter a valid email address:\n• The format should be like example@domain.com.";
-        toolTipService.createCustomTooltip(emailTooltip, emTip, "tooltip-Label");
-
-        Image03.fitWidthProperty().bind(stackPane.widthProperty());
-        Image03.fitHeightProperty().bind(stackPane.heightProperty());
+    public void handleAboutUsClick(ActionEvent event) {
+        ViewManager.show("/application/studyspace/CustomerInteraction/AboutUs.fxml");
     }
 }

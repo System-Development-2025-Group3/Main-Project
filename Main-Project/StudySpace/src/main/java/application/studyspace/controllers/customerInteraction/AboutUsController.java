@@ -73,7 +73,7 @@ public class AboutUsController {
 
 
     private void initializeTeamMembers() {
-        teamMembers.add(new TeamMember("John Doe", "Age: 30", "Software Engineer",
+        teamMembers.add(new TeamMember("Fabian Doering", "Age: 30", "Software Engineer",
                 "John is experienced in software development.", "/images/customerInteraction/Team-Member-1.png"));
         teamMembers.add(new TeamMember("Jane Smith", "Age: 28", "Designer",
                 "Jane creates intuitive designs.", "/images/customerInteraction/Team-Member-2.png"));
