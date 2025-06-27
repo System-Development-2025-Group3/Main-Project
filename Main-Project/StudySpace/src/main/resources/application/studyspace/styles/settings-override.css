@@ -1,0 +1,220 @@
+/* ============ GLOBAL ============ */
+.root {
+    -fx-background-color: #ffffff;
+    -fx-padding: 16px;
+}
+
+/* ============ HEADER CARD ============ */
+.header-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+}
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
+}
+
+/* ============ SIDEBAR ============ */
+.login-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 34px 38px 30px 38px;
+    -fx-spacing: 20px;
+}
+.login-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+
+/* ============ SIDEBAR BUTTONS ============ */
+.sidebar-button {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #191919;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-padding: 10px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-font-weight: 600;
+    -fx-border-width: 0;
+}
+.sidebar-button:hover,
+.sidebar-button:selected {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #1c1c1c;
+}
+.sidebar-button .font-icon {
+    -fx-icon-size: 20;
+    -fx-icon-color: #191919;
+}
+
+/* LOGOUT BUTTON */
+.button.sidebar-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 0;
+    -fx-padding: 10px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: none;
+}
+/* REMOVE hover/pressed background */
+.button.sidebar-logout:hover,
+.button.sidebar-logout:pressed {
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
+}
+
+/* Keep icon color consistent */
+.button.sidebar-logout .font-icon {
+    -fx-icon-size: 20;
+    -fx-icon-color: #191919;
+}
+
+/* ============ SETTINGS CARD BOXES ============ */
+.card-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 24px 32px 24px 32px;
+}
+
+/* ============ FIELD LABELS ============ */
+.field-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #121417;
+    -fx-padding: 0 4 0 0;
+}
+.field-label-bold {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #121417;
+}
+
+/* ============ MAIN TITLES ============ */
+.main-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #121417;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);
+}
+
+/* ============ FORM FIELDS ============ */
+.text-field, .password-field {
+    -fx-background-color: #f1f2f4;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+    -fx-border-color: transparent;
+}
+
+/* ============ BUTTONS ============ */
+.button {
+    -fx-background-color: #191919;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
+}
+.button:hover {
+    -fx-background-color: #222222;
+}
+.button:pressed {
+    -fx-background-color: #000000;
+}
+
+/* ============ SLIDERS ============ */
+.styled-slider {
+    -fx-pref-width: 300;
+    -fx-padding: 6 0;
+}
+.styled-slider .track {
+    -fx-background-color: #121417;
+    -fx-background-radius: 4;
+    -fx-pref-height: 6;
+}
+.styled-slider .thumb {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #121417;
+    -fx-border-width: 2;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-pref-width: 16;
+    -fx-pref-height: 16;
+    -fx-cursor: hand;
+    -fx-translate-y: -1;
+}
+.styled-slider .thumb:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+.styled-slider .thumb:pressed {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+/* ============ SLIDER VALUE LABEL ============ */
+.slider-value {
+    -fx-font-size: 12px;
+    -fx-text-fill: #677583;
+    -fx-padding: 0 0 0 4;
+}
+
+/* ============ DAY PICKER BUTTONS ============ */
+.day-square {
+    -fx-background-color: #f1f2f4;
+    -fx-text-fill: #121417;
+    -fx-font-size: 12px;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-pref-width: 36px;
+    -fx-pref-height: 36px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+.day-square:selected, .day-square:selected:hover {
+    -fx-background-color: #121417;
+    -fx-text-fill: white;
+}
+.day-square:hover {
+    -fx-background-color: #e0e2e7;
+}
+
+/* ============ CIRCLE TOOLTIP LABEL ============ */
+.circle-label {
+    -fx-background-color: #ececec;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #616161;
+    -fx-alignment: center;
+    -fx-pref-width: 24px;
+    -fx-pref-height: 24px;
+    -fx-cursor: hand;
+}
+
+/* ============ CHECKBOXES ============ */
+.check-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: #121417;
+}
+
+/* ==== (OPTIONAL) ADD SPINNER/COMBO IF USED ==== */
+/* Spinner style - for the time pickers */
+.spinner {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-background-color: #fff;
+    -fx-padding: 2 6;
+}

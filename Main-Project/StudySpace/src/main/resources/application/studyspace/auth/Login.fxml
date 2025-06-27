@@ -8,7 +8,7 @@
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="application.studyspace.controllers.auth.LoginController"
            styleClass="root"
-           stylesheets="@../styles/LoginandRegister/LoginandRegisterStylesheet.css"
+           stylesheets="@../styles/LandingPage/LoginandRegisterStylesheet.css"
            prefWidth="1000" prefHeight="670">
 
     <!-- MAIN CONTENT: Centered login card -->

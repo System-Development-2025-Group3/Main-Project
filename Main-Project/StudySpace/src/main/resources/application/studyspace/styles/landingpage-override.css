@@ -1,0 +1,160 @@
+/* ============ GLOBAL ============ */
+.root {
+    -fx-background-color: #ffffff;
+    -fx-padding: 16px;          /* breathing room around the edges */
+}
+
+/* ============ HEADER CARD ============ */
+.header-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;                           /* softer corners */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
+    -fx-padding: 16px;                                     /* uniform padding */
+    -fx-spacing: 8px;                                      /* space between icon + title + button */
+}
+.header-title {
+    -fx-font-size: 20px;                                   /* up from 16 */
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
+}
+
+/* ============ CARD CONTAINER ============ */
+.login-card,
+.calendar-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;                           /* match header */
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-spacing: 20px;
+}
+
+/* Sidebar card specifics */
+.login-card {
+    -fx-padding: 34px 38px 30px 38px;                      /* your existing inset */
+}
+/* ================= SIDEBAR HEADER ================= */
+.login-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+
+/* ============ SIDEBAR BUTTONS ============ */
+.sidebar-button {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #191919;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-padding: 10px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-font-weight: 600;
+    -fx-border-width: 0;
+}
+.sidebar-button:hover,
+.sidebar-button:selected {
+    -fx-background-color: #f0f0f0;      /* <---- grayish, same for hover & selected */
+    -fx-text-fill: #1c1c1c;
+}
+.sidebar-button .font-icon {
+    -fx-icon-size: 20;
+    -fx-icon-color: #191919;
+}
+
+/* ============ LOGOUT ROW ============ */
+/* target the Button and its built-in text node */
+.button.sidebar-logout {
+    -fx-font-size: 16px;       /* big text */
+    -fx-font-weight: 600;
+    -fx-text-fill: #191919;    /* make sure the text color is set here */
+    -fx-padding: 16px 20px;
+}
+
+.button.sidebar-logout .font-icon {
+    -fx-icon-size: 20;         /* huge “X” */
+    -fx-icon-color: #191919;
+}
+
+/* if you still want a little extra space between icon and text */
+.button.sidebar-logout > .graphic {   /* the HBox or FontIcon sits here */
+    -fx-padding: 0 12px 0 0;
+}
+
+/* ============ CALENDAR CARD ============ */
+.calendar-card {
+    -fx-padding: 32px;                                     /* a bit more breathing room */
+}
+
+/* nudge the built-in header up inside the card */
+.calendar-card .calendar-header {
+    -fx-translate-y: -8px;
+}
+
+/* make the weekday labels a hair larger */
+.calendar-card .label {
+    -fx-font-size: 14px;
+}
+
+/* force all CalendarView backgrounds to be transparent */
+.calendar-wrapper,
+.calendar-wrapper .root {
+    -fx-background-color: transparent;
+}
+
+/* ============ FLOATING ADD BUTTON ============ */
+.floating-add-button {
+    -fx-background-color: #222222;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 48px;
+    -fx-pref-height: 48px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #bbb, 4, 0.09, 0, 2);
+}
+.floating-add-button:hover {
+    -fx-background-color: #444444;
+}
+
+/* ====== CALENDARVIEW HORIZONTAL SCROLLBAR (pill indicator) ====== */
+
+/* give it the same padding as your vertical bar */
+.calendar-view .scroll-bar:horizontal {
+    -fx-padding: 0 6;             /* left/right padding to center thumb on track */
+    -fx-background-color: transparent;
+}
+
+/* dark track (6px high) */
+.calendar-view .scroll-bar:horizontal .track {
+    -fx-background-color: #121417;
+    -fx-background-radius: 4;
+    -fx-pref-height: 6;
+}
+
+/* white thumb with dark border, pill-shaped */
+.calendar-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #121417;
+    -fx-border-width: 2;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-pref-width: 16;
+    -fx-pref-height: 16;
+    -fx-cursor: hand;
+    -fx-translate-x: -5;          /* center on the 6px track */
+}
+
+/* same hover + press effects as your styled-slider */
+.calendar-view .scroll-bar:horizontal .thumb:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 1);
+}
+.calendar-view .scroll-bar:horizontal .thumb:pressed {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+/* hide the little arrow buttons at both ends */
+.calendar-view .scroll-bar .increment-button,
+.calendar-view .scroll-bar .decrement-button,
+.calendar-view .scroll-bar .increment-arrow,
+.calendar-view .scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: null;
+}

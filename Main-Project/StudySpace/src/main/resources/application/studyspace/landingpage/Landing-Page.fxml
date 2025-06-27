@@ -9,8 +9,8 @@
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
-      stylesheets="@../styles/LoginandRegister/LoginandRegisterStylesheet.css,
-                   @../styles/LandingPage/LandingPageStylesheet.css"
+      stylesheets="@../styles/LoginandRegisterStylesheet.css,
+                   @../styles/landingpage-override.css"
       styleClass="root"
       spacing="24">
 
@@ -26,37 +26,53 @@
         <Pane HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <!-- MAIN CONTENT without padding attribute -->
+    <!-- MAIN CONTENT -->
     <HBox spacing="24"
           VBox.vgrow="ALWAYS">
 
         <!-- SIDEBAR CARD -->
         <VBox styleClass="login-card"
-              spacing="20"
-              maxWidth="240"
-              VBox.vgrow="ALWAYS">
+              maxWidth="240" spacing="20">
             <Label text="Study Planner" styleClass="login-title"/>
-            <ToggleButton text="📅  Calendar"
-                          styleClass="sidebar-button"
+
+            <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"
                           selected="true"
-                          onAction="#handleSidebarCalendar"/>
-            <ToggleButton text="📊  Dashboard"
-                          styleClass="sidebar-button"
-                          toggleGroup="$navGroup"
-                          onAction="#handleSidebarDashboard"/>
-            <ToggleButton text="⚙  Settings"
-                          styleClass="sidebar-button"
-                          toggleGroup="$navGroup"
-                          onAction="#handleSidebarSettings"/>
-            <Region VBox.vgrow="ALWAYS"/>
-            <Button fx:id="logoutButton"
-                    styleClass="sidebar-logout"
-                    onAction="#handleExit">
+                          onAction="#handleSidebarCalendar">
                 <graphic>
-                    <FontIcon iconLiteral="fas-sign-out-alt" iconSize="16"/>
+                    <FontIcon iconLiteral="far-calendar-alt" />
                 </graphic>
-                <Label text="Logout" styleClass="logout-label"/>
+                <text>Calendar</text>
+            </ToggleButton>
+
+            <ToggleButton styleClass="sidebar-button"
+                          toggleGroup="$navGroup"
+                          onAction="#handleSidebarDashboard">
+                <graphic>
+                    <FontIcon iconLiteral="fas-chart-bar" />
+                </graphic>
+                <text>Dashboard</text>
+            </ToggleButton>
+
+            <ToggleButton styleClass="sidebar-button"
+                          toggleGroup="$navGroup"
+                          onAction="#handleSidebarSettings">
+                <graphic>
+                    <FontIcon iconLiteral="fas-cog" />
+                </graphic>
+                <text>Settings</text>
+            </ToggleButton>
+
+            <!-- spacer to push logout to the bottom -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="logoutButton"
+                    onAction="#handleExit"
+                    styleClass="sidebar-logout">
+                <graphic>
+                    <FontIcon iconLiteral="fas-times" />
+                </graphic>
+                <text>Logout</text>
             </Button>
         </VBox>
 
@@ -75,7 +91,7 @@
                           showSourceTrayButton="false"
                           showToday="false"
                           showToolBar="false"
-                          stylesheets="@../styles/calendar/calendarfx-overrides.css"/>
+                          stylesheets="@../styles/calendarfx-overrides.css"/>
 
             <!-- FLOATING ADD BUTTON -->
             <StackPane pickOnBounds="false" VBox.vgrow="NEVER">

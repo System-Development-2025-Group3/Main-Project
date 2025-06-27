@@ -78,7 +78,7 @@ public class LoginController {
 
     @FXML
     public void handleAboutUsClick(ActionEvent event) {
-        ViewManager.show("/application/studyspace/CustomerInteraction/AboutUs.fxml");
+        ViewManager.show("/application/studyspace/auth/AboutUs.fxml");
     }
 
 

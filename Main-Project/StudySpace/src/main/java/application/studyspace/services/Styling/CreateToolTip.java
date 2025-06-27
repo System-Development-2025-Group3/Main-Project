@@ -25,7 +25,7 @@ public class CreateToolTip {
         customTooltip.setAutoHide(true);
 
         tooltipLabel.getStylesheets().add(Objects.requireNonNull(
-                getClass().getResource("/application/studyspace/styles/LandingPage/SettingsStylesheet.css")).toExternalForm());
+                getClass().getResource("/application/studyspace/styles/settings-override.css")).toExternalForm());
 
         targetNode.setOnMouseEntered(e -> {
             Bounds b = targetNode.localToScreen(targetNode.getBoundsInLocal());
