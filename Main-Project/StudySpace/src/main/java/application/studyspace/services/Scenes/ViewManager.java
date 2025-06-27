@@ -45,6 +45,20 @@ public class ViewManager {
         }
     }
 
+    public static void loadRootLayout(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(ViewManager.class.getResource("/application/studyspace/scenes/RootLayout.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setFullScreen(true);
+            primaryStage.setTitle("StudySpace");
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Shows a popup overlay and keeps it grouped in one removable wrapper.
      */

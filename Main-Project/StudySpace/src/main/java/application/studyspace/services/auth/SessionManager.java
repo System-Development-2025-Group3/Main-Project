@@ -1,5 +1,7 @@
 package application.studyspace.services.auth;
 
+import application.studyspace.services.DataBase.DatabaseHelper;
+import application.studyspace.services.onboarding.StudyPreferences;
 import com.calendarfx.view.CalendarView;
 
 import java.util.Objects;
@@ -54,14 +56,22 @@ public class SessionManager {
         prefs.putBoolean("SKIP_SPLASH_SCREEN", skipSplashScreen); // Save preference persistently
     }
 
-    public boolean loadSkipSplashScreenPreference() {
-        Preferences prefs = Preferences.userRoot().node(PREF_NODE);
-        return prefs.getBoolean("SKIP_SPLASH_SCREEN", false); // Default to false
+    // Always called at app start, before login
+    public boolean loadSkipSplashScreenPreferenceLocal() {
+        Preferences prefs = Preferences.userRoot().node("StudySpace");
+        return prefs.getBoolean("SKIP_SPLASH_SCREEN", false); // default: show splash
     }
 
-    public void saveSkipSplashScreenPreference(boolean skipSplashScreen) {
-        Preferences prefs = Preferences.userRoot().node(PREF_NODE);
-        prefs.putBoolean("SKIP_SPLASH_SCREEN", skipSplashScreen); // Save the preference independently
+    // Update local value
+    public void saveSkipSplashScreenPreferenceLocal(boolean skip) {
+        Preferences prefs = Preferences.userRoot().node("StudySpace");
+        prefs.putBoolean("SKIP_SPLASH_SCREEN", skip);
+    }
+
+    // Call after successful login
+    public void syncSkipSplashScreenFromDb(UUID userId) {
+        boolean skipSplash = StudyPreferences.getSkipSplashScreenPreference(userId);
+        saveSkipSplashScreenPreferenceLocal(skipSplash);
     }
 
     public String getSavedUsername() {

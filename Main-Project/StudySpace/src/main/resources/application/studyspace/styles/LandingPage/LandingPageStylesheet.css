@@ -1,288 +1,79 @@
 /* ============ GLOBAL ============ */
-.root, .dashboard-bg {
-  -fx-font-family: "Segoe UI", sans-serif;
-  -fx-background-color: #f9f9f9;
+.root {
+    -fx-background-color: #ffffff;
 }
 
-/* ============ SIDEBAR ============ */
-.sidebar {
-  -fx-background-color: #111111;
-  -fx-padding: 32 0 32 0;
-  -fx-spacing: 10;
-  -fx-alignment: TOP_CENTER;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 8, 0, 0, 2);
+/* ============ HEADER CARD ============ */
+.header-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
+    -fx-padding: 12px 24px;
 }
-.sidebar-title {
-  -fx-text-fill: #111827;
-  -fx-font-size: 16px;
-  -fx-font-weight: bold;
-  -fx-padding: 0 0 24 0;
+.header-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
 }
+
+/* ============ CARD CONTAINER ============ */
+.login-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 34px 38px 30px 38px;
+    -fx-spacing: 20px;
+}
+
+/* ============ SIDEBAR BUTTONS ============ */
 .sidebar-button {
-  -fx-background-color: transparent;
-  -fx-text-fill: #fff;
-  -fx-font-size: 18px;
-  -fx-background-radius: 12;
-  -fx-cursor: hand;
-  -fx-min-width: 56;
-  -fx-min-height: 56;
-  -fx-max-width: 56;
-  -fx-max-height: 56;
-  -fx-alignment: center;
-  -fx-effect: null;
-  -fx-padding: 0;
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #191919;
+    -fx-font-size: 14px;
+    -fx-background-radius: 9px;
+    -fx-padding: 8px 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
 }
 .sidebar-button:hover {
-  -fx-background-color: #F3F4F6;
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
 }
-.sidebar-button:selected, .sidebar-button:focused {
-  -fx-background-color: #222222;
-  -fx-text-fill: #fff;
-}
-.logout-button {
-  -fx-background-color: #fff;
-  -fx-text-fill: #111111;
-  -fx-background-radius: 12;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 8, 0, 0, 2);
-}
-.logout-button:hover {
-  -fx-background-color: #ef4444;
-  -fx-text-fill: #fff;
+.sidebar-button:selected {
+    -fx-background-color: #222222;
+    -fx-text-fill: #ffffff;
 }
 
-/* ============ HEADER BAR ============ */
-.header-box {
-  -fx-padding: 16 24;
-  -fx-spacing: 12;
-  -fx-alignment: CENTER_LEFT;
-}
-.nav-button {
-  -fx-background-color: transparent;
-  -fx-text-fill: #374151;
-  -fx-font-size: 14px;
-  -fx-cursor: hand;
-}
-.nav-button:hover {
-  -fx-background-color: #F3F4F6;
-  -fx-background-radius: 4;
-}
-.content-title {
-  -fx-text-fill: #111827;
-  -fx-font-size: 20px;
-  -fx-font-weight: 600;
-}
-.create-event-button {
-  -fx-background-color: #111827;
-  -fx-text-fill: white;
-  -fx-padding: 6 16;
-  -fx-background-radius: 6;
-  -fx-font-size: 14px;
-}
-.create-event-button:hover {
-  -fx-background-color: #374151;
-}
-
-/* ============ VIEW TOGGLE ============ */
-.view-toggle {
-  -fx-background-color: #FFFFFF;
-  -fx-border-radius: 8;
-  -fx-background-radius: 8;
-  -fx-border-color: #E5E7EB;
-  -fx-border-width: 1;
-  -fx-padding: 8 12;
-  -fx-alignment: CENTER_LEFT;
-}
-.view-button {
-  -fx-background-color: transparent;
-  -fx-text-fill: #374151;
-  -fx-font-size: 13px;
-  -fx-font-weight: 500;
-  -fx-padding: 6 12;
-  -fx-background-radius: 6;
-}
-.view-button:selected {
-  -fx-background-color: #111827;
-  -fx-text-fill: #FFFFFF;
-}
-.view-button:hover {
-  -fx-background-color: #F3F4F6;
-}
-
-/* ============ CALENDAR WRAPPER ============ */
-.calendar-wrapper {
-  -fx-background-color: #FFFFFF;
-  -fx-padding: 16;
-  -fx-border-color: #E5E7EB;
-  -fx-border-radius: 12;
-  -fx-background-radius: 12;
-}
-
-/* ============ CalendarFX OVERRIDES ============ */
-/* (targets its default classes) */
-.calendar-view {
-  -fx-background-color: transparent;
-}
-.calendar-header-view,
-.calendar-toolbar,
-.calendar-secondary-toolbar {
-  -fx-background-color: transparent;
-  -fx-border-color: transparent;
-}
-.day-header-text {
-  -fx-text-fill: #374151;
-  -fx-font-size: 12px;
-  -fx-font-weight: 600;
-}
-.hour-text {
-  -fx-text-fill: #9CA3AF;
-  -fx-font-size: 10px;
-}
-.day-cell {
-  -fx-border-color: #E5E7EB;
-}
-.today {
-  -fx-background-color: #F9FAFB;
-}
-.entry {
-  -fx-background-color: #374151;
-  -fx-text-fill: #FFFFFF;
-  -fx-background-radius: 4;
-  -fx-padding: 2 4;
-}
-.entry:hover {
-  -fx-background-color: #1F2937;
-}
-.calendar-view .page-toolbar,
-.calendar-view .page-toolbar-button {
-  -fx-background-color: transparent !important;
-  -fx-border-color: transparent !important;
-}
-/* ============ Floating Rectangular Add Button ============ */
-.floating-add-button {
-    -fx-background-color: #000;                       /* solid black */
-    -fx-background-radius: 8px;                       /* soft rounded corners */
-    -fx-min-height: 48px;
-    -fx-min-width: 120px;                             /* or auto grow with padding */
-    -fx-padding: 0 16px;                              /* vertical 0, horizontal 16px */
+/* ============ LOGOUT ROW ============ */
+.sidebar-logout {
+    -fx-background-color: transparent;
     -fx-cursor: hand;
-    -fx-alignment: center;
-    -fx-text-fill: white;                             /* label (if any) */
+    -fx-padding: 8px 12px;
+    -fx-alignment: CENTER_LEFT;
+}
+.logout-label {
     -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.3, 0, 2);
-    -fx-transition: opacity 150ms ease-in-out;
+    -fx-text-fill: #191919;
+    -fx-padding: 0 0 0 8px;
+}
+
+/* ============ CALENDARWRAPPER OVERRIDE ============ */
+.calendar-wrapper,
+.calendar-wrapper .root {
+    -fx-background-color: transparent;
+}
+
+/* ============ FLOATING ADD BUTTON ============ */
+.floating-add-button {
+    -fx-background-color: #222222;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 48px;
+    -fx-pref-height: 48px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #bbb, 4, 0.09, 0, 2);
 }
 .floating-add-button:hover {
-    -fx-opacity: 0.85;
-}
-
-.entry-done {
-  -fx-background-color: #dddddd !important;
-  -fx-border-color: #999999 !important;
-  -fx-text-fill: #777777 !important;
-}
-
-/* ============ DASHBOARD CARDS ============ */
-.dashboard-grid {
-  -fx-hgap: 32;
-  -fx-vgap: 32;
-}
-.dashboard-card {
-  -fx-background-color: #fff;
-  -fx-background-radius: 18;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.13), 16, 0, 0, 6);
-  -fx-padding: 32 28 32 28;
-  -fx-spacing: 18;
-  -fx-min-width: 320;
-  -fx-max-width: 380;
-  -fx-alignment: TOP_CENTER;
-}
-.dashboard-card-title {
-  -fx-font-size: 18px;
-  -fx-font-weight: bold;
-  -fx-text-fill: #111111;
-  -fx-padding: 0 0 12 0;
-}
-
-/* ============ SESSIONS ============ */
-.session-row {
-  -fx-background-color: #f3f4f6;
-  -fx-background-radius: 12;
-  -fx-padding: 10 16;
-  -fx-spacing: 10;
-  -fx-alignment: center-left;
-}
-.session-label {
-  -fx-font-size: 15px;
-  -fx-text-fill: #222;
-}
-.session-check, .session-cross {
-  -fx-background-radius: 8;
-  -fx-min-width: 32;
-  -fx-min-height: 32;
-  -fx-font-size: 16px;
-  -fx-background-color: #fff;
-  -fx-border-color: #e5e7eb;
-  -fx-border-width: 1;
-  -fx-cursor: hand;
-}
-.session-check:hover {
-  -fx-background-color: #22c55e;
-  -fx-text-fill: #fff;
-  -fx-border-color: #22c55e;
-}
-.session-cross:hover {
-  -fx-background-color: #ef4444;
-  -fx-text-fill: #fff;
-  -fx-border-color: #ef4444;
-}
-
-/* ============ PROGRESS RINGS ============ */
-.progress-ring-bg {
-  -fx-stroke: #e5e7eb;
-  -fx-stroke-width: 8;
-  -fx-fill: transparent;
-}
-.progress-ring-fg {
-  -fx-stroke: #111827;
-  -fx-stroke-width: 8;
-  -fx-fill: transparent;
-}
-.countdown-timer {
-  -fx-font-size: 22px;
-  -fx-font-weight: bold;
-  -fx-text-fill: #111111;
-}
-
-/* ============ SPLIT BOX ============ */
-.split-box {
-  -fx-background-color: #f3f4f6;
-  -fx-background-radius: 12;
-  -fx-padding: 16 18;
-  -fx-alignment: center;
-}
-.main-title {
-  -fx-font-size: 22px;
-  -fx-font-weight: bold;
-  -fx-text-fill: #111111;
-}
-.streak-emoji {
-  -fx-font-size: 22px;
-  -fx-padding: 0 0 0 4;
-}
-
-/* ============ EXAM PROGRESS ============ */
-.exam-progress-label {
-  -fx-font-size: 15px;
-  -fx-font-weight: 600;
-  -fx-text-fill: #111111;
-  -fx-background-color: transparent;
-  -fx-alignment: center;
-}
-
-/* ============ TILEPANE ============ */
-.tile-pane {
-  -fx-hgap: 16;
-  -fx-vgap: 16;
-  -fx-alignment: center;
+    -fx-background-color: #444444;
 }

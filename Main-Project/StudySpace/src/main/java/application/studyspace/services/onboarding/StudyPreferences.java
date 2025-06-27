@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.*;
 
+import static application.studyspace.services.DataBase.UUIDHelper.uuidToBytes;
+
 public class StudyPreferences {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("HH:mm");
@@ -71,7 +73,7 @@ public class StudyPreferences {
         try (Connection c = DataSourceManager.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
-            ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
+            ps.setBytes(1, uuidToBytes(userId));
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next())
                     throw new IllegalStateException("No prefs for user " + userId);
@@ -108,7 +110,7 @@ public class StudyPreferences {
         try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
+            ps.setBytes(1, uuidToBytes(userId));
             ps.setTime(2, Time.valueOf(startTime));
             ps.setTime(3, Time.valueOf(endTime));
             ps.setInt(4, sessionLength);
@@ -124,5 +126,73 @@ public class StudyPreferences {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean loadSkipSplashScreen(UUID userUUID) {
+        String sql = "SELECT skip_splash_screen FROM study_preferences WHERE user_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBytes(1, uuidToBytes(userUUID));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("skip_splash_screen");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading skip splash screen: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Returns TRUE if user wants to SKIP splash, FALSE if should show splash
+    public static boolean getSkipSplashScreenPreference(UUID userUUID) {
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT skip_splash_screen FROM study_preferences WHERE user_id = ?")) {
+            stmt.setBytes(1, uuidToBytes(userUUID));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getBoolean("skip_splash_screen");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // default to show splash if not found or error
+    }
+
+    public static boolean updateSkipSplashScreen(UUID userUUID, boolean skip) {
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("UPDATE study_preferences SET skip_splash_screen = ? WHERE user_id = ?")) {
+            stmt.setBoolean(1, skip);
+            stmt.setBytes(2, uuidToBytes(userUUID));
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateRememberMe(UUID userUUID, boolean rememberMe) {
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("UPDATE study_preferences SET remember_me = ? WHERE user_id = ?")) {
+            stmt.setBoolean(1, rememberMe);
+            stmt.setBytes(2, uuidToBytes(userUUID));
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean loadRememberMe(UUID userUUID) {
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT remember_me FROM study_preferences WHERE user_id = ?")) {
+            stmt.setBytes(1, uuidToBytes(userUUID));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getBoolean("remember_me");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

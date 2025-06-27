@@ -1,4 +1,25 @@
-/* LOGIN CARD */
+/* =================== GLOBAL =================== */
+.root {
+    -fx-background-color: #ffffff;
+}
+
+/* =================== HEADER CARD =================== */
+.header-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
+    -fx-padding: 12 24;
+    -fx-spacing: 8;
+    /* Margin for header is achieved with VBox spacing or VBox padding, not CSS! */
+}
+.header-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
+}
+
+/* =================== CARD CONTAINER / LOGIN CARD =================== */
 .login-card {
     -fx-background-color: #fff;
     -fx-background-radius: 18;
@@ -10,25 +31,58 @@
     -fx-max-width: 380;
 }
 
-/* Title */
-.login-title {
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
+/* =================== SIDEBAR BUTTONS =================== */
+.sidebar-button {
+    -fx-background-color: #fafafa;
     -fx-text-fill: #191919;
-    -fx-padding: 0 0 10 0;
-    /* No text alignment: label aligns to left by parent VBox! */
+    -fx-font-size: 14px;
+    -fx-background-radius: 9;
+    -fx-padding: 8 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+.sidebar-button:hover {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+}
+.sidebar-button:selected {
+    -fx-background-color: #222222;
+    -fx-text-fill: #ffffff;
 }
 
+/* =================== LOGOUT ROW =================== */
+.sidebar-logout {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+    -fx-alignment: CENTER_LEFT;
+}
+.logout-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #191919;
+    -fx-padding: 0 0 0 8;
+}
 
-/* Label */
+/* =================== FLOATING ADD BUTTON =================== */
+.floating-add-button {
+    -fx-background-color: #222222;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #bbb, 4, 0.09, 0, 2);
+}
+.floating-add-button:hover {
+    -fx-background-color: #444444;
+}
+
+/* =================== FORM STYLING =================== */
 .input-label {
     -fx-font-size: 14px;
     -fx-text-fill: #404040;
     -fx-padding: 0 0 2 0;
 }
-
-/* Inputs */
-.text-field, .password-field {
+.text-field, .password-field, .login-input {
     -fx-pref-width: 260;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
@@ -38,7 +92,15 @@
     -fx-font-size: 15px;
 }
 
-/* Checkbox */
+/* =================== LOGIN TITLE =================== */
+.login-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191919;
+    -fx-padding: 0 0 10 0;
+}
+
+/* =================== CHECKBOX =================== */
 .remember-checkbox {
     -fx-font-size: 14px;
     -fx-text-fill: #222;
@@ -48,25 +110,25 @@
     -fx-border-color: #bcbcbc;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
-    -fx-min-width: 17; -fx-min-height: 17;
+    -fx-min-width: 17;
+    -fx-min-height: 17;
 }
 .remember-checkbox:selected .box {
     -fx-background-color: #222;
     -fx-border-color: #222;
 }
-
 .remember-checkbox .mark {
     -fx-background-color: #fff;
 }
 
-/* Button */
+/* =================== BUTTON =================== */
 .login-btn {
     -fx-background-color: #222;
     -fx-text-fill: #fff;
     -fx-font-size: 17px;
     -fx-background-radius: 9;
     -fx-padding: 10 0 10 0;
-    -fx-pref-width: 300;    /* Make it match text fields exactly */
+    -fx-pref-width: 300;
     -fx-cursor: hand;
     -fx-font-weight: normal;
     -fx-effect: dropshadow(gaussian, #bbb, 2, 0.09, 0, 2);
@@ -75,76 +137,33 @@
     -fx-background-color: #444;
 }
 
-/* Register Link */
+/* =================== REGISTER LINK =================== */
 .register-link {
     -fx-text-fill: #393939;
     -fx-font-size: 13px;
     -fx-padding: 10 0 0 0;
     -fx-alignment: center;
 }
-
-/* Outer Background */
-.root {
-    -fx-background-color: #ffffff;
-}
-.header-outer {
-    -fx-padding: 16 0 0 0;
-    -fx-alignment: top_center;
-    -fx-max-width: 100;
-}
-/* HEADER CARD (now full-width) */
-.header-card {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 16;
-    -fx-border-radius: 16;
-    -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.25), 11, 0, 0, 4);
-    -fx-padding: 12 24;
-    -fx-spacing: 8;
-}
-.header-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1c1c1c;
-}
-.header-about {
-    -fx-font-size: 15px;
-    -fx-font-weight: 700;    /* make this bold enough */
-    -fx-text-fill: #191919;
+.register-link:hover {
+    -fx-underline: true;
+    -fx-text-fill: #000000;
     -fx-cursor: hand;
 }
 
-.login-input {
-    -fx-pref-width: 260;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #e2e2e2;
-    -fx-background-color: #fafafa;
-    -fx-padding: 8 12 8 12;
-    -fx-font-size: 15px;
-}
-
-/* bottom register link */
-.register-link:hover {
-    -fx-underline: true;        /* turn on underline */
-    -fx-text-fill: #000000;     /* make it pure black */
-    -fx-cursor: hand;           /* show pointer */
-}
-
-/* header AboutUs link */
-
+/* =================== HEADER ABOUT LINK =================== */
 .hyperlink.header-about {
-    -fx-font-size:   15px;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
-    -fx-text-fill:   #191919;
-    -fx-underline:   false;
-    -fx-cursor:      hand;
+    -fx-text-fill: #191919;
+    -fx-underline: false;
+    -fx-cursor: hand;
 }
-
-/* on hover: black underline */
 .hyperlink.header-about:hover {
     -fx-underline: true;
     -fx-text-fill: #000000;
 }
+
+/* =================== HEADER CLOSE =================== */
 .header-close {
     -fx-text-fill: black;
     -fx-font-size: 16px;
@@ -154,3 +173,6 @@
     -fx-text-fill: red;
     -fx-cursor: hand;
 }
+
+/* =================== VBOX SPACING (use in FXML!) =================== */
+/* Use VBox spacing="16" for vertical gaps between major sections! */

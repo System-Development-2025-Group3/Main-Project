@@ -5,7 +5,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="application.studyspace.controllers.landingpage.SettingsController"
-            stylesheets="@../styles/settings/SettingsStyleSheet.css"
+            stylesheets="@../styles/LandingPage/SettingsStyleSheet.css"
             style="-fx-background-color: #cfcfcf;">
 
     <!-- ================= ToggleGroup definitions ================= -->
@@ -142,19 +142,21 @@
                     <VBox spacing="10">
                         <Label text="Skip SplashScreen" styleClass="field-label-bold"/>
                         <HBox spacing="10" alignment="CENTER">
-                            <ToggleButton fx:id="skipTrueButton"
-                                          text="True"
-                                          toggleGroup="$skipSplashToggleGroup"
-                                          styleClass="toggle-button-unselected"
-                                          onAction="#handleSkipSplashScreenTrue" />
-
-                            <ToggleButton fx:id="skipFalseButton"
-                                          text="False"
-                                          toggleGroup="$skipSplashToggleGroup"
-                                          styleClass="toggle-button-unselected"
-                                          onAction="#handleSkipSplashScreenFalse" />
+                            <CheckBox fx:id="skipSplashCheckbox"
+                                      text="Skip splash screen on startup"
+                                      onAction="#handleSkipSplashChanged"/>
                         </HBox>
 
+                    </VBox>
+
+                    <!-- Remember Me Setting -->
+                    <VBox spacing="10">
+                        <Label text="Remember Me" styleClass="field-label-bold"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <CheckBox fx:id="rememberMeCheckbox"
+                                      text="Keep me logged in on this device"
+                                      onAction="#handleRememberMeChanged"/>
+                        </HBox>
                     </VBox>
 
 

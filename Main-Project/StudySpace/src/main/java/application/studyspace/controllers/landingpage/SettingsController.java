@@ -1,10 +1,9 @@
 package application.studyspace.controllers.landingpage;
 
-import application.studyspace.services.DataBase.SkipSplashScreenManager;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.PasswordHasher;
+import application.studyspace.services.auth.RememberMeHelper;
 import application.studyspace.services.auth.SessionManager;
-import application.studyspace.services.DataBase.DatabaseHelper;
 import application.studyspace.services.onboarding.StudyPreferences;
 import application.studyspace.services.Styling.CreateToolTip;
 import application.studyspace.services.Styling.StylingUtility;
@@ -27,15 +26,13 @@ public class SettingsController {
     @FXML private PasswordField NewPasswordField;
     @FXML private PasswordField ConfirmPasswordField;
     @FXML private Label passwordTooltip1, passwordTooltip2;
-    @FXML private ToggleButton skipTrueButton, skipFalseButton;
     @FXML private Slider sessionLengthSlider;
     @FXML private Label sessionLengthLabel;
     @FXML private Slider breakLengthSlider;
     @FXML private Label breakLengthLabel;
     @FXML private Spinner<LocalTime> startTimeSpinner;
     @FXML private Spinner<LocalTime> endTimeSpinner;
-    @FXML private Slider skipSplashScreenSlider;
-
+    @FXML private CheckBox skipSplashCheckbox;
     @FXML private ToggleButton monBtn;
     @FXML private ToggleButton tueBtn;
     @FXML private ToggleButton wedBtn;
@@ -43,12 +40,13 @@ public class SettingsController {
     @FXML private ToggleButton friBtn;
     @FXML private ToggleButton satBtn;
     @FXML private ToggleButton sunBtn;
+    @FXML private CheckBox rememberMeCheckbox;
 
     private final CreateToolTip toolTipService = new CreateToolTip();
 
     @FXML
     private void initialize() {
-
+        // Tooltips for password
         String pwTip = """
             The Password should fulfill the following conditions:\s
             • At least 12 characters long
@@ -57,161 +55,140 @@ public class SettingsController {
             • Includes at least one special character (%, &, !, ?, #, _, -, $)
             """;
         toolTipService.createCustomTooltip(passwordTooltip1, pwTip, "tooltip-Label");
+        toolTipService.createCustomTooltip(passwordTooltip2, pwTip, "tooltip-Label");
 
-        String pwTip1 = """
-            The Password should fulfill the following conditions:\s
-            • At least 12 characters long
-            • Includes at least one uppercase letter
-            • Includes at least one number
-            • Includes at least one special character (%, &, !, ?, #, _, -, $)
-            """;
-        toolTipService.createCustomTooltip(passwordTooltip2, pwTip1, "tooltip-Label");
-
-        // --- Configure Time Spinners ---
+        // Configure Time Spinners
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
         LocalTime t = LocalTime.of(6, 0);
         while (!t.isAfter(LocalTime.of(22, 0))) {
             times.add(t);
             t = t.plusMinutes(30);
         }
-
-        // Helper to format LocalTime in "HH:mm" format for the spinners
         StringConverter<LocalTime> timeFmt = new StringConverter<>() {
             private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
-            @Override public String toString(LocalTime lt) {
-                return lt == null ? "" : fmt.format(lt);
-            }
-            @Override public LocalTime fromString(String str) {
-                return (str == null || str.isEmpty()) ? null : LocalTime.parse(str, fmt);
-            }
+            @Override public String toString(LocalTime lt) { return lt == null ? "" : fmt.format(lt);}
+            @Override public LocalTime fromString(String str) { return (str == null || str.isEmpty()) ? null : LocalTime.parse(str, fmt);}
         };
-
-        // Configure the start time spinner
         SpinnerValueFactory<LocalTime> startFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         startFactory.setConverter(timeFmt);
-        startFactory.setValue(LocalTime.of(9, 0)); // Default start time
+        startFactory.setValue(LocalTime.of(9, 0));
         startTimeSpinner.setValueFactory(startFactory);
         startTimeSpinner.setEditable(true);
 
-        // Configure the end time spinner
         SpinnerValueFactory<LocalTime> endFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         endFactory.setConverter(timeFmt);
-        endFactory.setValue(LocalTime.of(17, 0)); // Default end time
+        endFactory.setValue(LocalTime.of(17, 0));
         endTimeSpinner.setValueFactory(endFactory);
         endTimeSpinner.setEditable(true);
 
-        // --- Configure Sliders ---
+        // Sliders
         sessionLengthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             int rounded = (int) (Math.round(newVal.doubleValue() / 5) * 5);
             sessionLengthSlider.setValue(rounded);
             sessionLengthLabel.setText(rounded + " min");
         });
-
         breakLengthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             int rounded = (int) (Math.round(newVal.doubleValue() / 5) * 5);
             breakLengthSlider.setValue(rounded);
             breakLengthLabel.setText(rounded + " min");
         });
 
-        updateSkipSplashScreenButtons(true); // Default: True selected
-
-        // Event Handlers
-        skipTrueButton.setOnAction(event -> handleSkipSplashScreenTrue());
-        skipFalseButton.setOnAction(event -> handleSkipSplashScreenFalse());
-
+        // Load checkboxes from DB
+        reloadPreferenceCheckboxes();
     }
 
-    /**
-     * Updates the Skip Splash Screen preference to False.
-     */
-    @FXML
-    private void handleSkipSplashScreenFalse() {
+    /** Loads checkbox values from the database and updates the UI/local tokens. */
+    private void reloadPreferenceCheckboxes() {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
-        SkipSplashScreenManager manager = new SkipSplashScreenManager();
-
-        boolean success = manager.updateSkipSplashScreen(userUUID, false);
-        if (success) {
-            SessionManager.getInstance().saveSkipSplashScreenPreference(false);
-            System.out.println("Skip Splash Screen updated to: False");
-            updateSkipSplashScreenButtons(false);
-        } else {
-            System.err.println("Failed to update Skip Splash Screen setting to False.");
+        if (userUUID == null) {
+            skipSplashCheckbox.setSelected(false);
+            rememberMeCheckbox.setSelected(false);
+            System.out.println("[Settings] No user logged in; checkboxes reset.");
+            return;
         }
+        boolean skipSplash = StudyPreferences.loadSkipSplashScreen(userUUID);
+        boolean rememberMe = StudyPreferences.loadRememberMe(userUUID);
+
+        skipSplashCheckbox.setSelected(skipSplash);
+        rememberMeCheckbox.setSelected(rememberMe);
+
+        // Sync local token with DB
+        if (rememberMe) {
+            RememberMeHelper.saveRememberedUserUUID(userUUID);
+        } else {
+            RememberMeHelper.clearRememberedUserUUID();
+        }
+        System.out.printf("[Settings] Loaded from DB: skipSplash=%b, rememberMe=%b%n", skipSplash, rememberMe);
     }
 
-    /**
-     * Updates the Skip Splash Screen preference to True.
-     */
+    /** Updates skip splash in DB, then reloads from DB and updates checkbox. */
     @FXML
-    private void handleSkipSplashScreenTrue() {
+    private void handleSkipSplashChanged() {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
-        SkipSplashScreenManager manager = new SkipSplashScreenManager();
+        boolean newValue = skipSplashCheckbox.isSelected();
 
-        boolean success = manager.updateSkipSplashScreen(userUUID, true);
-        if (success) {
-            SessionManager.getInstance().saveSkipSplashScreenPreference(true);
-            System.out.println("Skip Splash Screen updated to: True");
-            updateSkipSplashScreenButtons(true);
-        } else {
-            System.err.println("Failed to update Skip Splash Screen setting to True.");
+        // Local always
+        SessionManager.getInstance().saveSkipSplashScreenPreferenceLocal(newValue);
+
+        boolean success = false;
+        if (userUUID != null) {
+            success = StudyPreferences.updateSkipSplashScreen(userUUID, newValue);
+            System.out.printf("[Settings] Save skipSplash=%b to DB: %s%n", newValue, success ? "OK" : "FAILED");
         }
+
+        // Always reload after save, to catch DB/logic desync
+        boolean latestValue = (userUUID != null) ? StudyPreferences.loadSkipSplashScreen(userUUID) : newValue;
+        skipSplashCheckbox.setSelected(latestValue);
+        System.out.printf("[Settings] skipSplashCheckbox now set to: %b%n", latestValue);
     }
 
-    /**
-     * Updates the visual style of the skip splash screen toggle buttons based on their selection state.
-     *
-     * @param skipSplashScreen Whether the skip splash screen preference is enabled (`true = skip splash screen`).
-     */
-    private void updateSkipSplashScreenButtons(boolean skipSplashScreen) {
-        // Update selection state
-        skipTrueButton.setSelected(skipSplashScreen);
-        skipFalseButton.setSelected(!skipSplashScreen);
+    /** Updates Remember Me in DB & local, reloads to confirm. */
+    @FXML
+    private void handleRememberMeChanged() {
+        UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
+        boolean newValue = rememberMeCheckbox.isSelected();
 
-        // Update styles for selected/unselected buttons
-        if (skipSplashScreen) {
-            skipTrueButton.getStyleClass().removeAll("toggle-button-unselected");
-            skipTrueButton.getStyleClass().add("toggle-button-selected");
-
-            skipFalseButton.getStyleClass().removeAll("toggle-button-selected");
-            skipFalseButton.getStyleClass().add("toggle-button-unselected");
+        // Local token sync
+        if (newValue) {
+            RememberMeHelper.saveRememberedUserUUID(userUUID);
         } else {
-            skipTrueButton.getStyleClass().removeAll("toggle-button-selected");
-            skipTrueButton.getStyleClass().add("toggle-button-unselected");
-
-            skipFalseButton.getStyleClass().removeAll("toggle-button-unselected");
-            skipFalseButton.getStyleClass().add("toggle-button-selected");
+            RememberMeHelper.clearRememberedUserUUID();
         }
+
+        boolean dbSuccess = false;
+        if (userUUID != null) {
+            dbSuccess = StudyPreferences.updateRememberMe(userUUID, newValue);
+            System.out.printf("[Settings] Save rememberMe=%b to DB: %s%n", newValue, dbSuccess ? "OK" : "FAILED");
+        }
+
+        // Always reload after save, to catch DB/logic desync
+        boolean latestValue = (userUUID != null) ? StudyPreferences.loadRememberMe(userUUID) : newValue;
+        rememberMeCheckbox.setSelected(latestValue);
+        System.out.printf("[Settings] rememberMeCheckbox now set to: %b%n", latestValue);
     }
-
-
 
     @FXML
     private void handleResetPassword(ActionEvent event) throws SQLException {
         String newPassword = NewPasswordField.getText();
         String confirmPassword = ConfirmPasswordField.getText();
         int secs = 5;
-
         ValidationUtils.ValidationResult result = ValidationUtils.validatePasswordUpdate(newPassword, confirmPassword);
-
         switch (result) {
-            case EMPTY_PASSWORD -> StylingUtility.showError(
-                    NewPasswordField, toolTipService, passwordTooltip1,
+            case EMPTY_PASSWORD -> StylingUtility.showError(NewPasswordField, toolTipService, passwordTooltip1,
                     "Please enter a new password.",
                     "tooltip-Label-Error", "password-field-error", "password-field", secs);
 
-            case PASSWORD_INVALID -> StylingUtility.showError(
-                    NewPasswordField, toolTipService, passwordTooltip1,
+            case PASSWORD_INVALID -> StylingUtility.showError(NewPasswordField, toolTipService, passwordTooltip1,
                     "Password is not strong enough! \n Ensure it has at least ...  \n - 12 characters, ... \n - one uppercase letter, ... \n - one number, ... \n and one special character!",
                     "tooltip-Label-Error", "password-field-error", "password-field", secs);
 
-            case PASSWORD_MISMATCH -> StylingUtility.showError(
-                    ConfirmPasswordField, toolTipService, passwordTooltip2,
+            case PASSWORD_MISMATCH -> StylingUtility.showError(ConfirmPasswordField, toolTipService, passwordTooltip2,
                     "Passwords do not match.",
                     "tooltip-Label-Error", "password-field-error", "password-field", secs);
 
             case OK -> {
                 UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
-                String email = DatabaseHelper.getEmailByUUID(userUUID);
+                String email = application.studyspace.services.DataBase.DatabaseHelper.getEmailByUUID(userUUID);
 
                 if (email != null && !email.isEmpty()) {
                     boolean success = PasswordHasher.updatePassword(email, newPassword);
@@ -237,19 +214,13 @@ public class SettingsController {
                             "tooltip-Label-Error", "password-field-error", "password-field", secs);
                 }
             }
-            default -> {
-                // To handle any other validation results if necessary
-            }
+            default -> {}
         }
     }
 
-
     @FXML
     private void handleSave(ActionEvent event) {
-        // Get user session
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
-
-        // Get blocked days
         StringBuilder blockedDaysBuilder = new StringBuilder();
         if (monBtn.isSelected()) blockedDaysBuilder.append("Monday ");
         if (tueBtn.isSelected()) blockedDaysBuilder.append("Tuesday ");
@@ -260,7 +231,6 @@ public class SettingsController {
         if (sunBtn.isSelected()) blockedDaysBuilder.append("Sunday ");
         String blockedDays = blockedDaysBuilder.toString().trim();
 
-        // Get allowed study time range
         LocalTime start = startTimeSpinner.getValue();
         LocalTime end = endTimeSpinner.getValue();
 
@@ -282,7 +252,7 @@ public class SettingsController {
             System.err.println("Saving study preferences failed.");
         }
     }
-    /** Handler for clicking the “Calendar” item in the sidebar. */
+
     @FXML
     private void handleSidebarCalendar() {
         ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
@@ -298,10 +268,8 @@ public class SettingsController {
         //Already on Settings;
     }
 
-    /** Exits the application. */
     @FXML
     private void handleExit() {
         Platform.exit();
     }
-
 }

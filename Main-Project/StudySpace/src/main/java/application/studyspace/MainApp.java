@@ -1,55 +1,50 @@
 package application.studyspace;
 
+import application.studyspace.services.auth.RememberMeHelper;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.SplashScreenAnimator;
+import application.studyspace.services.Scenes.ViewManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.application.Platform;
 import javafx.stage.Stage;
+import java.util.UUID;
 
 public class MainApp extends Application {
-    public void start(Stage ignoredPrimaryStage) {
-        try {
-            // Load user preferences for skipping the splash screen
-            boolean skipSplash = SessionManager.getInstance().loadSkipSplashScreenPreference();
+    @Override
+    public void start(Stage primaryStage) {
+        System.out.println("🚀 Starting Planify...");
 
-            if (skipSplash) {
-                // If the preference is enabled, directly load the main application
-                loadMainApplication();
-            } else {
-                // Otherwise, show the splash screen first
-                Stage splashStage = new Stage();
-                SplashScreenAnimator.showSplash(splashStage, this::loadMainApplication);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Optionally, fallback to showing the splash screen in case of errors
+        // LOG: Checking if RememberMe UUID is present
+        UUID rememberedUUID = RememberMeHelper.getRememberedUserUUID();
+        System.out.println("[MainApp] Remembered UUID = " + rememberedUUID);
+
+        // LOG: Checking if splash screen should be shown
+        boolean skipSplash = SessionManager.getInstance().loadSkipSplashScreenPreferenceLocal();
+        System.out.println("[MainApp] Skip splash preference (local) = " + skipSplash);
+
+        boolean showSplash = !skipSplash;
+
+        // If user is remembered, log them in
+        if (rememberedUUID != null) {
+            System.out.println("[MainApp] Logging in user from token: " + rememberedUUID);
+            SessionManager.getInstance().login(rememberedUUID);
+        }
+
+        // Now decide what to show
+        if (showSplash) {
+            System.out.println("[MainApp] Showing splash screen");
             Stage splashStage = new Stage();
-            SplashScreenAnimator.showSplash(splashStage, this::loadMainApplication);
+            SplashScreenAnimator.showSplash(splashStage, () ->
+                    Platform.runLater(() -> {
+                        System.out.println("[MainApp] Loading root layout after splash");
+                        ViewManager.loadRootLayout(primaryStage);
+                    })
+            );
+        } else {
+            System.out.println("[MainApp] Skipping splash, loading root layout");
+            ViewManager.loadRootLayout(primaryStage);
         }
     }
-
-    /**
-     * Loads the main application (RootLayout).
-     */
-    private void loadMainApplication() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/studyspace/scenes/RootLayout.fxml"));
-            Parent root = loader.load();
-
-            Stage mainStage = new Stage();
-            Scene scene = new Scene(root);
-            mainStage.setScene(scene);
-
-            mainStage.setFullScreen(true);
-            mainStage.setTitle("StudySpace");
-            mainStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static void main(String[] args) {
         launch(args);

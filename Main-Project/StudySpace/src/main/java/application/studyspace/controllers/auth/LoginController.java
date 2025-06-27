@@ -1,10 +1,11 @@
 package application.studyspace.controllers.auth;
 
 import application.studyspace.services.DataBase.DatabaseHelper;
-import application.studyspace.services.DataBase.SkipSplashScreenManager;
 import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.auth.RememberMeHelper;
 import application.studyspace.services.auth.ValidationUtils;
 import application.studyspace.services.auth.SessionManager;
+import application.studyspace.services.onboarding.StudyPreferences;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +19,6 @@ import javafx.util.Duration;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static application.studyspace.services.auth.AutoLoginHandler.activateAutoLogin;
 
 public class LoginController {
 
@@ -55,15 +55,23 @@ public class LoginController {
                 DatabaseHelper dbHelper = new DatabaseHelper();
                 UUID userUUID = dbHelper.getUserUUIDByEmail(email);
                 SessionManager.getInstance().login(userUUID);
-                if (stayLoggedInCheckbox.isSelected()) {
-                    activateAutoLogin(userUUID.toString());
+
+                // --- NEW: Sync skip splash pref from DB to local after login ---
+                boolean skipSplashFromDb = StudyPreferences.getSkipSplashScreenPreference(userUUID);
+                SessionManager.getInstance().saveSkipSplashScreenPreferenceLocal(skipSplashFromDb);
+                // ---------------------------------------------------------------
+
+                boolean rememberMe = stayLoggedInCheckbox.isSelected();
+                if (rememberMe) {
+                    RememberMeHelper.saveRememberedUserUUID(userUUID);
+                } else {
+                    RememberMeHelper.clearRememberedUserUUID();
                 }
+                // Always update DB too (for cross-device consistency)
+                StudyPreferences.updateRememberMe(userUUID, rememberMe);
+
                 ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
                 ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", null);
-
-                boolean skipSplashDatabase = new SkipSplashScreenManager()
-                        .loadSkipSplashScreenFromDatabase(userUUID);
-                SessionManager.getInstance().setSkipSplashScreen(skipSplashDatabase);
             }
         }
     }

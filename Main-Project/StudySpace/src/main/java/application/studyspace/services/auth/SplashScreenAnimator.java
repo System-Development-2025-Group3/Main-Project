@@ -12,41 +12,40 @@ import javafx.util.Duration;
 public class SplashScreenAnimator {
 
     public static void showSplash(Stage splashStage, Runnable onFinished) {
-        // remove OS title‐bar / border
         splashStage.initStyle(StageStyle.UNDECORATED);
-        // for full transparency (no window background at all) use:
-        //   splashStage.initStyle(StageStyle.TRANSPARENT);
 
-        // Load the splash image from resources
+        // Load splash image
         Image logoImage = new Image(
-                SplashScreenAnimator.class
-                        .getResource("/images/auth/LoginPage02.png")
-                        .toExternalForm()
+                SplashScreenAnimator.class.getResource("/images/auth/LoginPage02.png").toExternalForm()
         );
-
-        // Create the logo image view and scale it
         ImageView logo = new ImageView(logoImage);
-        logo.setFitWidth(400);
+
+        // Set the size for a perfect square
+        int SQUARE_SIZE = 500;
+        logo.setFitWidth(SQUARE_SIZE * 0.7); // or any value that looks good, e.g., 350px for 500x500 window
+        logo.setFitHeight(SQUARE_SIZE * 0.7);
         logo.setPreserveRatio(true);
 
-        // Create the root container for the splash scene
         StackPane root = new StackPane(logo);
-        root.setStyle("-fx-background-color: white;");
-        // if you went TRANSPARENT above, give your root a background:
-        // root.setStyle("-fx-background-color: white;");
+        root.setStyle("-fx-background-color: white; -fx-border-radius: 16; -fx-background-radius: 16;"); // Rounded corners optional
 
-        // Set up the scene and stage
-        Scene scene = new Scene(root, 800, 600);
-        // if you went TRANSPARENT above, also:
-        // scene.setFill(Color.TRANSPARENT);
+        // Make sure the StackPane is fixed size
+        root.setPrefWidth(SQUARE_SIZE);
+        root.setPrefHeight(SQUARE_SIZE);
+        root.setMaxWidth(SQUARE_SIZE);
+        root.setMaxHeight(SQUARE_SIZE);
+
+        Scene scene = new Scene(root, SQUARE_SIZE, SQUARE_SIZE);
 
         splashStage.setScene(scene);
         splashStage.setResizable(false);
+
+        // Center the window
         splashStage.centerOnScreen();
+
         splashStage.show();
 
-        // --- your existing animation code below ---
-
+        // --- Animations (unchanged) ---
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(1.0), root);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
