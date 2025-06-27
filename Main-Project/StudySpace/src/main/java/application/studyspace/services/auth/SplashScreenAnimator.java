@@ -16,7 +16,7 @@ public class SplashScreenAnimator {
 
         // Load splash image
         Image logoImage = new Image(
-                SplashScreenAnimator.class.getResource("/images/auth/LoginPage02.png").toExternalForm()
+                SplashScreenAnimator.class.getResource("/application/studyspace/landingpage/images/logos/fullLogo.png").toExternalForm()
         );
         ImageView logo = new ImageView(logoImage);
 

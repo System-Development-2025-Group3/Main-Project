@@ -33,6 +33,7 @@ public class LandingpageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         // Always load the latest events/calendars for the current user
         refreshCalendarView();
 

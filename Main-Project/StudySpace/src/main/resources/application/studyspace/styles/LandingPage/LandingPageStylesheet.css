@@ -1,15 +1,16 @@
-/* ============ GLOBAL ============ */
 .root {
     -fx-background-color: #ffffff;
+    -fx-padding: 16px 16px 16px 16px; /* top, right, bottom, left */
 }
 
 /* ============ HEADER CARD ============ */
+/* header */
 .header-card {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 16px;
-    -fx-border-radius: 16px;
+    -fx-background-radius: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
-    -fx-padding: 12px 24px;
+    -fx-padding: 16px;      /* uniform padding instead of FXML margin */
+    -fx-spacing: 8px;
 }
 .header-title {
     -fx-font-size: 16px;
@@ -63,6 +64,13 @@
 .calendar-wrapper,
 .calendar-wrapper .root {
     -fx-background-color: transparent;
+}
+.calendar-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 24px;
+    -fx-spacing: 0;
 }
 
 /* ============ FLOATING ADD BUTTON ============ */

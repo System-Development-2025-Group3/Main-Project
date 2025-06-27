@@ -7,13 +7,14 @@ import application.studyspace.services.Scenes.ViewManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+
+import java.net.URL;
 import java.util.UUID;
 
 public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         System.out.println("🚀 Starting Planify...");
-
         // LOG: Checking if RememberMe UUID is present
         UUID rememberedUUID = RememberMeHelper.getRememberedUserUUID();
         System.out.println("[MainApp] Remembered UUID = " + rememberedUUID);

@@ -3,32 +3,37 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.paint.Color?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="application.studyspace.controllers.landingpage.LandingpageController"
+      stylesheets="@../styles/LoginandRegister/LoginandRegisterStylesheet.css,
+                   @../styles/LandingPage/LandingPageStylesheet.css"
       styleClass="root"
-      stylesheets="@../styles/LoginandRegister/LoginandRegisterStylesheet.css,@../styles/LandingPage/LandingPageStylesheet.css"
-      prefWidth="1200" prefHeight="800"
-      spacing="0">
+      spacing="24">
 
-    <!-- HEADER CARD -->
+    <!-- HEADER -->
     <HBox styleClass="header-card"
-          alignment="CENTER_LEFT">
-        <Label text="⚜ Planify Calendar" styleClass="header-title"/>
+          alignment="CENTER_LEFT"
+          spacing="8">
+        <ImageView fitHeight="32" preserveRatio="true" >
+            <Image url="@images/logos/smallLogo.png"/>
+        </ImageView>
+        <Label text="Planify Calendar" styleClass="header-title"/>
+
+        <Pane HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <!-- MAIN CONTENT: Sidebar + Calendar cards -->
-    <HBox spacing="20"
-          VBox.vgrow="ALWAYS"
-          style="-fx-padding: 16 16 16 16;">
+    <!-- MAIN CONTENT without padding attribute -->
+    <HBox spacing="24"
+          VBox.vgrow="ALWAYS">
+
         <!-- SIDEBAR CARD -->
         <VBox styleClass="login-card"
               spacing="20"
-              prefWidth="240"
+              maxWidth="240"
               VBox.vgrow="ALWAYS">
             <Label text="Study Planner" styleClass="login-title"/>
             <ToggleButton text="📅  Calendar"
@@ -45,21 +50,23 @@
                           toggleGroup="$navGroup"
                           onAction="#handleSidebarSettings"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button fx:id="exitButton"
+            <Button fx:id="logoutButton"
                     styleClass="sidebar-logout"
                     onAction="#handleExit">
                 <graphic>
-                    <FontIcon iconLiteral="fas-sign-out-alt" iconSize="16" iconColor="black"/>
+                    <FontIcon iconLiteral="fas-sign-out-alt" iconSize="16"/>
                 </graphic>
                 <Label text="Logout" styleClass="logout-label"/>
             </Button>
         </VBox>
 
         <!-- CALENDAR CARD -->
-        <VBox styleClass="login-card"
-              VBox.vgrow="ALWAYS">
+        <VBox styleClass="calendar-card"
+              VBox.vgrow="ALWAYS"
+              HBox.hgrow="ALWAYS">
             <CalendarView fx:id="calendarView"
                           VBox.vgrow="ALWAYS"
+                          HBox.hgrow="ALWAYS"
                           selectionMode="SINGLE"
                           showAddCalendarButton="false"
                           showPageSwitcher="false"
@@ -68,48 +75,31 @@
                           showSourceTrayButton="false"
                           showToday="false"
                           showToolBar="false"
-                          stylesheets="@../styles/calendar/calendarfx-overrides.css">
-                <availabilityFill>
-                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-                        <stops>
-                            <Stop offset="0.0">
-                                <color>
-                                    <Color red="0.153" green="0.107" blue="0.565" opacity="0.1"/>
-                                </color>
-                            </Stop>
-                            <Stop offset="1.0">
-                                <color>
-                                    <Color red="1.0" green="1.0" blue="1.0" opacity="1.0"/>
-                                </color>
-                            </Stop>
-                        </stops>
-                    </RadialGradient>
-                </availabilityFill>
-            </CalendarView>
+                          stylesheets="@../styles/calendar/calendarfx-overrides.css"/>
+
+            <!-- FLOATING ADD BUTTON -->
+            <StackPane pickOnBounds="false" VBox.vgrow="NEVER">
+                <Button fx:id="addEventButton"
+                        styleClass="floating-add-button"
+                        onAction="#openAddOverlay"
+                        StackPane.alignment="BOTTOM_RIGHT">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-plus" iconSize="18" iconColor="white"/>
+                    </graphic>
+                </Button>
+            </StackPane>
         </VBox>
     </HBox>
 
-    <!-- FLOATING ADD BUTTON -->
-    <StackPane pickOnBounds="false" VBox.vgrow="NEVER">
-        <Button fx:id="addEventButton"
-                styleClass="floating-add-button"
-                onAction="#openAddOverlay"
-                StackPane.alignment="CENTER">
-            <graphic>
-                <FontIcon iconLiteral="fas-plus" iconSize="18" iconColor="white"/>
-            </graphic>
-        </Button>
-    </StackPane>
-
-    <!-- ================= Overlay Pane ================= -->
+    <!-- OVERLAY PANE (kept styling except no FXML padding attribute) -->
     <VBox fx:id="addOverlayPane"
           visible="false" managed="false"
           style="-fx-background-color: rgba(0,0,0,0.5);"
-          VBox.vgrow="ALWAYS">
+          alignment="CENTER"
+          spacing="10">
         <VBox spacing="16" alignment="TOP_CENTER"
               style="-fx-background-color: white;
                      -fx-background-radius: 12;
-                     -fx-padding: 24;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);"
               maxWidth="520">
             <!-- Exam vs Blocker toggles -->
@@ -157,9 +147,7 @@
         </VBox>
     </VBox>
 
-    <!-- Define navigation group -->
     <fx:define>
         <ToggleGroup fx:id="navGroup"/>
     </fx:define>
-
 </VBox>
