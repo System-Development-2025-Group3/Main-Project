@@ -8,6 +8,7 @@
            xmlns="http://javafx.com/javafx/17.0.12"
            fx:controller="application.studyspace.controllers.customerInteraction.AboutUsController"
            stylesheets="@../styles/LoginandRegister/customerInteraction/AboutUs.css">
+           stylesheets="@../styles/customerInteraction/AboutUs.css">
 
 <!-- Background Pane -->
     <Pane style="-fx-background-color: #f5f5f5;" />
