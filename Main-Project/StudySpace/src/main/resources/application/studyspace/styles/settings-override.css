@@ -98,6 +98,11 @@
     -fx-font-weight: bold;
     -fx-text-fill: #121417;
 }
+.pw-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #121417;
+    -fx-padding: 0 4 -20 0;
+}
 
 /* ============ MAIN TITLES ============ */
 .main-title {
@@ -204,9 +209,24 @@
 }
 
 /* ============ CHECKBOXES ============ */
-.check-box {
-    -fx-font-size: 13px;
-    -fx-text-fill: #121417;
+.remember-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #222;
+}
+.remember-checkbox .box {
+    -fx-background-color: #fff;
+    -fx-border-color: #bcbcbc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-min-width: 17;
+    -fx-min-height: 17;
+}
+.remember-checkbox:selected .box {
+    -fx-background-color: #222;
+    -fx-border-color: #222;
+}
+.remember-checkbox .mark {
+    -fx-background-color: #fff;
 }
 
 /* ==== (OPTIONAL) ADD SPINNER/COMBO IF USED ==== */

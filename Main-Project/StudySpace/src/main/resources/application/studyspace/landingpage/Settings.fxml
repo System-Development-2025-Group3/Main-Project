@@ -11,9 +11,9 @@
       stylesheets="@../styles/LoginandRegisterStylesheet.css,
                    @../styles/landingpage-override.css,
                    @../styles/settings-override.css"
-
       styleClass="root"
-      spacing="24">
+      spacing="24"
+      fillWidth="true">
 
     <!-- HEADER -->
     <HBox styleClass="header-card"
@@ -26,15 +26,13 @@
         <Pane HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <!-- MAIN CONTENT AREA -->
-    <HBox spacing="36" VBox.vgrow="ALWAYS">
-        <!-- SIDEBAR -->
+    <!-- Main content: Sidebar + Cards, matching Calendar page margin style -->
+    <HBox spacing="24" VBox.vgrow="ALWAYS" fillHeight="true" alignment="TOP_LEFT">
+        <!-- SIDEBAR (fixed width, no grow) -->
         <VBox styleClass="login-card"
-              minWidth="240" maxWidth="240"
-              prefWidth="240"
+              minWidth="240" maxWidth="240" prefWidth="240"
               VBox.vgrow="ALWAYS"
-              spacing="20"
-              alignment="TOP_LEFT">
+              spacing="20" alignment="TOP_LEFT">
             <Label text="Study Planner" styleClass="login-title"/>
 
             <ToggleButton styleClass="sidebar-button"
@@ -45,7 +43,6 @@
                 </graphic>
                 <text>Calendar</text>
             </ToggleButton>
-
             <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"
                           onAction="#handleSidebarDashboard">
@@ -54,7 +51,6 @@
                 </graphic>
                 <text>Dashboard</text>
             </ToggleButton>
-
             <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"
                           selected="true"
@@ -66,7 +62,6 @@
             </ToggleButton>
 
             <Region VBox.vgrow="ALWAYS"/>
-
             <Button fx:id="logoutButton"
                     onAction="#handleExit"
                     styleClass="sidebar-logout">
@@ -77,124 +72,124 @@
             </Button>
         </VBox>
 
-        <!-- MAIN CARDS AREA -->
-        <HBox spacing="32" alignment="TOP_LEFT" HBox.hgrow="ALWAYS">
+        <!-- STUDY PREFERENCES CARD (flexible width, fills space) -->
+        <VBox styleClass="card-box"
+              alignment="TOP_LEFT"
+              spacing="28"
+              minWidth="340"
+              maxWidth="600"
+              prefWidth="420"
+              VBox.vgrow="ALWAYS"
+              HBox.hgrow="ALWAYS">
+            <Label text="Study Preferences" styleClass="main-title"/>
+            <!-- Preferred study time -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Preferred study time" styleClass="field-label-bold"/>
+                <Spinner fx:id="startTimeSpinner" prefWidth="80"/>
+                <Label text="to"/>
+                <Spinner fx:id="endTimeSpinner" prefWidth="80"/>
+            </HBox>
+            <!-- Session Length -->
+            <VBox spacing="2">
+                <Label text="Study session length" styleClass="field-label"/>
+                <Slider fx:id="sessionLengthSlider"
+                        min="10" max="180" value="30"
+                        majorTickUnit="10"
+                        snapToTicks="true"
+                        blockIncrement="5"
+                        styleClass="styled-slider"/>
+                <Label fx:id="sessionLengthLabel" text="30 min" styleClass="slider-value"/>
+            </VBox>
+            <!-- Break Length -->
+            <VBox spacing="2">
+                <Label text="Break length" styleClass="field-label"/>
+                <Slider fx:id="breakLengthSlider"
+                        min="5" max="60" value="10"
+                        majorTickUnit="5"
+                        snapToTicks="true"
+                        blockIncrement="5"
+                        styleClass="styled-slider"/>
+                <Label fx:id="breakLengthLabel" text="10 min" styleClass="slider-value"/>
+            </VBox>
+            <!-- Blocked days -->
+            <VBox spacing="8" style="-fx-padding: 8 0 0 0;">
+                <Label text="Blocked days" styleClass="field-label-bold"/>
+                <HBox spacing="6">
+                    <ToggleButton fx:id="monBtn" text="Mo" styleClass="day-square"/>
+                    <ToggleButton fx:id="tueBtn" text="Tu" styleClass="day-square"/>
+                    <ToggleButton fx:id="wedBtn" text="We" styleClass="day-square"/>
+                    <ToggleButton fx:id="thuBtn" text="Th" styleClass="day-square"/>
+                    <ToggleButton fx:id="friBtn" text="Fr" styleClass="day-square"/>
+                    <ToggleButton fx:id="satBtn" text="Sa" styleClass="day-square"/>
+                    <ToggleButton fx:id="sunBtn" text="Su" styleClass="day-square"/>
+                </HBox>
+            </VBox>
+            <!-- Save Preferences Button -->
+            <Button text="Submit Preferences"
+                    fx:id="submitPreferencesBtn"
+                    onAction="#handleSave"
+                    styleClass="button"
+                    maxWidth="Infinity"/>
+        </VBox>
 
-            <!-- STUDY PREFERENCES CARD -->
+        <!-- SETTINGS + PASSWORD CARDS (stacked vertically, fixed width, no grow) -->
+        <VBox spacing="24" alignment="TOP_CENTER">
             <VBox styleClass="card-box"
                   alignment="TOP_LEFT"
-                  spacing="18"
-                  prefWidth="380"
-                  minWidth="320"
-                  VBox.vgrow="ALWAYS">
-                <Label text="Study Preferences" styleClass="main-title"/>
-                <!-- Preferred study time -->
-                <HBox spacing="8" alignment="CENTER_LEFT">
-                    <Label text="Preferred study time" styleClass="field-label-bold"/>
-                    <Spinner fx:id="startTimeSpinner" prefWidth="80"/>
-                    <Label text="to"/>
-                    <Spinner fx:id="endTimeSpinner" prefWidth="80"/>
+                  spacing="28"
+                  minWidth="280"
+                  maxWidth="420"
+                  prefWidth="340">
+                <Label text="Settings" styleClass="main-title"/>
+                <CheckBox fx:id="skipSplashCheckbox"
+                          text="Skip splashscreen"
+                          styleClass="remember-checkbox"
+                          onAction="#handleSkipSplashChanged"/>
+                <CheckBox fx:id="rememberMeCheckbox"
+                          text="Keep me logged in on this device"
+                          styleClass="remember-checkbox"
+                          onAction="#handleRememberMeChanged"/>
+            </VBox>
+
+            <VBox styleClass="card-box"
+                  alignment="TOP_LEFT"
+                  spacing="28"
+                  minWidth="280"
+                  maxWidth="420"
+                  prefWidth="340">
+                <Label text="Change your password" styleClass="main-title"/>
+                <Label text="Password" styleClass="pw-label"/>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <PasswordField fx:id="NewPasswordField"
+                                   promptText="Password"
+                                   styleClass="text-field"/>
+                    <Label fx:id="passwordTooltip1"
+                           text="?"
+                           styleClass="circle-label"
+                           minWidth="24" minHeight="24"
+                           alignment="CENTER"/>
                 </HBox>
-                <!-- Session Length -->
-                <VBox spacing="2">
-                    <Label text="Study session length" styleClass="field-label"/>
-                    <Slider fx:id="sessionLengthSlider"
-                            min="10" max="180" value="30"
-                            majorTickUnit="10"
-                            snapToTicks="true"
-                            blockIncrement="5"
-                            styleClass="styled-slider"/>
-                    <Label fx:id="sessionLengthLabel" text="30 min" styleClass="slider-value"/>
-                </VBox>
-                <!-- Break Length -->
-                <VBox spacing="2">
-                    <Label text="Break length" styleClass="field-label"/>
-                    <Slider fx:id="breakLengthSlider"
-                            min="5" max="60" value="10"
-                            majorTickUnit="5"
-                            snapToTicks="true"
-                            blockIncrement="5"
-                            styleClass="styled-slider"/>
-                    <Label fx:id="breakLengthLabel" text="10 min" styleClass="slider-value"/>
-                </VBox>
-                <!-- Blocked days -->
-                <VBox spacing="8" style="-fx-padding: 8 0 0 0;">
-                    <Label text="Blocked days" styleClass="field-label-bold"/>
-                    <HBox spacing="6">
-                        <ToggleButton fx:id="monBtn" text="Mo" styleClass="day-square"/>
-                        <ToggleButton fx:id="tueBtn" text="Tu" styleClass="day-square"/>
-                        <ToggleButton fx:id="wedBtn" text="We" styleClass="day-square"/>
-                        <ToggleButton fx:id="thuBtn" text="Th" styleClass="day-square"/>
-                        <ToggleButton fx:id="friBtn" text="Fr" styleClass="day-square"/>
-                        <ToggleButton fx:id="satBtn" text="Sa" styleClass="day-square"/>
-                        <ToggleButton fx:id="sunBtn" text="Su" styleClass="day-square"/>
-                    </HBox>
-                </VBox>
-                <!-- Save Preferences Button -->
-                <Button text="Submit Preferences"
-                        fx:id="submitPreferencesBtn"
-                        onAction="#handleSave"
+                <Label text="Confirm your password" styleClass="pw-label"/>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <PasswordField fx:id="ConfirmPasswordField"
+                                   promptText="Confirm your password"
+                                   styleClass="text-field"/>
+                    <Label fx:id="passwordTooltip2"
+                           text="?"
+                           styleClass="circle-label"
+                           minWidth="24" minHeight="24"
+                           alignment="CENTER"/>
+                </HBox>
+                <Button text="Change password"
+                        fx:id="resetPasswordBtn"
+                        onAction="#handleResetPassword"
                         styleClass="button"
                         maxWidth="Infinity"/>
             </VBox>
+        </VBox>
 
-            <!-- SETTINGS + PASSWORD CARDS (stacked vertically) -->
-            <VBox spacing="28" alignment="TOP_CENTER">
-
-                <!-- SETTINGS CARD -->
-                <VBox styleClass="card-box"
-                      alignment="TOP_LEFT"
-                      spacing="24"
-                      prefWidth="320"
-                      minWidth="220">
-                    <Label text="Settings" styleClass="main-title"/>
-                    <CheckBox fx:id="skipSplashCheckbox"
-                              text="Skip splashscreen"
-                              onAction="#handleSkipSplashChanged"/>
-                    <CheckBox fx:id="rememberMeCheckbox"
-                              text="Keep me logged in on this device"
-                              onAction="#handleRememberMeChanged"/>
-                </VBox>
-
-                <!-- CHANGE PASSWORD CARD -->
-                <VBox styleClass="card-box"
-                      alignment="TOP_LEFT"
-                      spacing="12"
-                      prefWidth="320"
-                      minWidth="220">
-                    <Label text="Change your password" styleClass="main-title"/>
-                    <Label text="Password" styleClass="field-label"/>
-                    <HBox spacing="5" alignment="CENTER_LEFT">
-                        <PasswordField fx:id="NewPasswordField"
-                                       promptText="Password"
-                                       styleClass="text-field"/>
-                        <!-- Password Tooltip Icon -->
-                        <Label fx:id="passwordTooltip1"
-                               text="?"
-                               styleClass="circle-label"
-                               minWidth="24" minHeight="24"
-                               alignment="CENTER"/>
-                    </HBox>
-                    <Label text="Confirm your password" styleClass="field-label"/>
-                    <HBox spacing="5" alignment="CENTER_LEFT">
-                        <PasswordField fx:id="ConfirmPasswordField"
-                                       promptText="Confirm your password"
-                                       styleClass="text-field"/>
-                        <!-- Confirm Password Tooltip Icon -->
-                        <Label fx:id="passwordTooltip2"
-                               text="?"
-                               styleClass="circle-label"
-                               minWidth="24" minHeight="24"
-                               alignment="CENTER"/>
-                    </HBox>
-                    <Button text="Change password"
-                            fx:id="resetPasswordBtn"
-                            onAction="#handleResetPassword"
-                            styleClass="button"
-                            maxWidth="Infinity"/>
-                </VBox>
-            </VBox>
-        </HBox>
+        <!-- Optional: right margin for wide screens -->
+        <Region minWidth="60" maxWidth="100" HBox.hgrow="NEVER"/>
     </HBox>
 
     <fx:define>

@@ -62,20 +62,28 @@
 /* ============ LOGOUT ROW ============ */
 /* target the Button and its built-in text node */
 .button.sidebar-logout {
-    -fx-font-size: 16px;       /* big text */
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
+    -fx-font-size: 16px;
     -fx-font-weight: 600;
-    -fx-text-fill: #191919;    /* make sure the text color is set here */
-    -fx-padding: 16px 20px;
+    -fx-background-radius: 0;
+    -fx-padding: 10px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: none;
+}
+/* REMOVE hover/pressed background */
+.button.sidebar-logout:hover,
+.button.sidebar-logout:pressed {
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
 }
 
+/* Keep icon color consistent */
 .button.sidebar-logout .font-icon {
-    -fx-icon-size: 20;         /* huge “X” */
+    -fx-icon-size: 20;
     -fx-icon-color: #191919;
-}
-
-/* if you still want a little extra space between icon and text */
-.button.sidebar-logout > .graphic {   /* the HBox or FontIcon sits here */
-    -fx-padding: 0 12px 0 0;
 }
 
 /* ============ CALENDAR CARD ============ */

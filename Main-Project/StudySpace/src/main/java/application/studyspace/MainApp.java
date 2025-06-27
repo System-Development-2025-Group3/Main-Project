@@ -8,7 +8,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.UUID;
 
 public class MainApp extends Application {
