@@ -4,14 +4,28 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.control.Button?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
            xmlns="http://javafx.com/javafx/17.0.12"
            fx:controller="application.studyspace.controllers.customerInteraction.AboutUsController"
-           stylesheets="@../styles/LandingPage/AboutUs.css">
+           stylesheets="@../styles/AboutUs.css">
 
 
 <!-- Background Pane -->
     <Pane style="-fx-background-color: #f5f5f5;" />
+
+    <!-- Exit Button -->
+    <Button fx:id="exitButton"
+            text="X"
+            style="-fx-background-color: transparent; -fx-text-fill: #ff0000; -fx-font-size: 16; -fx-cursor: hand;"
+            onMouseClicked="#handleExit"
+            StackPane.alignment="TOP_RIGHT"
+            styleClass="exit-button"
+            maxWidth="30"
+            maxHeight="30"
+            focusTraversable="false">
+    </Button>
+
 
     <!-- Main Content -->
     <VBox alignment="CENTER" spacing="40" style="-fx-padding: 50;">

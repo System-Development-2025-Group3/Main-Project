@@ -1,10 +1,12 @@
 package application.studyspace.controllers.customerInteraction;
 
 
+import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.customerInteraction.TeamMember;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,7 +24,8 @@ public class AboutUsController {
 
     @FXML
     private StackPane cardCarousel;
-
+    @FXML
+    private Button exitButton;
 
     @FXML
     private VBox leftCard, centerCard, rightCard;
@@ -71,18 +74,17 @@ public class AboutUsController {
         setupCarouselAnimation();
     }
 
-
     private void initializeTeamMembers() {
-        teamMembers.add(new TeamMember("Fabian Doering", "Age: 30", "Software Engineer",
-                "John is experienced in software development.", "/images/customerInteraction/Team-Member-1.png"));
-        teamMembers.add(new TeamMember("Jane Smith", "Age: 28", "Designer",
-                "Jane creates intuitive designs.", "/images/customerInteraction/Team-Member-2.png"));
-        teamMembers.add(new TeamMember("Emily Brown", "Age: 35", "Product Manager",
-                "Emily manages product timelines effectively.", "/images/customerInteraction/Team-Member-3.png"));
-        teamMembers.add(new TeamMember("Michael Green", "Age: 32", "Backend Developer",
-                "Michael specializes in backend systems.", "/images/customerInteraction/Team-Member-4.png"));
-        teamMembers.add(new TeamMember("Sarah White", "Age: 27", "Marketing Specialist",
-                "Sarah organizes marketing campaigns.", "/images/customerInteraction/Team-Member-5.png"));
+        teamMembers.add(new TeamMember("Fabian Doering", "Age: 21", "Product Owener and Business Informatics Specialist",
+                "Fabian was the product owner of the Team and currently works withing Deutsche Banks Digital Client Solutions Team in the Coverage Squad. Furthermore he is the main representative of the liberal party in his district.", "/images/customerInteraction/Team-Member-1.png"));
+        teamMembers.add(new TeamMember("Josef Neumann", "Age: 20", "Designer",
+                "Josef was the Scrum Master of the Team and works as a dual student withing the Chief Product Office (CPO) within Deutsche Bank.", "/images/customerInteraction/Team-Member-2.png"));
+        teamMembers.add(new TeamMember("Finn Krieger", "Age: 21", "Product Manager",
+                "Finn was one of the main Developers of the Team and currently works withing Deutsche Banks Digital Client Solutions Team in the Product Squad. Furthermore he is a consultant for FS Student Consulting.", "/images/customerInteraction/Team-Member-3.png"));
+        teamMembers.add(new TeamMember("Cedric Unger", "Age: 20", "Backend Developer",
+                "Cedric was the main Developer of our project and currently works as a dual Student for Flatex in the IT Department.", "/images/customerInteraction/Team-Member-4.png"));
+        teamMembers.add(new TeamMember("Alexander Hahn", "Age: 23", "Marketing Specialist",
+                "Alex is also a Developer of our Team and works within Deutsche Bank in the Private Bank.", "/images/customerInteraction/Team-Member-5.png"));
     }
 
 
@@ -126,5 +128,11 @@ public class AboutUsController {
         age.setText(member.getAge());
         profession.setText(member.getProfession());
         description.setText(member.getDescription());
+    }
+
+    @FXML
+    private void handleExit(){
+        System.out.println("[AboutUsController] handleExit() called");
+        ViewManager.show("/application/studyspace/auth/Login.fxml");
     }
 }
