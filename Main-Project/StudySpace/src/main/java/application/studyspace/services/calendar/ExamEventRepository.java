@@ -228,4 +228,19 @@ public class ExamEventRepository {
             ps.executeUpdate();
         }
     }
+
+    public static List<ExamEvent> findByUser(UUID userId) throws SQLException {
+        String sql = "SELECT * FROM exam_events WHERE user_id = ?";
+        List<ExamEvent> out = new ArrayList<>();
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBytes(1, application.studyspace.services.DataBase.UUIDHelper.uuidToBytes(userId));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    out.add(mapRow(rs));
+                }
+            }
+        }
+        return out;
+    }
 }

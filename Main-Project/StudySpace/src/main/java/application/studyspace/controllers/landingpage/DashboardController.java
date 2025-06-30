@@ -1,6 +1,7 @@
 package application.studyspace.controllers.landingpage;
 
 import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.calendar.ExamEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -9,6 +10,10 @@ import javafx.scene.shape.Circle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 public class DashboardController {
 
@@ -60,8 +65,7 @@ public class DashboardController {
         // Example default values for study info
         setStudyInfo("3h", 3);
 
-        // Example for next exam: set this to your actual next exam info!
-        setNextExam("Mathe", java.time.LocalDateTime.now().plusDays(4).plusHours(3).plusMinutes(4));
+        loadNextExam();
     }
 
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
@@ -81,6 +85,42 @@ public class DashboardController {
         timeStudiedLabel.setText(studiedTime);
         studyStreakLabel.setText(String.valueOf(streak));
         fireImage.setVisible(streak > 0);
+    }
+
+
+    /**
+     * Loads the next upcoming exam for the current user and updates the UI countdown.
+     * <p>
+     * This method fetches all {@code ExamEvent}s for the logged-in user,
+     * determines which one is scheduled to occur soonest in the future,
+     * and then calls {@link #setNextExam(String, java.time.LocalDateTime)}
+     * to display the live countdown and exam subject on the dashboard.
+     * <p>
+     * If no upcoming exam is found, the UI will indicate that there are no exams.
+     * If an error occurs during loading, it sets fallback values and prints the stack trace.
+     */
+    private void loadNextExam() {
+        try {
+            UUID userId = application.studyspace.services.auth.SessionManager.getInstance().getLoggedInUserId();
+            // Get all exams for user
+            List<ExamEvent> exams = application.studyspace.services.calendar.ExamEventRepository.findByUser(userId);
+            java.time.ZonedDateTime now = java.time.ZonedDateTime.now();
+
+            // Find the soonest exam in the future
+            ExamEvent nextExam = exams.stream()
+                    .filter(e -> e.getStart().isAfter(now))
+                    .min(Comparator.comparing(application.studyspace.services.calendar.ExamEvent::getStart))
+                    .orElse(null);
+
+            if (nextExam != null) {
+                setNextExam(nextExam.getTitle(), nextExam.getStart().toLocalDateTime());
+            } else {
+                setNextExam("No upcoming exams", java.time.LocalDateTime.now());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setNextExam("No data", java.time.LocalDateTime.now());
+        }
     }
 
     /**

@@ -156,29 +156,32 @@
                 </HBox>
             </VBox>
 
-
+            <!-- Next EXAM -->
             <VBox styleClass="card-box"
                   alignment="TOP_CENTER"
                   spacing="18"
                   GridPane.rowIndex="0" GridPane.columnIndex="1"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+
                 <Label text="Time left until next exam" styleClass="main-title"
                        style="-fx-font-size: 26px; -fx-font-weight: bold;" alignment="CENTER" />
-                <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                    <StackPane alignment="CENTER" style="-fx-padding: 0 0 0 0;">
+
+                <VBox alignment="CENTER" spacing="6" VBox.vgrow="ALWAYS">
+                    <!-- Move the subject label inside here, just above the circle, with minimal spacing -->
+                    <Label fx:id="nextExamSubjectLabel"
+                           text="GERMAN EXAM"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+                    <StackPane alignment="CENTER">
                         <Circle radius="120" style="-fx-stroke: #111; -fx-stroke-width: 12; -fx-fill: transparent;"/>
                         <VBox alignment="CENTER" spacing="3">
-                            <Label fx:id="nextExamSubjectLabel"
-                                   text="Mathe"
-                                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
                             <Label fx:id="nextExamDaysLabel"
-                                   text="4D"
+                                   text="7D"
                                    style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
                             <Label fx:id="nextExamHoursLabel"
-                                   text="3H"
+                                   text="18H"
                                    style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
                             <Label fx:id="nextExamMinutesLabel"
-                                   text="4M"
+                                   text="25M"
                                    style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
                         </VBox>
                     </StackPane>
