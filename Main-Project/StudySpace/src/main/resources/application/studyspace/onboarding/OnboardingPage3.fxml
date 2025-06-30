@@ -58,8 +58,6 @@
                     <VBox fx:id="examForm" spacing="12" visible="false" managed="false">
                         <Label text="Exam Name" styleClass="field-label"/>
                         <TextField fx:id="examNameField" promptText="e.g. Calculus" styleClass="styled-text-field"/>
-                        <Label text="Description" styleClass="field-label"/>
-                        <TextArea fx:id="descriptionArea" prefRowCount="4" styleClass="styled-text-area"/>
                         <Label text="Date and Time" styleClass="field-label"/>
                         <HBox spacing="6">
                             <DatePicker fx:id="exStartDate" styleClass="styled-combo"/>
@@ -70,12 +68,6 @@
                         <TextField fx:id="topicsField" styleClass="styled-text-field"/>
                         <Label text="Estimated Study Time per Topic(minutes)" styleClass="field-label"/>
                         <TextField fx:id="estimatedMinutesField" styleClass="styled-text-field"/>
-                        <Label text="Grade Weight (%)" styleClass="field-label"/>
-                        <Slider fx:id="weightSlider"
-                                min="0" max="100" value="50"
-                                snapToTicks="true"
-                                styleClass="styled-slider"/>
-                        <Label fx:id="weightLabel" styleClass="slider-value"/>
                         <Button fx:id="addExamBtn"
                                 text="Add Exam"
                                 styleClass="page-button"

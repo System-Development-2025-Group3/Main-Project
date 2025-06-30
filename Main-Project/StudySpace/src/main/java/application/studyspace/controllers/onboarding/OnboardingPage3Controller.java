@@ -25,6 +25,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -33,25 +35,22 @@ import java.util.logging.Logger;
 public class OnboardingPage3Controller implements Initializable {
 
     private static final Logger logger = Logger.getLogger(OnboardingPage3Controller.class.getName());
+    private final Map<UUID, Calendar> calendarMap = new HashMap<>();
 
     @FXML private StackPane calendarPreviewContainer;
     @FXML private VBox examForm, blockerForm;
     @FXML private ToggleGroup typeToggleGroup;
     @FXML private ToggleButton examToggle, blockerToggle;
     @FXML private TextField examNameField, topicsField, estimatedMinutesField;
-    @FXML private TextArea descriptionArea;
     @FXML private DatePicker exStartDate, evtStartDate, evtEndDate;
     @FXML private Spinner<LocalTime> exStartTime, exEndTime, evtStartTime, evtEndTime;
     @FXML private CheckBox evtAllDay;
-    @FXML private Slider weightSlider;
-    @FXML private Label  weightLabel;
     @FXML private Button addExamBtn, SaveBtn;
     @FXML private TextField evtTitleField, evtLocationField;
 
     @FXML public Button page1Btn, page2Btn, page3Btn;
 
     private CalendarView calendarView;
-    private Calendar     defaultCalendar;
 
     private final CalendarEventMapper     mapper   = new CalendarEventMapper();
     private final CalendarEventRepository calRepo  = new CalendarEventRepository();
@@ -80,8 +79,14 @@ public class OnboardingPage3Controller implements Initializable {
         addExamBtn.setOnAction(this::handleAddExam);
         SaveBtn   .setOnAction(this::generateStudyPlan);
 
-        weightSlider.valueProperty().addListener((o, old, nu) ->
-                weightLabel.setText(String.format("%.0f%%", nu.doubleValue())));
+    }
+
+    /** Called by the calendar loader to provide a fresh map of all loaded calendars. */
+    public void setCalendarMap(Map<UUID, Calendar> loadedMap) {
+        this.calendarMap.clear();
+        if (loadedMap != null) {
+            this.calendarMap.putAll(loadedMap);
+        }
     }
 
     private void setupPreview() {
@@ -93,19 +98,17 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
-        CalendarHelper.setupWeekCalendarAsync(calendarView);
+        CalendarHelper.setupWeekCalendarAsync(calendarView, this::setCalendarMap);
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
     }
 
     private void setupTimeSpinners(Spinner<LocalTime> start, Spinner<LocalTime> end) {
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
-        // From 01:00 to 24:00 (use 00:00 next day for 24:00, or display "24:00")
         for (int h = 1; h <= 23; h++) {
             times.add(LocalTime.of(h, 0));
             times.add(LocalTime.of(h, 30));
         }
-        // Optionally add 24:00 as LocalTime.MIDNIGHT (next day)
         times.add(LocalTime.MIDNIGHT);
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
@@ -133,7 +136,6 @@ public class OnboardingPage3Controller implements Initializable {
         // Always keep end >= start
         start.valueProperty().addListener((obs, oldStart, newStart) -> {
             LocalTime endTime = end.getValue();
-            // If end < start, set end = start
             if (endTime != null && newStart != null && endTime.isBefore(newStart)) {
                 end.getValueFactory().setValue(newStart);
             }
@@ -141,7 +143,6 @@ public class OnboardingPage3Controller implements Initializable {
 
         end.valueProperty().addListener((obs, oldEnd, newEnd) -> {
             LocalTime startTime = start.getValue();
-            // If end < start, set end = start
             if (startTime != null && newEnd != null && newEnd.isBefore(startTime)) {
                 end.getValueFactory().setValue(startTime);
             }
@@ -172,19 +173,18 @@ public class OnboardingPage3Controller implements Initializable {
         try {
             saveBlocker(SessionManager.getInstance().getLoggedInUserId());
             resetExamForm();
-            logger.info("✅ Exam added successfully");
+            logger.info("✅ Blocker added successfully");
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "❌ Failed to add exam", ex);
+            logger.log(Level.SEVERE, "❌ Failed to add blocker", ex);
         }
     }
-    // Close the overlay when the user clicks the close button
+
     @FXML
     public Button closeOverlayButton;
     @FXML
     public void handleCloseOverlay(ActionEvent event) {
         ViewManager.closeTopOverlay();
     }
-
 
     @FXML
     public void generateStudyPlan(ActionEvent e) {
@@ -197,9 +197,10 @@ public class OnboardingPage3Controller implements Initializable {
             ex.printStackTrace();
         }
         ViewManager.closeTopOverlay();
-        CalendarHelper.updateUserCalendarAsync(SessionManager.getInstance().getUserCalendar());
+        CalendarHelper.updateUserCalendarAsync(SessionManager.getInstance().getUserCalendar(), this::setCalendarMap);
     }
 
+    /** Adds a blocker to the correct calendar via the calendarMap (no more defaultCalendar!) */
     private void saveBlocker(UUID userId) throws SQLException {
         UUID calId = calDef.getOrCreateBlockersCalendar(userId);
         ZonedDateTime start = ZonedDateTime.of(evtStartDate.getValue(), evtStartTime.getValue(), ZoneId.systemDefault());
@@ -216,12 +217,17 @@ public class OnboardingPage3Controller implements Initializable {
         );
         ev.setCalendarId(calId);
         calRepo.save(ev);
-        defaultCalendar.addEntry(mapper.toEntry(ev, defaultCalendar));
+        Calendar fxCal = calendarMap.get(calId);
+        if (fxCal != null) {
+            fxCal.addEntry(mapper.toEntry(ev, fxCal));
+        } else {
+            System.out.println("[OnboardingPage3Controller] Could not find Calendar for ID: " + calId);
+        }
         logger.info("✅ Blocker registered: " + ev.getTitle());
     }
 
+    /** Adds an exam to its new calendar and also uses calendarMap to show in the preview. */
     private void saveExam(UUID userId) throws SQLException {
-        // validation (update the ValidationUtils method to match these params)
         ExamValidationResult vr = ValidationUtils.validateExamFields(
                 examNameField.getText(),
                 exStartDate.getValue(), exStartTime.getValue(),
@@ -238,15 +244,17 @@ public class OnboardingPage3Controller implements Initializable {
 
         int topics     = Integer.parseInt(topicsField.getText());
         int minutes    = Integer.parseInt(estimatedMinutesField.getText());
-        double weight  = weightSlider.getValue();
+        double weight  = 0; // Default weight, not in use
+        int difficulty = 1; // Default difficulty, not in use
+        String description = "";
 
         ExamEvent exam = new ExamEvent(
                 userId,
                 examNameField.getText(),
-                descriptionArea.getText(),
+                description, // not in use
                 "",
                 start, end,
-                weight, 1,
+                weight, difficulty, //not in use
                 topics, minutes
         );
 
@@ -257,21 +265,26 @@ public class OnboardingPage3Controller implements Initializable {
         exRepo.save(exam);
         logger.info("✅ ExamEvent saved: " + exam.getId());
 
-        // render it
+        // If calendarMap is updated, it will include this new calendar AFTER next reload.
+        // But for instant preview, you can add it as a temp calendar if you want:
         Calendar fxCal = new Calendar(exam.getTitle());
         fxCal.setStyle(Style.STYLE2);
         fxCal.addEntry(mapper.toEntry(exam, fxCal));
-        calendarView.getCalendarSources().get(0).getCalendars().add(fxCal);
+        if (calendarView.getCalendarSources().isEmpty()) {
+            com.calendarfx.model.CalendarSource src = new com.calendarfx.model.CalendarSource("Planify");
+            src.getCalendars().add(fxCal);
+            calendarView.getCalendarSources().add(src);
+        } else {
+            calendarView.getCalendarSources().get(0).getCalendars().add(fxCal);
+        }
     }
 
     private void resetExamForm() {
         examNameField.clear();
-        descriptionArea.clear();
         exStartDate.setValue(null);
         exStartTime.getValueFactory().setValue(LocalTime.of(8,0));
         exEndTime  .getValueFactory().setValue(LocalTime.of(10,0));
         topicsField.clear();
         estimatedMinutesField.clear();
-        weightSlider.setValue(50);
     }
 }

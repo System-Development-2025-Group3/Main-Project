@@ -93,9 +93,139 @@ public class ExamEventRepository {
         }
     }
 
-    /** Save/update (unchanged). */
-    public static void save(ExamEvent e) throws SQLException { /* … */ }
+    /**
+     * Deletes an ExamEvent from the database by its UUID.
+     */
+    public static void delete(UUID examId) throws SQLException {
+        String sql = "DELETE FROM exam_events WHERE exam_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(examId));
+            int affected = ps.executeUpdate();
+            if (affected == 0) {
+                throw new SQLException("No exam event found with id " + examId);
+            }
+        }
+    }
 
-    /** Update single exam (unchanged). */
-    public void update(ExamEvent exam) throws SQLException { /* … */ }
+    public static void deleteExamAndSessions(UUID examId) throws SQLException {
+        // 1. Find the calendar ID for this exam
+        UUID calendarId = null;
+        String findCalendarSql = "SELECT calendar_id FROM exam_events WHERE exam_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(findCalendarSql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(examId));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    calendarId = UUIDHelper.BytesToUUID(rs.getBytes("calendar_id"));
+                }
+            }
+        }
+
+        if (calendarId == null) {
+            throw new SQLException("No calendar found for examId " + examId);
+        }
+
+        // 2. Delete the ExamEvent itself
+        String deleteExamSql = "DELETE FROM exam_events WHERE exam_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(deleteExamSql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(examId));
+            ps.executeUpdate();
+        }
+
+        // 3. Delete all CalendarEvents in this calendar
+        String deleteEventsSql = "DELETE FROM calendar_events WHERE calendar_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(deleteEventsSql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(calendarId));
+            ps.executeUpdate();
+        }
+
+        // 4. Delete the calendar itself
+        String deleteCalendarSql = "DELETE FROM calendars WHERE calendar_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(deleteCalendarSql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(calendarId));
+            ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Inserts a new ExamEvent or updates it if it already exists (by exam_id).
+     */
+    public static void save(ExamEvent e) throws SQLException {
+        String sql = """
+            INSERT INTO exam_events (
+                exam_id, user_id, calendar_id, title, description, location,
+                start_datetime, end_datetime, grade_weight,
+                number_of_topics, minutes_per_topic
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                user_id = VALUES(user_id),
+                calendar_id = VALUES(calendar_id),
+                title = VALUES(title),
+                description = VALUES(description),
+                location = VALUES(location),
+                start_datetime = VALUES(start_datetime),
+                end_datetime = VALUES(end_datetime),
+                grade_weight = VALUES(grade_weight),
+                number_of_topics = VALUES(number_of_topics),
+                minutes_per_topic = VALUES(minutes_per_topic)
+        """;
+
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBytes(1, UUIDHelper.uuidToBytes(e.getId()));
+            ps.setBytes(2, UUIDHelper.uuidToBytes(e.getUserId()));
+            ps.setBytes(3, UUIDHelper.uuidToBytes(e.getCalendarId()));
+            ps.setString(4, e.getTitle());
+            ps.setString(5, e.getDescription());
+            ps.setString(6, e.getLocation());
+            ps.setTimestamp(7, Timestamp.from(e.getStart().toInstant()));
+            ps.setTimestamp(8, Timestamp.from(e.getEnd().toInstant()));
+            ps.setDouble(9, e.getGradeWeight());
+            ps.setInt(10, e.getNumberOfTopics());
+            ps.setInt(11, e.getMinutesPerTopic());
+            ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Updates an existing ExamEvent in the database.
+     */
+    public void update(ExamEvent e) throws SQLException {
+        String sql = """
+            UPDATE exam_events SET
+                user_id = ?,
+                calendar_id = ?,
+                title = ?,
+                description = ?,
+                location = ?,
+                start_datetime = ?,
+                end_datetime = ?,
+                grade_weight = ?,
+                number_of_topics = ?,
+                minutes_per_topic = ?
+            WHERE exam_id = ?
+        """;
+
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBytes(1, UUIDHelper.uuidToBytes(e.getUserId()));
+            ps.setBytes(2, UUIDHelper.uuidToBytes(e.getCalendarId()));
+            ps.setString(3, e.getTitle());
+            ps.setString(4, e.getDescription());
+            ps.setString(5, e.getLocation());
+            ps.setTimestamp(6, Timestamp.from(e.getStart().toInstant()));
+            ps.setTimestamp(7, Timestamp.from(e.getEnd().toInstant()));
+            ps.setDouble(8, e.getGradeWeight());
+            ps.setInt(9, e.getNumberOfTopics());
+            ps.setInt(10, e.getMinutesPerTopic());
+            ps.setBytes(11, UUIDHelper.uuidToBytes(e.getId()));
+            ps.executeUpdate();
+        }
+    }
 }

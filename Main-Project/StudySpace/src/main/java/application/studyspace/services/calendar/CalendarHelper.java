@@ -14,10 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -29,30 +27,43 @@ public class CalendarHelper {
     /**
      * Kick off an async refresh of whichever page (week/month) is selected.
      */
-    public static void updateUserCalendarAsync(CalendarView calendarView) {
+    public static void updateUserCalendarAsync(
+            CalendarView calendarView,
+            Consumer<Map<UUID, Calendar>> calendarMapCallback
+    ) {
         switch (calendarView.getSelectedPage()) {
-            case DAY, WEEK -> setupWeekCalendarAsync(calendarView);
-            case MONTH    -> setupMonthCalendarAsync(calendarView);
-            default       -> setupWeekCalendarAsync(calendarView);
+            case DAY, WEEK -> setupWeekCalendarAsync(calendarView, calendarMapCallback);
+            case MONTH    -> setupMonthCalendarAsync(calendarView, calendarMapCallback);
+            default       -> setupWeekCalendarAsync(calendarView, calendarMapCallback);
         }
     }
 
     /**
      * Asynchronously loads and displays the week view.
      */
-    public static void setupWeekCalendarAsync(CalendarView calendarView) {
-        new Thread(createLoader(calendarView, ViewType.WEEK), "Calendar-Loader").start();
+    public static void setupWeekCalendarAsync(
+            CalendarView calendarView,
+            Consumer<Map<UUID, Calendar>> calendarMapCallback
+    ) {
+        new Thread(createLoader(calendarView, ViewType.WEEK, calendarMapCallback), "Calendar-Loader").start();
     }
 
     /**
      * Asynchronously loads and displays the month view.
      */
-    public static void setupMonthCalendarAsync(CalendarView calendarView) {
-        new Thread(createLoader(calendarView, ViewType.MONTH), "Calendar-Loader").start();
+    public static void setupMonthCalendarAsync(
+            CalendarView calendarView,
+            Consumer<Map<UUID, Calendar>> calendarMapCallback
+    ) {
+        new Thread(createLoader(calendarView, ViewType.MONTH, calendarMapCallback), "Calendar-Loader").start();
     }
 
     // Internal shared loader factory
-    private static Runnable createLoader(CalendarView calendarView, ViewType viewType) {
+    private static Runnable createLoader(
+            CalendarView calendarView,
+            ViewType viewType,
+            Consumer<Map<UUID, Calendar>> calendarMapCallback
+    ) {
         return () -> {
             try {
                 // Phase 1: load data off FX thread
@@ -70,6 +81,8 @@ public class CalendarHelper {
                 javafx.application.Platform.runLater(() -> {
                     calendarView.getCalendarSources().clear();
                     CalendarSource src = new CalendarSource("Planify");
+
+                    Map<UUID, Calendar> calendarsById = new HashMap<>();
                     for (CalendarModel cm : data.models) {
                         Calendar fxCal = new Calendar(cm.getName());
                         fxCal.setStyle(Calendar.Style.valueOf(cm.getStyle()));
@@ -78,8 +91,12 @@ public class CalendarHelper {
                         data.examsByCal.getOrDefault(cm.getId(), Collections.emptyList())
                                 .forEach(ex -> fxCal.addEntry(CalendarEventMapper.toEntry(ex, fxCal)));
                         src.getCalendars().add(fxCal);
+                        calendarsById.put(cm.getId(), fxCal);
                     }
                     calendarView.getCalendarSources().add(src);
+                    // Provide the map to the caller/controller:
+                    calendarMapCallback.accept(calendarsById);
+
                     if (viewType == ViewType.MONTH) {
                         calendarView.showMonthPage();
                     } else {

@@ -5,6 +5,7 @@ import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.CalendarHelper;
 import application.studyspace.services.calendar.ReconciliationHelper;
+import com.calendarfx.model.Calendar;
 import com.calendarfx.view.CalendarView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,13 +16,17 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LandingpageController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(LandingpageController.class.getName());
+    private final Map<UUID, Calendar> calendarMap = new HashMap<>();
 
     @FXML private CalendarView calendarView;
     @FXML private VBox addOverlayPane;
@@ -48,6 +53,17 @@ public class LandingpageController implements Initializable {
     }
 
     /**
+     * Receives the current map of all loaded calendars (UUID → Calendar).
+     * Keeps the controller in sync with the calendar view.
+     */
+    public void setCalendarMap(Map<UUID, Calendar> loadedMap) {
+        this.calendarMap.clear();
+        if (loadedMap != null) {
+            this.calendarMap.putAll(loadedMap);
+        }
+    }
+
+    /**
      * Reloads and re-renders all calendars and events for the current user in the CalendarView.
      * You can call this method anytime (e.g., after new events are added by other controllers).
      */
@@ -55,7 +71,7 @@ public class LandingpageController implements Initializable {
         if (calendarView == null) return;
 
         // Asynchronously load and update the calendar view without blocking FX thread
-        CalendarHelper.updateUserCalendarAsync(calendarView);
+        CalendarHelper.updateUserCalendarAsync(calendarView, this::setCalendarMap);
         logger.info("Landing page calendar refreshed.");
     }
 
@@ -108,7 +124,7 @@ public class LandingpageController implements Initializable {
     @FXML
     private void handleSidebarDashboard() {
         try {
-            ReconciliationHelper.reconcileWeek(calendarView);
+            ReconciliationHelper.reconcile(calendarView);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to sync before leaving calendar", e);
         }
@@ -118,7 +134,7 @@ public class LandingpageController implements Initializable {
     @FXML
     private void handleSidebarSettings() {
         try {
-            ReconciliationHelper.reconcileWeek(calendarView);
+            ReconciliationHelper.reconcile(calendarView);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to sync before leaving calendar", e);
         }
@@ -128,7 +144,7 @@ public class LandingpageController implements Initializable {
     @FXML
     private void handleExit() {
         try {
-            ReconciliationHelper.reconcileWeek(calendarView);
+            ReconciliationHelper.reconcile(calendarView);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to sync before exit", e);
         }

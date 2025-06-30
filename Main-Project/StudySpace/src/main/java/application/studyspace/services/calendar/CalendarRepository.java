@@ -59,6 +59,15 @@ public class CalendarRepository {
         return calId;
     }
 
+    public static void deleteCalendar(UUID calId) throws SQLException {
+        String sql = "DELETE FROM calendars WHERE calendar_id = ?";
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBytes(1, application.studyspace.services.DataBase.UUIDHelper.uuidToBytes(calId));
+            ps.executeUpdate();
+        }
+    }
+
     /**
      * Fetches (or creates) the single “Blockers” calendar for a user.
      * Subsequent calls will reuse the same UUID.
