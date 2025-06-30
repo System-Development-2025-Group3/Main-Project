@@ -74,14 +74,7 @@
     -fx-background-radius: 20px;
     -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
     -fx-padding: 24px 32px 24px 32px;
-    -fx-min-width: 370px;
-    -fx-min-height: 270px;
-    -fx-pref-width: 500px;
-    -fx-pref-height: 340px;
-    -fx-max-width: 500px;
-    -fx-max-height: 340px;
 }
-
 /* ============ FIELD LABELS & MAIN TITLES ============ */
 .field-label {
     -fx-font-size: 13px;
@@ -150,5 +143,85 @@
     -fx-font-size: 46px;
     -fx-font-weight: bold;
 }
+.session-row {
+    -fx-background-color: #f3f3f6;
+    -fx-background-radius: 18px;
+    -fx-padding: 8 16;
+    -fx-effect: dropshadow(gaussian, rgba(60,60,60,0.05), 4, 0.2, 0, 1.5);
+    -fx-min-height: 38px;
+    -fx-max-height: 44px;
+    -fx-alignment: center-left;
+    -fx-spacing: 12;
+}
+/* Label in session row */
+.session-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #232323;
+    -fx-font-weight: 400;
+}
+
+.icon-btn {
+    -fx-background-color: #232126;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-width: 32px;
+    -fx-max-height: 32px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(30,30,30,0.10), 2, 0.18, 0, 1.2);
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-content-display: center;
+    -fx-border-width: 0;
+}
+
+.check-btn {
+    /* Optionally you can set different hover color here */
+}
+.minus-btn {
+    /* Optionally you can set different hover color here */
+}
 
 
+.icon-btn:pressed, .icon-btn:focused {
+    -fx-background-color: #19191b;
+}
+
+.check-btn {
+    -fx-graphic: url('checkmark_white.svg'); /* See below for how to add SVGs as graphics */
+}
+
+.minus-btn {
+    -fx-graphic: url('minus_white.svg');
+}
+
+/* Minus Button Style */
+.remove-btn {
+    -fx-background-color: #232323;
+    -fx-background-radius: 8px;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 1, 0, 0, 1);
+    -fx-alignment: center;
+}
+.remove-btn .text {
+    -fx-fill: white;
+    -fx-font-size: 17px;
+}
+
+/* Done? header above checkboxes */
+.done-header {
+    -fx-font-weight: 600;
+    -fx-font-size: 15px;
+    -fx-padding: 0 4 0 0;
+    -fx-text-fill: #333;
+    -fx-alignment: center;
+}

@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class DashboardController {
 
@@ -13,10 +16,19 @@ public class DashboardController {
     @FXML private Circle progressRing1, progressRing2, progressRing3, progressRing4;
     @FXML private Label progressLabel1, progressLabel2, progressLabel3, progressLabel4;
 
-    // --- New for streak/today ---
+    // --- For streak/today ---
     @FXML private Label timeStudiedLabel;
     @FXML private Label studyStreakLabel;
     @FXML private ImageView fireImage;
+
+    // --- For next exam timer ---
+    @FXML private Label nextExamSubjectLabel;
+    @FXML private Label nextExamDaysLabel;
+    @FXML private Label nextExamHoursLabel;
+    @FXML private Label nextExamMinutesLabel;
+
+    // Timeline for countdown
+    private Timeline countdownTimeline;
 
     @FXML
     private void handleSidebarCalendar() {
@@ -45,8 +57,11 @@ public class DashboardController {
         setProgress(progressRing3, progressLabel3, progressTitle3, "English", 75);
         setProgress(progressRing4, progressLabel4, progressTitle4, "Statistics", 95);
 
-        // Set default values for time/streak, e.g. from DB
+        // Example default values for study info
         setStudyInfo("3h", 3);
+
+        // Example for next exam: set this to your actual next exam info!
+        setNextExam("Mathe", java.time.LocalDateTime.now().plusDays(4).plusHours(3).plusMinutes(4));
     }
 
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
@@ -61,10 +76,49 @@ public class DashboardController {
         titleLabel.setText(title);
     }
 
-    // --- Update study time & streak programmatically ---
+    // Update study time & streak programmatically
     public void setStudyInfo(String studiedTime, int streak) {
         timeStudiedLabel.setText(studiedTime);
         studyStreakLabel.setText(String.valueOf(streak));
         fireImage.setVisible(streak > 0);
+    }
+
+    /**
+     * Set next exam subject and date, and start ticking down.
+     * @param subject The exam subject (e.g., "Mathe")
+     * @param examDateTime The LocalDateTime when the exam is scheduled
+     */
+    public void setNextExam(String subject, java.time.LocalDateTime examDateTime) {
+        nextExamSubjectLabel.setText(subject);
+
+        if (countdownTimeline != null) countdownTimeline.stop();
+
+        countdownTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(0), e -> updateCountdown(examDateTime)),
+                new KeyFrame(Duration.seconds(1))
+        );
+        countdownTimeline.setCycleCount(Timeline.INDEFINITE);
+        countdownTimeline.play();
+    }
+
+    private void updateCountdown(java.time.LocalDateTime examDateTime) {
+        java.time.Duration duration = java.time.Duration.between(java.time.LocalDateTime.now(), examDateTime);
+        long totalSeconds = duration.getSeconds();
+
+        if (totalSeconds <= 0) {
+            nextExamDaysLabel.setText("0D");
+            nextExamHoursLabel.setText("0H");
+            nextExamMinutesLabel.setText("0M");
+            if (countdownTimeline != null) countdownTimeline.stop();
+            return;
+        }
+
+        long days = totalSeconds / (24 * 3600);
+        long hours = (totalSeconds % (24 * 3600)) / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+
+        nextExamDaysLabel.setText(days + "D");
+        nextExamHoursLabel.setText(hours + "H");
+        nextExamMinutesLabel.setText(minutes + "M");
     }
 }

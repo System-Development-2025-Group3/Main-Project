@@ -12,7 +12,7 @@
       fx:controller="application.studyspace.controllers.landingpage.DashboardController"
       stylesheets="@../styles/LoginandRegisterStylesheet.css,
                    @../styles/landingpage-override.css,
-                   @../styles/settings-override.css"
+                   @../styles/dashboard-override.css"
       styleClass="root"
       spacing="24"
       fillWidth="true">
@@ -88,49 +88,70 @@
                 <RowConstraints percentHeight="50" valignment="CENTER" vgrow="ALWAYS"/>
                 <RowConstraints percentHeight="50" valignment="CENTER" vgrow="ALWAYS"/>
             </rowConstraints>
-            <!-- Past Sessions Card -->
+            <!-- Past sessions card -->
             <VBox styleClass="card-box"
                   alignment="TOP_LEFT"
-                  spacing="14"
+                  spacing="18"
                   GridPane.rowIndex="0" GridPane.columnIndex="0"
-                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                <Label text="Past Sessions" styleClass="main-title"/>
-                <VBox spacing="12">
-                    <HBox spacing="8" alignment="CENTER_LEFT">
-                        <Label text="Mathe Session 1" styleClass="field-label"/>
-                        <CheckBox styleClass="remember-checkbox"/>
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
+                  style="-fx-padding: 28 30 24 30;">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Past Sessions" styleClass="main-title" />
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Label text="Done?" styleClass="done-header"/>
+                </HBox>
+                <VBox spacing="14">
+                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                        <Label text="Mathe Session 1" styleClass="session-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button styleClass="icon-btn check-btn" text="✔"/>
+                        <Button styleClass="icon-btn minus-btn" text="−"/>
                     </HBox>
-                    <HBox spacing="8" alignment="CENTER_LEFT">
-                        <Label text="Mathe Session 2" styleClass="field-label"/>
-                        <CheckBox styleClass="remember-checkbox"/>
+                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                        <Label text="Mathe Session 2" styleClass="session-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button styleClass="icon-btn check-btn" text="✔"/>
+                        <Button styleClass="icon-btn minus-btn" text="−"/>
                     </HBox>
-                    <HBox spacing="8" alignment="CENTER_LEFT">
-                        <Label text="Mathe Session 3" styleClass="field-label"/>
-                        <CheckBox styleClass="remember-checkbox"/>
+                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                        <Label text="Mathe Session 3" styleClass="session-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button styleClass="icon-btn check-btn" text="✔"/>
+                        <Button styleClass="icon-btn minus-btn" text="−"/>
                     </HBox>
-                    <HBox spacing="8" alignment="CENTER_LEFT">
-                        <Label text="Mathe Session 4" styleClass="field-label"/>
-                        <CheckBox styleClass="remember-checkbox"/>
+                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                        <Label text="Mathe Session 4" styleClass="session-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button styleClass="icon-btn check-btn" text="✔"/>
+                        <Button styleClass="icon-btn minus-btn" text="−"/>
                     </HBox>
+
                 </VBox>
-                <Label text="Done?" style="-fx-font-size: 13px; -fx-font-weight: 600;"/>
             </VBox>
 
-            <!-- Time left until next exam Card -->
             <VBox styleClass="card-box"
                   alignment="TOP_CENTER"
-                  spacing="16"
+                  spacing="18"
                   GridPane.rowIndex="0" GridPane.columnIndex="1"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                <Label text="Time left until next exam" styleClass="main-title"/>
-                <VBox alignment="CENTER" spacing="8" style="-fx-padding: 10 0 0 0;">
-                    <Label text="Mathe" style="-fx-font-size: 16px; -fx-font-weight: 600;"/>
-                    <StackPane alignment="CENTER">
-                        <Circle radius="70" style="-fx-stroke: #111; -fx-stroke-width: 6; -fx-fill: transparent;"/>
-                        <VBox alignment="CENTER">
-                            <Label text="4D" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-                            <Label text="3H" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label text="4M" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label text="Time left until next exam" styleClass="main-title"
+                       style="-fx-font-size: 26px; -fx-font-weight: bold;" alignment="CENTER" />
+                <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <StackPane alignment="CENTER" style="-fx-padding: 0 0 0 0;">
+                        <Circle radius="120" style="-fx-stroke: #111; -fx-stroke-width: 12; -fx-fill: transparent;"/>
+                        <VBox alignment="CENTER" spacing="3">
+                            <Label fx:id="nextExamSubjectLabel"
+                                   text="Mathe"
+                                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                            <Label fx:id="nextExamDaysLabel"
+                                   text="4D"
+                                   style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
+                            <Label fx:id="nextExamHoursLabel"
+                                   text="3H"
+                                   style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
+                            <Label fx:id="nextExamMinutesLabel"
+                                   text="4M"
+                                   style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
                         </VBox>
                     </StackPane>
                 </VBox>
