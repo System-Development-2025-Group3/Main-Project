@@ -1,204 +1,144 @@
 /* ============ GLOBAL ============ */
 .root {
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #ffffff;
+    -fx-padding: 16px;
+}
+
+/* ============ HEADER CARD ============ */
+.header-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 11, 0, 0, 4);
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+}
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
 }
 
 /* ============ SIDEBAR ============ */
-.sidebar {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;      /* subtle right border */
-    -fx-border-width: 0 1 0 0;
-    -fx-padding: 32 16;
+.login-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 34px 38px 30px 38px;
+    -fx-spacing: 20px;
 }
-.sidebar-title {
-    -fx-text-fill: #111827;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 24 0;
-}
-.sidebar-button {
-    -fx-text-fill: #374151;
-    -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-background-color: transparent;
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 8 12;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-}
-.sidebar-button:hover {
-    -fx-background-color: #F3F4F6;
-}
-.sidebar-button:selected {
-    -fx-background-color: #E5E7EB;
-    -fx-text-fill: #111827;
-}
-
-/* ============ HEADER BAR ============ */
-.header-box {
-    -fx-padding: 16 24;
-    -fx-spacing: 12;
-    -fx-alignment: CENTER_LEFT;
-}
-.nav-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #374151;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-}
-.nav-button:hover {
-    -fx-background-color: #F3F4F6;
-    -fx-background-radius: 4;
-}
-.content-title {
-    -fx-text-fill: #111827;
+.login-title {
     -fx-font-size: 20px;
     -fx-font-weight: 600;
 }
-.create-event-button {
-    -fx-background-color: #111827;
-    -fx-text-fill: white;
-    -fx-padding: 6 16;
-    -fx-background-radius: 6;
-    -fx-font-size: 14px;
-}
-.create-event-button:hover {
-    -fx-background-color: #374151;
-}
 
-/* ============ VIEW TOGGLE ============ */
-.view-toggle {
-    -fx-background-color: #FFFFFF;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-border-color: #E5E7EB;
-    -fx-border-width: 1;
-    -fx-padding: 8 12;
+/* ============ SIDEBAR BUTTONS ============ */
+.sidebar-button {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #191919;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-padding: 10px 14px;
     -fx-alignment: CENTER_LEFT;
-}
-.view-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
-    -fx-padding: 6 12;
-    -fx-background-radius: 6;
-}
-.view-button:selected {
-    -fx-background-color: #111827;
-    -fx-text-fill: #FFFFFF;
-}
-.view-button:hover {
-    -fx-background-color: #F3F4F6;
-}
-
-/* ============ CALENDAR WRAPPER ============ */
-.calendar-wrapper {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 16;
-    -fx-border-color: #E5E7EB;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
-
-/* ============ CalendarFX OVERRIDES ============ */
-/* (targets its default classes) */
-.calendar-view {
-    -fx-background-color: transparent;
-}
-.calendar-header-view,
-.calendar-toolbar,
-.calendar-secondary-toolbar {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-.day-header-text {
-    -fx-text-fill: #374151;
-    -fx-font-size: 12px;
+    -fx-cursor: hand;
     -fx-font-weight: 600;
+    -fx-border-width: 0;
 }
-.hour-text {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 10px;
-}
-.day-cell {
-    -fx-border-color: #E5E7EB;
-}
-.today {
-    -fx-background-color: #F9FAFB;
-}
-.entry {
-    -fx-background-color: #374151;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 4;
-    -fx-padding: 2 4;
-}
-.entry:hover {
-    -fx-background-color: #1F2937;
-}
-.calendar-view .page-toolbar,
-.calendar-view .page-toolbar-button {
-    -fx-background-color: transparent !important;
-    -fx-border-color: transparent !important;
-}
-.dashboard-grid {
-    -fx-padding: 20;
-    -fx-background-color: #dcdcdc;
+.sidebar-button:hover,
+.sidebar-button:selected {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #1c1c1c;
 }
 
-.dashboard-box {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0.1, 0, 2);
-    -fx-alignment: center;
+/* LOGOUT BUTTON */
+.button.sidebar-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
     -fx-font-size: 16px;
-    -fx-text-fill: #333;
+    -fx-font-weight: 600;
+    -fx-background-radius: 0;
+    -fx-padding: 10px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: none;
+}
+.button.sidebar-logout:hover,
+.button.sidebar-logout:pressed {
+    -fx-background-color: transparent;
+    -fx-text-fill: #191919;
 }
 
-.dashboard-inner-box {
+/* ============ MAIN CARD BOXES ============ */
+.card-box {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-alignment: center;
-    -fx-font-size: 16px;
-    -fx-text-fill: #333;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
+    -fx-padding: 24px 32px 24px 32px;
 }
 
-.legend-box {
-    -fx-background-color: rgba(0, 0, 0, 0.05); /* Subtle background */
-    -fx-padding: 15; /* Internal padding */
-    -fx-border-radius: 12; /* Smooth rounded edges */
-    -fx-background-radius: 12; /* Smooth rounded background */
-    -fx-alignment: center; /* Align legend items */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.1, 0, 2); /* Subtle shadow */
+/* ============ FIELD LABELS & MAIN TITLES ============ */
+.field-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #121417;
+    -fx-padding: 0 4 0 0;
+}
+.main-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #121417;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);
 }
 
-/* Description Box Styling */
-.description-box {
-    -fx-background-color: #374151; /* Dark gray background */
-    -fx-text-fill: white;          /* White text color */
+/* ============ CHECKBOXES ============ */
+.remember-checkbox {
     -fx-font-size: 14px;
-    -fx-padding: 8 16;             /* Space around text */
-    -fx-background-radius: 12;    /* Rounded corners */
+    -fx-text-fill: #222;
+}
+.remember-checkbox .box {
+    -fx-background-color: #fff;
+    -fx-border-color: #bcbcbc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-min-width: 17;
+    -fx-min-height: 17;
+}
+.remember-checkbox:selected .box {
+    -fx-background-color: #222;
+    -fx-border-color: #222;
+}
+.remember-checkbox .mark {
+    -fx-background-color: #fff;
+}
+
+/* ============ CIRCLE TOOLTIP LABEL ============ */
+.circle-label {
+    -fx-background-color: #ececec;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #616161;
     -fx-alignment: center;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0.2, 0, 2); /* Subtle shadow */
+    -fx-pref-width: 24px;
+    -fx-pref-height: 24px;
+    -fx-cursor: hand;
 }
 
-.tile-unit {
-    -fx-font-size: 20px !important; /* or any size you want */
+/* ============ BUTTONS ============ */
+.button {
+    -fx-background-color: #191919;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }
-
-.tile .axis-label {
-    -fx-text-fill: black;
+.button:hover {
+    -fx-background-color: #222222;
 }
-
-.tile .text {
-    -fx-font-size: 14px;       /* adjust font size */
-    -fx-text-fill: #555555;    /* change text color */
-    -fx-font-style: italic;    /* optional: style text */
-    -fx-wrap-text: true;       /* allow long text wrapping */
+.button:pressed {
+    -fx-background-color: #000000;
 }
 
 

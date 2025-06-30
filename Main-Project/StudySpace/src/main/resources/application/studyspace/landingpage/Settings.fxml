@@ -33,7 +33,7 @@
               minWidth="240" maxWidth="240" prefWidth="240"
               VBox.vgrow="ALWAYS"
               spacing="20" alignment="TOP_LEFT">
-            <Label text="Study Planner" styleClass="login-title"/>
+            <Label text="Planify Menu" styleClass="login-title"/>
 
             <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"
@@ -84,10 +84,10 @@
             <Label text="Study Preferences" styleClass="main-title"/>
             <!-- Preferred study time -->
             <HBox spacing="8" alignment="CENTER_LEFT">
-                <Label text="Preferred study time" styleClass="field-label-bold"/>
-                <Spinner fx:id="startTimeSpinner" prefWidth="80"/>
+                <Label text="Preferred study time" styleClass="field-label"/>
+                <Spinner fx:id="startTimeSpinner" prefWidth="120"/>
                 <Label text="to"/>
-                <Spinner fx:id="endTimeSpinner" prefWidth="80"/>
+                <Spinner fx:id="endTimeSpinner" prefWidth="120"/>
             </HBox>
             <!-- Session Length -->
             <VBox spacing="2">
@@ -113,7 +113,7 @@
             </VBox>
             <!-- Blocked days -->
             <VBox spacing="8" style="-fx-padding: 8 0 0 0;">
-                <Label text="Blocked days" styleClass="field-label-bold"/>
+                <Label text="Blocked days" styleClass="field-label"/>
                 <HBox spacing="6">
                     <ToggleButton fx:id="monBtn" text="Mo" styleClass="day-square"/>
                     <ToggleButton fx:id="tueBtn" text="Tu" styleClass="day-square"/>

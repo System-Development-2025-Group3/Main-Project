@@ -1,120 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import eu.hansolo.tilesfx.Tile?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="application.studyspace.controllers.landingpage.DashboardController"
-            stylesheets="@../styles/landingpage-override.css"
-            style="-fx-background-color: white;">
+<?import javafx.scene.shape.Circle?>
+<VBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="application.studyspace.controllers.landingpage.DashboardController"
+      stylesheets="@../styles/LoginandRegisterStylesheet.css,
+                   @../styles/landingpage-override.css,
+                   @../styles/settings-override.css"
+      styleClass="root"
+      spacing="24"
+      fillWidth="true">
+
+    <!-- HEADER -->
+    <HBox styleClass="header-card"
+          alignment="CENTER_LEFT"
+          spacing="8">
+        <ImageView fitHeight="32" preserveRatio="true">
+            <Image url="@images/logos/smallLogo.png"/>
+        </ImageView>
+        <Label text="Planify Dashboard" styleClass="header-title"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <HBox spacing="24" VBox.vgrow="ALWAYS" fillHeight="true" alignment="TOP_LEFT">
+        <!-- SIDEBAR -->
+        <VBox styleClass="login-card"
+              minWidth="240" maxWidth="240" prefWidth="240"
+              VBox.vgrow="ALWAYS"
+              spacing="20" alignment="TOP_LEFT">
+            <Label text="Study Planner" styleClass="login-title"/>
+
+            <ToggleButton styleClass="sidebar-button"
+                          toggleGroup="$navGroup"
+                          onAction="#handleSidebarCalendar">
+                <graphic>
+                    <FontIcon iconLiteral="far-calendar-alt"/>
+                </graphic>
+                <text>Calendar</text>
+            </ToggleButton>
+            <ToggleButton styleClass="sidebar-button"
+                          toggleGroup="$navGroup"
+                          selected="true"
+                          onAction="#handleSidebarDashboard">
+                <graphic>
+                    <FontIcon iconLiteral="fas-chart-bar"/>
+                </graphic>
+                <text>Dashboard</text>
+            </ToggleButton>
+            <ToggleButton styleClass="sidebar-button"
+                          toggleGroup="$navGroup"
+                          onAction="#handleSidebarSettings">
+                <graphic>
+                    <FontIcon iconLiteral="fas-cog"/>
+                </graphic>
+                <text>Settings</text>
+            </ToggleButton>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button fx:id="logoutButton"
+                    onAction="#handleExit"
+                    styleClass="sidebar-logout">
+                <graphic>
+                    <FontIcon iconLiteral="fas-times" />
+                </graphic>
+                <text>Logout</text>
+            </Button>
+        </VBox>
+
+        <!-- DASHBOARD CARDS AREA -->
+        <GridPane hgap="28" vgap="28" alignment="CENTER"
+                  HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+            <!-- Past Sessions Card -->
+            <VBox styleClass="card-box"
+                  alignment="TOP_LEFT"
+                  spacing="14"
+                  minWidth="0" minHeight="0"
+                  prefWidth="0" prefHeight="0"
+                  GridPane.rowIndex="0" GridPane.columnIndex="0"
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                <Label text="Past Sessions" styleClass="main-title"/>
+                <VBox spacing="12">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Mathe Session 1" styleClass="field-label"/>
+                        <CheckBox styleClass="remember-checkbox"/>
+                    </HBox>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Mathe Session 2" styleClass="field-label"/>
+                        <CheckBox styleClass="remember-checkbox"/>
+                    </HBox>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Mathe Session 3" styleClass="field-label"/>
+                        <CheckBox styleClass="remember-checkbox"/>
+                    </HBox>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Mathe Session 4" styleClass="field-label"/>
+                        <CheckBox styleClass="remember-checkbox"/>
+                    </HBox>
+                </VBox>
+                <Label text="Done?" style="-fx-font-size: 13px; -fx-font-weight: 600;"/>
+            </VBox>
+
+            <!-- Time left until next exam Card -->
+            <VBox styleClass="card-box"
+                  alignment="TOP_CENTER"
+                  spacing="16"
+                  minWidth="0" minHeight="0"
+                  prefWidth="0" prefHeight="0"
+                  GridPane.rowIndex="0" GridPane.columnIndex="1"
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                <Label text="Time left until next exam" styleClass="main-title"/>
+                <VBox alignment="CENTER" spacing="8" style="-fx-padding: 10 0 0 0;">
+                    <Label text="Mathe" style="-fx-font-size: 16px; -fx-font-weight: 600;"/>
+                    <StackPane alignment="CENTER">
+                        <Circle radius="70" style="-fx-stroke: #111; -fx-stroke-width: 6; -fx-fill: transparent;"/>
+                        <VBox alignment="CENTER">
+                            <Label text="4D" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                            <Label text="3H" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                            <Label text="4M" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </StackPane>
+                </VBox>
+            </VBox>
+
+            <!-- Time studied & Streak Card -->
+            <VBox styleClass="card-box"
+                  alignment="CENTER"
+                  spacing="18"
+                  minWidth="0" minHeight="0"
+                  prefWidth="0" prefHeight="0"
+                  GridPane.rowIndex="1" GridPane.columnIndex="0"
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                <HBox alignment="CENTER" spacing="36">
+                    <VBox alignment="CENTER">
+                        <Label text="Time studied today" styleClass="field-label"/>
+                        <Label text="3h" style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox alignment="CENTER">
+                        <Label text="Study Streak" styleClass="field-label"/>
+                        <HBox alignment="CENTER" spacing="4">
+                            <Label text="3" style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
+                            <Label text="🔥" style="-fx-font-size: 36px;"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Progress per Exam Card -->
+            <VBox styleClass="card-box"
+                  alignment="TOP_CENTER"
+                  spacing="18"
+                  GridPane.rowIndex="1" GridPane.columnIndex="1"
+                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                <Label text="Progress per Exam" styleClass="main-title"/>
+                <GridPane hgap="38" vgap="26" alignment="CENTER">
+                    <VBox alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                        <Label fx:id="progressTitle1" styleClass="field-label"/>
+                        <StackPane alignment="CENTER">
+                            <Circle fx:id="progressBg1" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Circle fx:id="progressRing1" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Label fx:id="progressLabel1" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                    </VBox>
+                    <VBox alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                        <Label fx:id="progressTitle2" styleClass="field-label"/>
+                        <StackPane alignment="CENTER">
+                            <Circle fx:id="progressBg2" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Circle fx:id="progressRing2" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Label fx:id="progressLabel2" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                    </VBox>
+                    <VBox alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                        <Label fx:id="progressTitle3" styleClass="field-label"/>
+                        <StackPane alignment="CENTER">
+                            <Circle fx:id="progressBg3" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Circle fx:id="progressRing3" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Label fx:id="progressLabel3" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                    </VBox>
+                    <VBox alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <Label fx:id="progressTitle4" styleClass="field-label"/>
+                        <StackPane alignment="CENTER">
+                            <Circle fx:id="progressBg4" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Circle fx:id="progressRing4" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
+                            <Label fx:id="progressLabel4" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                    </VBox>
+                </GridPane>
+            </VBox>
+        </GridPane>
+    </HBox>
 
     <fx:define>
         <ToggleGroup fx:id="navGroup"/>
     </fx:define>
-
-    <!-- Sidebar -->
-    <left>
-        <AnchorPane>
-            <VBox styleClass="sidebar"
-                  AnchorPane.topAnchor="0"
-                  AnchorPane.bottomAnchor="0"
-                  AnchorPane.leftAnchor="0"
-                  AnchorPane.rightAnchor="0">
-                <Label text="Study Planner" styleClass="sidebar-title"/>
-                <ToggleButton text="📅 Calendar"
-                              styleClass="sidebar-button"
-                              toggleGroup="$navGroup"
-                              onAction="#handleSidebarCalendar"/>
-                <ToggleButton text="📊 Dashboard"
-                              styleClass="sidebar-button"
-                              toggleGroup="$navGroup"
-                              selected="true"
-                              onAction="#handleSidebarDashboard"/>
-                <ToggleButton text="⚙ Settings"
-                              styleClass="sidebar-button"
-                              toggleGroup="$navGroup"
-                              onAction="#handleSidebarSettings"/>
-            </VBox>
-        </AnchorPane>
-    </left>
-
-    <!-- Main Dashboard Content -->
-    <center>
-        <AnchorPane stylesheets="@../styles/dashboard-override.css">
-            <GridPane
-                    AnchorPane.topAnchor="0"
-                    AnchorPane.bottomAnchor="0"
-                    AnchorPane.leftAnchor="0"
-                    AnchorPane.rightAnchor="0"
-                    hgap="50"
-                    vgap="50"
-                    styleClass="dashboard-grid">
-
-                <!-- Column Constraints -->
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="33"/>
-                    <ColumnConstraints percentWidth="33"/>
-                    <ColumnConstraints percentWidth="34"/>
-                </columnConstraints>
-
-                <!-- Row Constraints -->
-                <rowConstraints>
-                    <RowConstraints percentHeight="25"/>
-                    <RowConstraints percentHeight="25"/>
-                    <RowConstraints percentHeight="25"/>
-                    <RowConstraints percentHeight="25"/>
-                </rowConstraints>
-
-                <!-- Boxes -->
-                <StackPane fx:id="box1"
-                           styleClass="dashboard-inner-box"
-                           GridPane.rowIndex="0"
-                           GridPane.columnIndex="0"
-                           GridPane.rowSpan="2"
-                           style="-fx-background-color: white; -fx-padding: 16;">
-
-                    <VBox GridPane.vgrow="ALWAYS" StackPane.alignment="CENTER" alignment="CENTER" spacing="16" styleClass="dashboard-inner-box">
-
-                        <!-- GAUGE Tile -->
-                        <Tile fx:id="totalProgressTile"
-                              VBox.vgrow="ALWAYS"
-                              skinType="GAUGE"
-                              title="Overall Progress"
-                              titleColor="black"
-                              chartGridColor="#ffffff"
-                              unit=" %"
-                              unitColor="black"
-                              textColor="black"
-                              barColor="gainsboro"
-                              valueColor="black"
-                              needleColor="gainsboro">
-                        </Tile>
-
-                        <!-- Description Box (Below the Gauge) -->
-                        <Label
-                                VBox.vgrow="NEVER"
-                                text="Value 1: 0.00, Value 2: 0.00"
-                                styleClass="description-box"/>
-                    </VBox>
-                </StackPane>
-
-                <StackPane fx:id="box2" GridPane.columnIndex="1" styleClass="dashboard-box"/>
-
-                <StackPane fx:id="box3" GridPane.columnIndex="2" styleClass="dashboard-box"/>
-
-                <StackPane fx:id="box4" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"
-                           styleClass="dashboard-box"/>
-
-                <StackPane fx:id="box5" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"
-                           styleClass="dashboard-box"/>
-
-                <StackPane fx:id="box6" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2"
-                           styleClass="dashboard-box"/>
-
-                <StackPane fx:id="box7" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2"
-                           styleClass="dashboard-box"/>
-            </GridPane>
-        </AnchorPane>
-    </center>
-</BorderPane>
+</VBox>

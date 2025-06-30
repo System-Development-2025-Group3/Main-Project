@@ -38,7 +38,7 @@ public class OnboardingPage3Controller implements Initializable {
     @FXML private VBox examForm, blockerForm;
     @FXML private ToggleGroup typeToggleGroup;
     @FXML private ToggleButton examToggle, blockerToggle;
-    @FXML private TextField examNameField, topicsField, difficultyField, estimatedMinutesField;
+    @FXML private TextField examNameField, topicsField, estimatedMinutesField;
     @FXML private TextArea descriptionArea;
     @FXML private DatePicker exStartDate, evtStartDate, evtEndDate;
     @FXML private Spinner<LocalTime> exStartTime, exEndTime, evtStartTime, evtEndTime;
@@ -271,7 +271,6 @@ public class OnboardingPage3Controller implements Initializable {
         exStartTime.getValueFactory().setValue(LocalTime.of(8,0));
         exEndTime  .getValueFactory().setValue(LocalTime.of(10,0));
         topicsField.clear();
-        difficultyField.clear();
         estimatedMinutesField.clear();
         weightSlider.setValue(50);
     }

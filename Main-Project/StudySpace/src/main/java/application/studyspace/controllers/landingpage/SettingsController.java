@@ -17,8 +17,10 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import java.util.UUID;
 
 public class SettingsController {
@@ -44,6 +46,9 @@ public class SettingsController {
 
     private final CreateToolTip toolTipService = new CreateToolTip();
 
+    private SpinnerValueFactory<LocalTime> startFactory;
+    private SpinnerValueFactory<LocalTime> endFactory;
+
     @FXML
     private void initialize() {
         // Tooltips for password
@@ -57,7 +62,7 @@ public class SettingsController {
         toolTipService.createCustomTooltip(passwordTooltip1, pwTip, "tooltip-Label");
         toolTipService.createCustomTooltip(passwordTooltip2, pwTip, "tooltip-Label");
 
-        // Configure Time Spinners
+        // Time Spinner setup
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
         LocalTime t = LocalTime.of(6, 0);
         while (!t.isAfter(LocalTime.of(22, 0))) {
@@ -69,13 +74,13 @@ public class SettingsController {
             @Override public String toString(LocalTime lt) { return lt == null ? "" : fmt.format(lt);}
             @Override public LocalTime fromString(String str) { return (str == null || str.isEmpty()) ? null : LocalTime.parse(str, fmt);}
         };
-        SpinnerValueFactory<LocalTime> startFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+        startFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         startFactory.setConverter(timeFmt);
         startFactory.setValue(LocalTime.of(9, 0));
         startTimeSpinner.setValueFactory(startFactory);
         startTimeSpinner.setEditable(true);
 
-        SpinnerValueFactory<LocalTime> endFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
+        endFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         endFactory.setConverter(timeFmt);
         endFactory.setValue(LocalTime.of(17, 0));
         endTimeSpinner.setValueFactory(endFactory);
@@ -93,41 +98,95 @@ public class SettingsController {
             breakLengthLabel.setText(rounded + " min");
         });
 
-        // Load checkboxes from DB
-        reloadPreferenceCheckboxes();
+        // Load all settings from DB
+        reloadSavedSettings();
     }
 
-    /** Loads checkbox values from the database and updates the UI/local tokens. */
-    private void reloadPreferenceCheckboxes() {
+    /** Loads ALL saved user settings from the DB and updates UI. */
+    private void reloadSavedSettings() {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         if (userUUID == null) {
+            // No user: Reset to defaults
             skipSplashCheckbox.setSelected(false);
             rememberMeCheckbox.setSelected(false);
-            System.out.println("[Settings] No user logged in; checkboxes reset.");
+
+            startFactory.setValue(LocalTime.of(8, 0));
+            endFactory.setValue(LocalTime.of(18, 0));
+            sessionLengthSlider.setValue(60);
+            sessionLengthLabel.setText("60 min");
+            breakLengthSlider.setValue(10);
+            breakLengthLabel.setText("10 min");
+
+            monBtn.setSelected(false); tueBtn.setSelected(false); wedBtn.setSelected(false);
+            thuBtn.setSelected(false); friBtn.setSelected(false); satBtn.setSelected(false); sunBtn.setSelected(false);
+
+            RememberMeHelper.clearRememberedUserUUID();
+            System.out.println("[Settings] No user logged in; settings reset to defaults.");
             return;
         }
-        boolean skipSplash = StudyPreferences.loadSkipSplashScreen(userUUID);
-        boolean rememberMe = StudyPreferences.loadRememberMe(userUUID);
 
-        skipSplashCheckbox.setSelected(skipSplash);
-        rememberMeCheckbox.setSelected(rememberMe);
+        try {
+            // --- 1. Checkboxes (static loaders)
+            boolean skipSplash = StudyPreferences.loadSkipSplashScreen(userUUID);
+            boolean rememberMe = StudyPreferences.loadRememberMe(userUUID);
 
-        // Sync local token with DB
-        if (rememberMe) {
-            RememberMeHelper.saveRememberedUserUUID(userUUID);
-        } else {
-            RememberMeHelper.clearRememberedUserUUID();
+            skipSplashCheckbox.setSelected(skipSplash);
+            rememberMeCheckbox.setSelected(rememberMe);
+
+            // --- 2. Local token
+            if (rememberMe) {
+                RememberMeHelper.saveRememberedUserUUID(userUUID);
+            } else {
+                RememberMeHelper.clearRememberedUserUUID();
+            }
+
+            // --- 3. Other prefs from loaded object
+            StudyPreferences prefs = StudyPreferences.load(userUUID);
+
+            // Session times
+            LocalTime start = prefs.getStartTime();
+            LocalTime end = prefs.getEndTime();
+            startFactory.setValue(start != null ? start : LocalTime.of(8, 0));
+            endFactory.setValue(end != null ? end : LocalTime.of(18, 0));
+
+            // Sliders
+            int sessionLen = prefs.getSessionLength();
+            sessionLengthSlider.setValue(sessionLen > 0 ? sessionLen : 60);
+            sessionLengthLabel.setText((sessionLen > 0 ? sessionLen : 60) + " min");
+
+            int breakLen = prefs.getBreakLength();
+            breakLengthSlider.setValue(breakLen > 0 ? breakLen : 10);
+            breakLengthLabel.setText((breakLen > 0 ? breakLen : 10) + " min");
+
+            // Blocked days
+            Set<DayOfWeek> blocked = prefs.getBlockedDays();
+            monBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.MONDAY));
+            tueBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.TUESDAY));
+            wedBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.WEDNESDAY));
+            thuBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.THURSDAY));
+            friBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.FRIDAY));
+            satBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.SATURDAY));
+            sunBtn.setSelected(blocked != null && blocked.contains(DayOfWeek.SUNDAY));
+
+            System.out.printf("[Settings] Loaded for %s: skipSplash=%b, rememberMe=%b, start=%s, end=%s, session=%d, break=%d, blocked=%s%n",
+                    userUUID, skipSplash, rememberMe, start, end, sessionLen, breakLen, blocked);
+
+        } catch (SQLException ex) {
+            System.out.println("[Settings] No existing prefs, defaults applied.");
+            startFactory.setValue(LocalTime.of(8, 0));
+            endFactory.setValue(LocalTime.of(18, 0));
+            sessionLengthSlider.setValue(60);
+            sessionLengthLabel.setText("60 min");
+            breakLengthSlider.setValue(10);
+            breakLengthLabel.setText("10 min");
         }
-        System.out.printf("[Settings] Loaded from DB: skipSplash=%b, rememberMe=%b%n", skipSplash, rememberMe);
     }
 
-    /** Updates skip splash in DB, then reloads from DB and updates checkbox. */
     @FXML
     private void handleSkipSplashChanged() {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         boolean newValue = skipSplashCheckbox.isSelected();
 
-        // Local always
         SessionManager.getInstance().saveSkipSplashScreenPreferenceLocal(newValue);
 
         boolean success = false;
@@ -136,19 +195,16 @@ public class SettingsController {
             System.out.printf("[Settings] Save skipSplash=%b to DB: %s%n", newValue, success ? "OK" : "FAILED");
         }
 
-        // Always reload after save, to catch DB/logic desync
         boolean latestValue = (userUUID != null) ? StudyPreferences.loadSkipSplashScreen(userUUID) : newValue;
         skipSplashCheckbox.setSelected(latestValue);
         System.out.printf("[Settings] skipSplashCheckbox now set to: %b%n", latestValue);
     }
 
-    /** Updates Remember Me in DB & local, reloads to confirm. */
     @FXML
     private void handleRememberMeChanged() {
         UUID userUUID = SessionManager.getInstance().getLoggedInUserId();
         boolean newValue = rememberMeCheckbox.isSelected();
 
-        // Local token sync
         if (newValue) {
             RememberMeHelper.saveRememberedUserUUID(userUUID);
         } else {
@@ -161,7 +217,6 @@ public class SettingsController {
             System.out.printf("[Settings] Save rememberMe=%b to DB: %s%n", newValue, dbSuccess ? "OK" : "FAILED");
         }
 
-        // Always reload after save, to catch DB/logic desync
         boolean latestValue = (userUUID != null) ? StudyPreferences.loadRememberMe(userUUID) : newValue;
         rememberMeCheckbox.setSelected(latestValue);
         System.out.printf("[Settings] rememberMeCheckbox now set to: %b%n", latestValue);
@@ -248,6 +303,7 @@ public class SettingsController {
 
         if (success) {
             System.out.println("Study preferences saved.");
+            reloadSavedSettings(); // Optionally reload UI to reflect save
         } else {
             System.err.println("Saving study preferences failed.");
         }
