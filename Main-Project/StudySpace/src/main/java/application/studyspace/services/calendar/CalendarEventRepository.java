@@ -249,13 +249,40 @@ public class CalendarEventRepository {
         UUID tagUuid = rs.getBytes("tag_uuid") == null
                 ? null
                 : UUIDHelper.BytesToUUID(rs.getBytes("tag_uuid"));
+        boolean completed = rs.getBoolean("completed");
 
         CalendarEvent e = new CalendarEvent(
                 id, userId, title, desc, loc,
                 start, end, fullDay, hidden,
-                minDur, recurRule, recurSrc, recurId, tagUuid
+                minDur, recurRule, recurSrc, recurId, tagUuid, completed
         );
         e.setCalendarId(calId);
         return e;
+    }
+
+    /**
+     * Load all past events for a user that are not marked completed.
+     */
+    public static List<CalendarEvent> findUncompletedPastStudySessionsByUser(UUID userId) throws SQLException {
+        String sql = """
+        SELECT *
+        FROM calendar_events
+        WHERE user_id = ?
+          AND end_datetime < NOW()
+          AND completed = false
+        ORDER BY start_datetime DESC
+    """;
+
+        List<CalendarEvent> list = new ArrayList<>();
+        try (Connection conn = DataSourceManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        }
+        return list;
     }
 }

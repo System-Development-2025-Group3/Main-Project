@@ -22,6 +22,7 @@ public class CalendarEvent {
     private UUID recurrenceSource;
     private ZonedDateTime recurrenceId;
     private UUID tagUuid;
+    private boolean completed;
 
     // constructor for new events (calendarId to be set via setter)
     public CalendarEvent(UUID userId,
@@ -37,6 +38,7 @@ public class CalendarEvent {
         this.location    = location;
         this.start       = start;
         this.end         = end;
+        this.completed   = false;
     }
 
     // full constructor (used when loading from DB—set calendarId via setter afterward)
@@ -53,7 +55,7 @@ public class CalendarEvent {
                          String recurrenceRule,
                          UUID recurrenceSource,
                          ZonedDateTime recurrenceId,
-                         UUID tagUuid) {
+                         UUID tagUuid, boolean completed) {
         this.id               = id;
         this.userId           = userId;
         this.title            = title;
@@ -68,6 +70,7 @@ public class CalendarEvent {
         this.recurrenceSource = recurrenceSource;
         this.recurrenceId     = recurrenceId;
         this.tagUuid          = tagUuid;
+        this.completed   = false;
     }
 
     // ---- New calendarId accessor methods ----
@@ -185,6 +188,10 @@ public class CalendarEvent {
     public void setTagUuid(UUID tagUuid) {
         this.tagUuid = tagUuid;
     }
+
+    public boolean isCompleted() { return completed; }
+
+    public void setCompleted(boolean completed) { this.completed = completed; }
 
 
 }

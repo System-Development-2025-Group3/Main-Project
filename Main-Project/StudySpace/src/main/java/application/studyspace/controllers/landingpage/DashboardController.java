@@ -1,11 +1,18 @@
 package application.studyspace.controllers.landingpage;
 
 import application.studyspace.services.Scenes.ViewManager;
+import application.studyspace.services.calendar.CalendarEvent;
 import application.studyspace.services.calendar.ExamEvent;
+import application.studyspace.services.calendar.StudyPlanGenerator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -25,6 +32,7 @@ public class DashboardController {
     @FXML private Label timeStudiedLabel;
     @FXML private Label studyStreakLabel;
     @FXML private ImageView fireImage;
+    @FXML private VBox pastSessionsBox;
 
     // --- For next exam timer ---
     @FXML private Label nextExamSubjectLabel;
@@ -66,6 +74,8 @@ public class DashboardController {
         setStudyInfo("3h", 3);
 
         loadNextExam();
+
+        loadPastSessions();
     }
 
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
@@ -160,5 +170,90 @@ public class DashboardController {
         nextExamDaysLabel.setText(days + "D");
         nextExamHoursLabel.setText(hours + "H");
         nextExamMinutesLabel.setText(minutes + "M");
+    }
+
+    private HBox createSessionRow(CalendarEvent event) {
+        HBox row = new HBox(14);
+        row.getStyleClass().add("session-row");
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        Label label = new Label(event.getTitle());
+        label.getStyleClass().add("session-label");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button doneButton = new Button("✔");
+        doneButton.setStyle("-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;"
+                + "-fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;"
+                + "-fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;"
+                + "-fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;");
+
+        Button skipButton = new Button("−");
+        skipButton.setStyle("-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;"
+                + "-fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;"
+                + "-fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;"
+                + "-fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;");
+
+        // Add handlers for the buttons here
+        doneButton.setOnAction(e -> markSessionCompleted(event));
+        skipButton.setOnAction(e -> rescheduleSession(event));
+
+        row.getChildren().addAll(label, spacer, doneButton, skipButton);
+        return row;
+    }
+
+    private void loadPastSessions() {
+        try {
+            UUID userId = application.studyspace.services.auth.SessionManager.getInstance().getLoggedInUserId();
+
+            // Get the blocker calendar (if any)
+            var calendars = application.studyspace.services.calendar.CalendarRepository.findByUser(userId);
+            UUID blockerCalendarId = calendars.stream()
+                    .filter(c -> c.getName().toLowerCase().contains("blocker"))
+                    .map(c -> c.getId())
+                    .findFirst()
+                    .orElse(null);
+
+            // Load uncompleted past sessions
+            List<CalendarEvent> pastEvents =
+                    application.studyspace.services.calendar.CalendarEventRepository.findUncompletedPastStudySessionsByUser(userId);
+
+            pastSessionsBox.getChildren().removeIf(node -> node instanceof HBox);
+
+            pastEvents.stream()
+                    // Exclude any that belong to the blocker calendar
+                    .filter(evt -> blockerCalendarId == null || !evt.getCalendarId().equals(blockerCalendarId))
+                    // Sort most recent first
+                    .sorted(Comparator.comparing(CalendarEvent::getStart).reversed())
+                    // Limit to 6
+                    .limit(6)
+                    .forEach(evt -> {
+                        HBox row = createSessionRow(evt);
+                        pastSessionsBox.getChildren().add(row);
+                    });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void markSessionCompleted(application.studyspace.services.calendar.CalendarEvent event) {
+        try {
+            event.setCompleted(true);
+            application.studyspace.services.calendar.CalendarEventRepository.save(event);
+            loadPastSessions();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void rescheduleSession(CalendarEvent event) {
+        try {
+            StudyPlanGenerator.rescheduleOneSession(event);
+            loadPastSessions();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

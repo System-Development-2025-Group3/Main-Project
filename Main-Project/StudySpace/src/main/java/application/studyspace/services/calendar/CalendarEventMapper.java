@@ -101,7 +101,8 @@ public class CalendarEventMapper {
                 entry.getRecurrenceRule(),
                 old.getRecurrenceSource(),
                 old.getRecurrenceId(),
-                old.getTagUuid()
+                old.getTagUuid(),
+                old.isCompleted()
         );
     }
 }

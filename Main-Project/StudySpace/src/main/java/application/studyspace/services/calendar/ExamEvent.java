@@ -49,7 +49,7 @@ public class ExamEvent extends CalendarEvent {
                      int difficulty,
                      int numberOfTopics,
                      int minutesPerTopic) {
-        super(id, userId, title, description, location, start, end, false, false, null, null, null, null, null);
+        super(id, userId, title, description, location, start, end, false, false, null, null, null, null, null, false);
         this.setCalendarId(calendarId);
         this.gradeWeight = gradeWeight;
         this.difficulty = difficulty;

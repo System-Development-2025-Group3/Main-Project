@@ -258,4 +258,74 @@ public class StudyPlanGenerator {
         }
         System.out.println("[DEBUG] generateStudyPlan completed.");
     }
+
+    public static void rescheduleOneSession(CalendarEvent session) throws SQLException {
+        UUID userId = session.getUserId();
+
+        // Load preferences
+        StudyPreferences prefs = StudyPreferences.load(userId);
+
+        // Load occupied slots
+        List<CalendarModel> calendars = CalendarRepository.findByUser(userId);
+        List<CalendarEvent> occupied = new ArrayList<>();
+        for (CalendarModel cal : calendars) {
+            occupied.addAll(CalendarEventRepository.findByCalendarId(cal.getId()));
+        }
+
+        // Remove the session we are rescheduling from occupied, so it doesn't block itself
+        occupied.removeIf(e -> e.getId().equals(session.getId()));
+
+        // Determine length
+        int sessionLen = prefs.getSessionLength();
+        int breakLen   = prefs.getBreakLength();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // Try each day starting from today
+        for (int dayOffset = 0; dayOffset < 30; dayOffset++) {
+            LocalDate date = now.toLocalDate().plusDays(dayOffset);
+
+            // Skip blocked days
+            if (prefs.getBlockedDays().contains(date.getDayOfWeek())) continue;
+
+            LocalTime windowStart = prefs.getStartTime();
+            LocalTime windowEnd   = prefs.getEndTime();
+
+            // If today: don't schedule before now
+            if (dayOffset == 0 && now.toLocalTime().isAfter(windowStart)) {
+                windowStart = now.toLocalTime();
+            }
+
+            LocalDateTime slotStart = LocalDateTime.of(date, windowStart);
+            LocalDateTime dayEnd    = LocalDateTime.of(date, windowEnd);
+
+            while (!slotStart.isAfter(dayEnd.minusMinutes(sessionLen))) {
+                boolean hasOverlap = false;
+                for (CalendarEvent ev : occupied) {
+                    if (overlaps(slotStart, sessionLen, ev)) {
+                        hasOverlap = true;
+                        break;
+                    }
+                }
+                if (!hasOverlap) {
+                    // Found a free slot
+                    ZonedDateTime zStart = slotStart.atZone(ZoneId.systemDefault());
+                    ZonedDateTime zEnd   = zStart.plusMinutes(sessionLen);
+
+                    session.setStart(zStart);
+                    session.setEnd(zEnd);
+
+                    // Save updated event
+                    CalendarEventRepository.save(session);
+
+                    System.out.println("[DEBUG] Rescheduled session to " + zStart);
+                    return;
+                }
+                slotStart = slotStart.plusMinutes(sessionLen + breakLen);
+            }
+        }
+
+        // If no slot found
+        throw new SQLException("Could not find an available slot in the next 30 days to reschedule.");
+    }
 }
