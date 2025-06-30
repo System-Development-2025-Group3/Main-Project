@@ -6,7 +6,6 @@ import application.studyspace.services.DataBase.DataSourceManager;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
-import javafx.concurrent.Task;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 public class CalendarHelper {
 
     /**
-     * Kick off an async refresh of whichever page (week/month) is selected.
+     * Kicks off an async refresh depending on which page (day/week/month) is currently selected.
      */
     public static void updateUserCalendarAsync(
             CalendarView calendarView,
@@ -58,7 +57,9 @@ public class CalendarHelper {
         new Thread(createLoader(calendarView, ViewType.MONTH, calendarMapCallback), "Calendar-Loader").start();
     }
 
-    // Internal shared loader factory
+    /**
+     * Shared loader for any view type.
+     */
     private static Runnable createLoader(
             CalendarView calendarView,
             ViewType viewType,
@@ -66,10 +67,14 @@ public class CalendarHelper {
     ) {
         return () -> {
             try {
-                // Phase 1: load data off FX thread
+                // Phase 1: Load data off FX thread
                 UUID userId = SessionManager.getInstance().getLoggedInUserId();
+
+                // Load calendars for user
                 List<CalendarModel> models = CalendarRepository.findByUser(userId);
                 var ids = models.stream().map(CalendarModel::getId).collect(Collectors.toList());
+
+                // Load all events and exams for those calendars
                 Map<UUID, List<CalendarEvent>> eventsByCal =
                         CalendarEventRepository.findByCalendarIds(ids);
                 Map<UUID, List<ExamEvent>> examsByCal =
@@ -77,7 +82,7 @@ public class CalendarHelper {
 
                 LoadedCalendars data = new LoadedCalendars(models, eventsByCal, examsByCal);
 
-                // Phase 2: apply on FX thread
+                // Phase 2: Apply to FX thread
                 javafx.application.Platform.runLater(() -> {
                     calendarView.getCalendarSources().clear();
                     CalendarSource src = new CalendarSource("Planify");
@@ -86,22 +91,28 @@ public class CalendarHelper {
                     for (CalendarModel cm : data.models) {
                         Calendar fxCal = new Calendar(cm.getName());
                         fxCal.setStyle(Calendar.Style.valueOf(cm.getStyle()));
+
                         data.eventsByCal.getOrDefault(cm.getId(), Collections.emptyList())
                                 .forEach(e -> fxCal.addEntry(CalendarEventMapper.toEntry(e, fxCal)));
+
                         data.examsByCal.getOrDefault(cm.getId(), Collections.emptyList())
                                 .forEach(ex -> fxCal.addEntry(CalendarEventMapper.toEntry(ex, fxCal)));
+
                         src.getCalendars().add(fxCal);
                         calendarsById.put(cm.getId(), fxCal);
                     }
                     calendarView.getCalendarSources().add(src);
-                    // Provide the map to the caller/controller:
+
+                    // Provide the map to the caller
                     calendarMapCallback.accept(calendarsById);
 
+                    // Switch view
                     if (viewType == ViewType.MONTH) {
                         calendarView.showMonthPage();
                     } else {
                         calendarView.showWeekPage();
                     }
+
                     applyStudyPreferences(calendarView);
                 });
             } catch (Exception ex) {
@@ -126,6 +137,7 @@ public class CalendarHelper {
                     calendarView.setStartTime(start);
                     calendarView.setEndTime(end);
 
+                    // Blocked days
                     var blockedDays = calendarView.getWeekendDays();
                     blockedDays.clear();
                     String csv = rs.getString("blocked_days");
@@ -133,7 +145,9 @@ public class CalendarHelper {
                         for (String d : csv.split(",")) {
                             try {
                                 blockedDays.add(DayOfWeek.valueOf(d.trim()));
-                            } catch (IllegalArgumentException ignored) {}
+                            } catch (IllegalArgumentException ignored) {
+                                // Ignore invalid day names
+                            }
                         }
                     }
                 }
@@ -143,10 +157,14 @@ public class CalendarHelper {
         }
     }
 
-    // Simple enum to distinguish views
+    /**
+     * Enum to distinguish view types.
+     */
     private enum ViewType { WEEK, MONTH }
 
-    // DTO for passing loaded data
+    /**
+     * DTO for passing loaded data between background thread and FX thread.
+     */
     private static class LoadedCalendars {
         final List<CalendarModel> models;
         final Map<UUID, List<CalendarEvent>> eventsByCal;

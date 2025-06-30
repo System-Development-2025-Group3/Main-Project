@@ -1,3 +1,4 @@
+// WHY IS THIS A CLASS??? I DONT EVEN KNOW
 package application.studyspace.services.customerInteraction;
 
 

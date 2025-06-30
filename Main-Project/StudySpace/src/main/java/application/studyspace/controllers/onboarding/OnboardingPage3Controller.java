@@ -1,14 +1,17 @@
 package application.studyspace.controllers.onboarding;
 
+// Imports
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.ValidationUtils;
 import application.studyspace.services.auth.ValidationUtils.ExamValidationResult;
 import application.studyspace.services.calendar.*;
 import application.studyspace.services.onboarding.StudyPreferences;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.CalendarView;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,38 +35,61 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller for Onboarding Page 3.
+ * Lets the user create Exams and Blockers and preview them in a calendar.
+ */
 public class OnboardingPage3Controller implements Initializable {
 
     private static final Logger logger = Logger.getLogger(OnboardingPage3Controller.class.getName());
+
+    // Keeps loaded calendars mapped by UUID
     private final Map<UUID, Calendar> calendarMap = new HashMap<>();
 
+    // UI components
     @FXML private StackPane calendarPreviewContainer;
     @FXML private VBox examForm, blockerForm;
     @FXML private ToggleGroup typeToggleGroup;
     @FXML private ToggleButton examToggle, blockerToggle;
+
+    // Exam input fields
     @FXML private TextField examNameField, topicsField, estimatedMinutesField;
-    @FXML private DatePicker exStartDate, evtStartDate, evtEndDate;
-    @FXML private Spinner<LocalTime> exStartTime, exEndTime, evtStartTime, evtEndTime;
+    @FXML private DatePicker exStartDate;
+    @FXML private Spinner<LocalTime> exStartTime, exEndTime;
+
+    // Blocker input fields
+    @FXML private DatePicker evtStartDate, evtEndDate;
+    @FXML private Spinner<LocalTime> evtStartTime, evtEndTime;
     @FXML private CheckBox evtAllDay;
-    @FXML private Button addExamBtn, SaveBtn;
     @FXML private TextField evtTitleField, evtLocationField;
 
+    @FXML private Button addExamBtn, SaveBtn;
+
+    // Onboarding page navigation buttons
     @FXML public Button page1Btn, page2Btn, page3Btn;
 
+    // The calendar preview component
     private CalendarView calendarView;
 
+    // Services for DB operations
     private final CalendarEventMapper     mapper   = new CalendarEventMapper();
     private final CalendarEventRepository calRepo  = new CalendarEventRepository();
     private final ExamEventRepository     exRepo   = new ExamEventRepository();
     private final CalendarRepository      calDef   = new CalendarRepository();
 
+    /**
+     * Called automatically after FXML loads.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Setup calendar preview
         setupPreview();
+
+        // Initially hide close overlay button
         closeOverlayButton.setDisable(true);
         closeOverlayButton.setVisible(false);
 
-        // toggle between exam/blocker
+        // Toggle between exam/blocker forms
         typeToggleGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
             boolean isExam = newT == examToggle;
             examForm.setVisible(isExam);
@@ -73,15 +99,18 @@ public class OnboardingPage3Controller implements Initializable {
         });
         examToggle.setSelected(true);
 
+        // Time spinners for both exam and blocker
         setupTimeSpinners(evtStartTime, evtEndTime);
         setupTimeSpinners(exStartTime,  exEndTime);
 
+        // Button handlers
         addExamBtn.setOnAction(this::handleAddExam);
-        SaveBtn   .setOnAction(this::generateStudyPlan);
-
+        SaveBtn.setOnAction(this::generateStudyPlan);
     }
 
-    /** Called by the calendar loader to provide a fresh map of all loaded calendars. */
+    /**
+     * Stores calendars from async loader.
+     */
     public void setCalendarMap(Map<UUID, Calendar> loadedMap) {
         this.calendarMap.clear();
         if (loadedMap != null) {
@@ -89,6 +118,9 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
+    /**
+     * Creates and configures the preview CalendarView.
+     */
     private void setupPreview() {
         calendarView = new CalendarView();
         calendarView.setShowToolBar(false);
@@ -98,11 +130,15 @@ public class OnboardingPage3Controller implements Initializable {
         calendarView.setShowSearchField(false);
         calendarView.setShowDeveloperConsole(false);
 
+        // Load week view asynchronously
         CalendarHelper.setupWeekCalendarAsync(calendarView, this::setCalendarMap);
 
         calendarPreviewContainer.getChildren().setAll(calendarView);
     }
 
+    /**
+     * Prepares spinners for selecting times.
+     */
     private void setupTimeSpinners(Spinner<LocalTime> start, Spinner<LocalTime> end) {
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
         for (int h = 1; h <= 23; h++) {
@@ -113,7 +149,7 @@ public class OnboardingPage3Controller implements Initializable {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
         StringConverter<LocalTime> conv = new StringConverter<>() {
-            public String toString(LocalTime t)  {
+            public String toString(LocalTime t) {
                 if (t == null) return "";
                 if (t.equals(LocalTime.MIDNIGHT)) return "24:00";
                 return t.format(fmt);
@@ -128,19 +164,19 @@ public class OnboardingPage3Controller implements Initializable {
         SpinnerValueFactory<LocalTime> sf2 = new SpinnerValueFactory.ListSpinnerValueFactory<>(times);
         sf1.setConverter(conv);
         sf2.setConverter(conv);
+
         start.setValueFactory(sf1);
         end.setValueFactory(sf2);
         start.setEditable(true);
         end.setEditable(true);
 
-        // Always keep end >= start
+        // Keep end >= start
         start.valueProperty().addListener((obs, oldStart, newStart) -> {
             LocalTime endTime = end.getValue();
             if (endTime != null && newStart != null && endTime.isBefore(newStart)) {
                 end.getValueFactory().setValue(newStart);
             }
         });
-
         end.valueProperty().addListener((obs, oldEnd, newEnd) -> {
             LocalTime startTime = start.getValue();
             if (startTime != null && newEnd != null && newEnd.isBefore(startTime)) {
@@ -149,16 +185,22 @@ public class OnboardingPage3Controller implements Initializable {
         });
     }
 
+    // Navigation handlers for onboarding
     @FXML public void handlePage1() {
         ViewManager.closeTopOverlay();
-        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", c->{});
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", c -> {});
     }
     @FXML public void handlePage2() {
         ViewManager.closeTopOverlay();
-        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage2.fxml", c->{});
+        ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage2.fxml", c -> {});
     }
-    @FXML public void handlePage3() { /* noop */ }
+    @FXML public void handlePage3() {
+        // Already on Page 3, no-op
+    }
 
+    /**
+     * Called when the user clicks "Add Exam".
+     */
     @FXML public void handleAddExam(ActionEvent e) {
         try {
             saveExam(SessionManager.getInstance().getLoggedInUserId());
@@ -169,6 +211,9 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
+    /**
+     * Called when the user clicks "Add Blocker".
+     */
     @FXML public void handleAddBlocker(ActionEvent e) {
         try {
             saveBlocker(SessionManager.getInstance().getLoggedInUserId());
@@ -179,15 +224,19 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
-    @FXML
-    public Button closeOverlayButton;
-    @FXML
-    public void handleCloseOverlay(ActionEvent event) {
+    @FXML public Button closeOverlayButton;
+
+    /**
+     * Closes the onboarding overlay.
+     */
+    @FXML public void handleCloseOverlay(ActionEvent event) {
         ViewManager.closeTopOverlay();
     }
 
-    @FXML
-    public void generateStudyPlan(ActionEvent e) {
+    /**
+     * Generates study plan for the current user.
+     */
+    @FXML public void generateStudyPlan(ActionEvent e) {
         UUID userId = SessionManager.getInstance().getLoggedInUserId();
         try {
             StudyPlanGenerator.generateStudyPlan(userId);
@@ -200,11 +249,13 @@ public class OnboardingPage3Controller implements Initializable {
         CalendarHelper.updateUserCalendarAsync(SessionManager.getInstance().getUserCalendar(), this::setCalendarMap);
     }
 
-    /** Adds a blocker to the correct calendar via the calendarMap (no more defaultCalendar!) */
+    /**
+     * Saves a blocker event to DB and preview.
+     */
     private void saveBlocker(UUID userId) throws SQLException {
         UUID calId = calDef.getOrCreateBlockersCalendar(userId);
         ZonedDateTime start = ZonedDateTime.of(evtStartDate.getValue(), evtStartTime.getValue(), ZoneId.systemDefault());
-        ZonedDateTime end   = evtAllDay.isSelected()
+        ZonedDateTime end = evtAllDay.isSelected()
                 ? start.plusDays(1)
                 : ZonedDateTime.of(evtEndDate.getValue(), evtEndTime.getValue(), ZoneId.systemDefault());
 
@@ -217,6 +268,7 @@ public class OnboardingPage3Controller implements Initializable {
         );
         ev.setCalendarId(calId);
         calRepo.save(ev);
+
         Calendar fxCal = calendarMap.get(calId);
         if (fxCal != null) {
             fxCal.addEntry(mapper.toEntry(ev, fxCal));
@@ -226,7 +278,9 @@ public class OnboardingPage3Controller implements Initializable {
         logger.info("✅ Blocker registered: " + ev.getTitle());
     }
 
-    /** Adds an exam to its new calendar and also uses calendarMap to show in the preview. */
+    /**
+     * Saves an exam event to DB and preview.
+     */
     private void saveExam(UUID userId) throws SQLException {
         ExamValidationResult vr = ValidationUtils.validateExamFields(
                 examNameField.getText(),
@@ -240,33 +294,29 @@ public class OnboardingPage3Controller implements Initializable {
         }
 
         ZonedDateTime start = ZonedDateTime.of(exStartDate.getValue(), exStartTime.getValue(), ZoneId.systemDefault());
-        ZonedDateTime end   = ZonedDateTime.of(exStartDate.getValue(), exEndTime.getValue(), ZoneId.systemDefault());
+        ZonedDateTime end = ZonedDateTime.of(exStartDate.getValue(), exEndTime.getValue(), ZoneId.systemDefault());
 
-        int topics     = Integer.parseInt(topicsField.getText());
-        int minutes    = Integer.parseInt(estimatedMinutesField.getText());
-        double weight  = 0; // Default weight, not in use
-        int difficulty = 1; // Default difficulty, not in use
-        String description = "";
+        int topics = Integer.parseInt(topicsField.getText());
+        int minutes = Integer.parseInt(estimatedMinutesField.getText());
+        double weight = 0; // Not used
+        int difficulty = 1; // Not used
 
         ExamEvent exam = new ExamEvent(
                 userId,
                 examNameField.getText(),
-                description, // not in use
+                "",
                 "",
                 start, end,
-                weight, difficulty, //not in use
+                weight, difficulty,
                 topics, minutes
         );
 
-        // save to its own calendar
         UUID calId = calDef.createCalendar(userId, exam.getTitle(), "STYLE2");
         exam.setCalendarId(calId);
-
         exRepo.save(exam);
         logger.info("✅ ExamEvent saved: " + exam.getId());
 
-        // If calendarMap is updated, it will include this new calendar AFTER next reload.
-        // But for instant preview, you can add it as a temp calendar if you want:
+        // Preview in the CalendarView
         Calendar fxCal = new Calendar(exam.getTitle());
         fxCal.setStyle(Style.STYLE2);
         fxCal.addEntry(mapper.toEntry(exam, fxCal));
@@ -279,11 +329,14 @@ public class OnboardingPage3Controller implements Initializable {
         }
     }
 
+    /**
+     * Resets the exam form inputs to default.
+     */
     private void resetExamForm() {
         examNameField.clear();
         exStartDate.setValue(null);
-        exStartTime.getValueFactory().setValue(LocalTime.of(8,0));
-        exEndTime  .getValueFactory().setValue(LocalTime.of(10,0));
+        exStartTime.getValueFactory().setValue(LocalTime.of(8, 0));
+        exEndTime.getValueFactory().setValue(LocalTime.of(10, 0));
         topicsField.clear();
         estimatedMinutesField.clear();
     }

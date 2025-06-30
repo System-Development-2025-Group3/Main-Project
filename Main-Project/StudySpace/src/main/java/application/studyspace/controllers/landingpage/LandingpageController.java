@@ -1,12 +1,15 @@
 package application.studyspace.controllers.landingpage;
 
+// Import dependencies
 import application.studyspace.controllers.onboarding.OnboardingPage3Controller;
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.CalendarHelper;
 import application.studyspace.services.calendar.ReconciliationHelper;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.view.CalendarView;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,11 +26,18 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller for the main Landing Page view.
+ * Shows the calendar, allows adding new events, and handles navigation.
+ */
 public class LandingpageController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(LandingpageController.class.getName());
+
+    // Holds the loaded calendars by UUID
     private final Map<UUID, Calendar> calendarMap = new HashMap<>();
 
+    // FXML bindings to UI components
     @FXML private CalendarView calendarView;
     @FXML private VBox addOverlayPane;
     @FXML private ToggleGroup typeToggleGroup;
@@ -36,16 +46,20 @@ public class LandingpageController implements Initializable {
     @FXML private VBox examForm;
     @FXML private VBox blockerForm;
 
+    /**
+     * Called automatically after FXML is loaded.
+     * Sets up the calendar, bindings, and stores the CalendarView.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        // Always load the latest events/calendars for the current user
+        // Load all calendars/events
         refreshCalendarView();
 
-        // Store this CalendarView in the SessionManager for other controllers to update/refresh
+        // Store the CalendarView so other controllers can access it
         SessionManager.getInstance().setUserCalendar(calendarView);
 
-        // Bind overlay form visibility
+        // Bind visibility of the forms to toggle buttons
         examForm.visibleProperty().bind(examToggle.selectedProperty());
         examForm.managedProperty().bind(examToggle.selectedProperty());
         blockerForm.visibleProperty().bind(blockerToggle.selectedProperty());
@@ -53,8 +67,7 @@ public class LandingpageController implements Initializable {
     }
 
     /**
-     * Receives the current map of all loaded calendars (UUID → Calendar).
-     * Keeps the controller in sync with the calendar view.
+     * Updates the internal map of calendars loaded in the CalendarView.
      */
     public void setCalendarMap(Map<UUID, Calendar> loadedMap) {
         this.calendarMap.clear();
@@ -64,27 +77,31 @@ public class LandingpageController implements Initializable {
     }
 
     /**
-     * Reloads and re-renders all calendars and events for the current user in the CalendarView.
-     * You can call this method anytime (e.g., after new events are added by other controllers).
+     * Reloads and redraws the calendar view for the current user.
      */
     public void refreshCalendarView() {
         if (calendarView == null) return;
 
-        // Asynchronously load and update the calendar view without blocking FX thread
+        // Load calendars asynchronously so UI doesn't freeze
         CalendarHelper.updateUserCalendarAsync(calendarView, this::setCalendarMap);
         logger.info("Landing page calendar refreshed.");
     }
 
-    /** Opens the overlay for adding a new exam or blocker; defaults to exam. */
+    /**
+     * Opens the overlay to add a new exam or blocker.
+     * By default, opens the onboarding page as the overlay content.
+     */
     @FXML
     public void openAddOverlay() {
         ViewManager.showOverlay(
                 "/application/studyspace/onboarding/OnboardingPage3.fxml",
                 (OnboardingPage3Controller ctrl) -> {
+                    // Hide onboarding navigation buttons
                     ctrl.page1Btn.setVisible(false);
                     ctrl.page2Btn.setVisible(false);
                     ctrl.page3Btn.setVisible(false);
 
+                    // Show close button
                     ctrl.closeOverlayButton.setDisable(false);
                     ctrl.closeOverlayButton.setVisible(true);
                     ctrl.closeOverlayButton.setManaged(true);
@@ -93,7 +110,9 @@ public class LandingpageController implements Initializable {
         );
     }
 
-    /** Closes the add‑new overlay without saving. */
+    /**
+     * Closes the add-new overlay without saving.
+     */
     @FXML
     public void closeAddOverlay() {
         addOverlayPane.setVisible(false);
@@ -101,8 +120,9 @@ public class LandingpageController implements Initializable {
     }
 
     /**
-     * Invoked when the user clicks “Save” in the "add new event" overlay.
-     * After saving, also refreshes the calendar view to show the new event.
+     * Called when user clicks Save in the overlay.
+     * Currently logs that creation is not implemented.
+     * Refreshes calendar afterward.
      */
     @FXML
     public void saveNewItem() {
@@ -115,12 +135,19 @@ public class LandingpageController implements Initializable {
         closeAddOverlay();
     }
 
-    /** Handler for clicking the “Calendar” item in the sidebar. */
+    /**
+     * Sidebar button: Calendar.
+     * Refreshes the calendar view.
+     */
     @FXML
     private void handleSidebarCalendar() {
         refreshCalendarView();
     }
 
+    /**
+     * Sidebar button: Dashboard.
+     * Reconciles unsaved changes, then navigates to Dashboard.
+     */
     @FXML
     private void handleSidebarDashboard() {
         try {
@@ -131,6 +158,10 @@ public class LandingpageController implements Initializable {
         ViewManager.show("/application/studyspace/landingpage/Dashboard.fxml");
     }
 
+    /**
+     * Sidebar button: Settings.
+     * Reconciles unsaved changes, then navigates to Settings.
+     */
     @FXML
     private void handleSidebarSettings() {
         try {
@@ -141,6 +172,9 @@ public class LandingpageController implements Initializable {
         ViewManager.show("/application/studyspace/landingpage/Settings.fxml");
     }
 
+    /**
+     * Closes the app after syncing unsaved changes.
+     */
     @FXML
     private void handleExit() {
         try {

@@ -1,5 +1,6 @@
 package application.studyspace.controllers.landingpage;
 
+// Import all dependencies
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.calendar.*;
@@ -24,27 +25,33 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for the Dashboard view.
+ * Displays progress rings, countdown to next exam, study stats, and past sessions.
+ */
 public class DashboardController {
 
+    // Progress rings and labels for exams
     @FXML private Label progressTitle1, progressTitle2, progressTitle3, progressTitle4;
     @FXML private Circle progressRing1, progressRing2, progressRing3, progressRing4;
     @FXML private Label progressLabel1, progressLabel2, progressLabel3, progressLabel4;
 
-    // --- For streak/today ---
+    // For study time and streak display
     @FXML private Label timeStudiedLabel;
     @FXML private Label studyStreakLabel;
     @FXML private ImageView fireImage;
     @FXML private VBox pastSessionsBox;
 
-    // --- For next exam timer ---
+    // Labels for the next exam countdown
     @FXML private Label nextExamSubjectLabel;
     @FXML private Label nextExamDaysLabel;
     @FXML private Label nextExamHoursLabel;
     @FXML private Label nextExamMinutesLabel;
 
-    // Timeline for countdown
+    // Timeline to update countdown every second
     private Timeline countdownTimeline;
 
+    // Navigation handlers for sidebar buttons
     @FXML
     private void handleSidebarCalendar() {
         ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
@@ -65,6 +72,7 @@ public class DashboardController {
         Platform.exit();
     }
 
+    // Called automatically after FXML load
     @FXML
     private void initialize() {
         loadExamProgress();
@@ -73,6 +81,7 @@ public class DashboardController {
         loadStudyStats();
     }
 
+    // Updates a circular progress ring and labels
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
         double radius = ring.getRadius();
         double circ = 2 * Math.PI * radius;
@@ -85,33 +94,23 @@ public class DashboardController {
         titleLabel.setText(title);
     }
 
-    // Update study time & streak programmatically
+    // Update study time and streak in UI
     public void setStudyInfo(String studiedTime, int streak) {
         timeStudiedLabel.setText(studiedTime);
         studyStreakLabel.setText(String.valueOf(streak));
         fireImage.setVisible(streak > 0);
     }
 
-
     /**
-     * Loads the next upcoming exam for the current user and updates the UI countdown.
-     * <p>
-     * This method fetches all {@code ExamEvent}s for the logged-in user,
-     * determines which one is scheduled to occur soonest in the future,
-     * and then calls {@link #setNextExam(String, java.time.LocalDateTime)}
-     * to display the live countdown and exam subject on the dashboard.
-     * <p>
-     * If no upcoming exam is found, the UI will indicate that there are no exams.
-     * If an error occurs during loading, it sets fallback values and prints the stack trace.
+     * Loads the next upcoming exam and starts the countdown.
      */
     private void loadNextExam() {
         try {
             UUID userId = application.studyspace.services.auth.SessionManager.getInstance().getLoggedInUserId();
-            // Get all exams for user
             List<ExamEvent> exams = application.studyspace.services.calendar.ExamEventRepository.findByUser(userId);
             java.time.ZonedDateTime now = java.time.ZonedDateTime.now();
 
-            // Find the soonest exam in the future
+            // Find soonest upcoming exam
             ExamEvent nextExam = exams.stream()
                     .filter(e -> e.getStart().isAfter(now))
                     .min(Comparator.comparing(application.studyspace.services.calendar.ExamEvent::getStart))
@@ -129,9 +128,7 @@ public class DashboardController {
     }
 
     /**
-     * Set next exam subject and date, and start ticking down.
-     * @param subject The exam subject (e.g., "Mathe")
-     * @param examDateTime The LocalDateTime when the exam is scheduled
+     * Sets the exam info and starts the countdown timer.
      */
     public void setNextExam(String subject, java.time.LocalDateTime examDateTime) {
         nextExamSubjectLabel.setText(subject);
@@ -146,6 +143,7 @@ public class DashboardController {
         countdownTimeline.play();
     }
 
+    // Updates countdown labels based on time remaining
     private void updateCountdown(java.time.LocalDateTime examDateTime) {
         java.time.Duration duration = java.time.Duration.between(java.time.LocalDateTime.now(), examDateTime);
         long totalSeconds = duration.getSeconds();
@@ -167,6 +165,7 @@ public class DashboardController {
         nextExamMinutesLabel.setText(minutes + "M");
     }
 
+    // Creates a row displaying a past uncompleted session
     private HBox createSessionRow(CalendarEvent event) {
         HBox row = new HBox(14);
         row.getStyleClass().add("session-row");
@@ -184,7 +183,7 @@ public class DashboardController {
         Button skipButton = new Button("−");
         skipButton.getStyleClass().addAll("dashboard-icon-btn", "dashboard-icon-btn-skip");
 
-        // Add handlers for the buttons here
+        // Action handlers
         doneButton.setOnAction(e -> markSessionCompleted(event));
         skipButton.setOnAction(e -> rescheduleSession(event));
 
@@ -192,11 +191,14 @@ public class DashboardController {
         return row;
     }
 
+    /**
+     * Loads and displays uncompleted past study sessions.
+     */
     private void loadPastSessions() {
         try {
             UUID userId = application.studyspace.services.auth.SessionManager.getInstance().getLoggedInUserId();
 
-            // Get the blocker calendar (if any)
+            // Find blocker calendar if exists
             var calendars = application.studyspace.services.calendar.CalendarRepository.findByUser(userId);
             UUID blockerCalendarId = calendars.stream()
                     .filter(c -> c.getName().toLowerCase().contains("blocker"))
@@ -204,28 +206,25 @@ public class DashboardController {
                     .findFirst()
                     .orElse(null);
 
-            // Load uncompleted past sessions
+            // Load past uncompleted events
             List<CalendarEvent> pastEvents =
                     application.studyspace.services.calendar.CalendarEventRepository.findUncompletedPastStudySessionsByUser(userId);
+
+            // Clear previous rows
             pastSessionsBox.getChildren().removeIf(node -> node instanceof HBox);
 
             pastEvents.stream()
-                    // Exclude any that belong to the blocker calendar
                     .filter(evt -> blockerCalendarId == null || !evt.getCalendarId().equals(blockerCalendarId))
-                    // Sort most recent first
                     .sorted(Comparator.comparing(CalendarEvent::getStart).reversed())
-                    // Limit to 6
                     .limit(6)
-                    .forEach(evt -> {
-                        HBox row = createSessionRow(evt);
-                        pastSessionsBox.getChildren().add(row);
-                    });
+                    .forEach(evt -> pastSessionsBox.getChildren().add(createSessionRow(evt)));
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    // Marks a session as completed and refreshes UI
     private void markSessionCompleted(CalendarEvent event) {
         try {
             event.setCompleted(true);
@@ -238,6 +237,7 @@ public class DashboardController {
         }
     }
 
+    // Reschedules a session and refreshes UI
     private void rescheduleSession(CalendarEvent event) {
         try {
             StudyPlanGenerator.rescheduleOneSession(event);
@@ -248,16 +248,16 @@ public class DashboardController {
         }
     }
 
+    /**
+     * Loads study statistics (time studied and streak).
+     */
     private void loadStudyStats() {
         try {
             UUID userId = SessionManager.getInstance().getLoggedInUserId();
 
-            // Load only completed events from DB
             List<CalendarEvent> completedEvents = CalendarEventRepository.findCompletedEventsByUser(userId);
-
             LocalDate today = LocalDate.now();
 
-            // Calculate total minutes studied today
             long totalMinutesToday = completedEvents.stream()
                     .filter(e -> e.getStart().toLocalDate().equals(today))
                     .mapToLong(e -> java.time.Duration.between(e.getStart(), e.getEnd()).toMinutes())
@@ -266,10 +266,8 @@ public class DashboardController {
             double hours = totalMinutesToday / 60.0;
             String formattedHours = String.format("%.1f", hours);
 
-            // Calculate streak based on completed events
             int streak = calculateStreak(completedEvents);
 
-            // Update UI
             setStudyInfo(formattedHours + "h", streak);
 
             System.out.println("[DEBUG] Total hours studied today: " + formattedHours + ", streak: " + streak);
@@ -280,9 +278,8 @@ public class DashboardController {
         }
     }
 
-
+    // Calculates the number of consecutive study days
     private int calculateStreak(List<CalendarEvent> completedEvents) {
-        // Map of LocalDate -> count of completed sessions
         Map<LocalDate, Long> completedByDay = completedEvents.stream()
                 .collect(Collectors.groupingBy(
                         e -> e.getStart().toLocalDate(),
@@ -300,26 +297,27 @@ public class DashboardController {
                 break;
             }
         }
-
         return streak;
     }
 
+    /**
+     * Loads progress rings for up to 4 exams.
+     */
     private void loadExamProgress() {
         try {
             UUID userId = SessionManager.getInstance().getLoggedInUserId();
 
-            // Fetch all exams for user, limit to 4
             List<ExamEvent> exams = ExamEventRepository.findByUser(userId).stream()
                     .limit(4)
                     .collect(Collectors.toList());
 
-            // Debug: print loaded exams
+            // Debug print
             System.out.println("[DEBUG] Loaded exams:");
             for (ExamEvent exam : exams) {
                 System.out.println("  Exam: " + exam.getTitle() + " (" + exam.getId() + ")");
             }
 
-            // Clear and hide all first
+            // Clear and hide all progress UI
             progressTitle1.setText("");
             progressTitle2.setText("");
             progressTitle3.setText("");
@@ -341,24 +339,19 @@ public class DashboardController {
             progressLabel4.setVisible(false);
             progressTitle4.setVisible(false);
 
+            // Loop through exams
             for (int i = 0; i < exams.size(); i++) {
                 ExamEvent exam = exams.get(i);
                 UUID examId = exam.getId();
 
-                // Fetch all sessions for this exam
                 List<CalendarEvent> allSessions = CalendarEventRepository.findByUserAndExam(userId, examId);
-                // Fetch only completed sessions for this exam and user from DB, same as study streak logic
                 List<CalendarEvent> completedSessions = CalendarEventRepository.findCompletedEventsByUserAndExam(userId, examId);
 
-
-                // Subtract 2 from total sessions count to exclude the exam event itself
-                int adjustedTotalSessions = Math.max(allSessions.size() - 2, 1);  // avoid division by zero
+                int adjustedTotalSessions = Math.max(allSessions.size() - 2, 1);
                 int percent = (int) ((completedSessions.size() * 100) / adjustedTotalSessions);
 
-                //DEBUG
+                // Debug logs
                 System.out.println("[DEBUG] Exam '" + exam.getTitle() + "' has " + allSessions.size() + " sessions.");
-                System.out.println("[DEBUG] Completed sessions from DB: " + completedSessions.size());
-                System.out.println("[DEBUG] Adjusted total sessions (minus 2): " + adjustedTotalSessions);
                 System.out.println("[DEBUG] Completed sessions: " + completedSessions.size() + " / " + adjustedTotalSessions + " (" + percent + "%)");
 
                 switch (i) {
@@ -373,12 +366,11 @@ public class DashboardController {
         }
     }
 
+    // Makes a progress ring visible and sets its progress
     private void updateProgress(Circle ring, Label percentLabel, Label titleLabel, String title, int percent) {
         ring.setVisible(true);
         percentLabel.setVisible(true);
         titleLabel.setVisible(true);
         setProgress(ring, percentLabel, titleLabel, title, percent);
     }
-
-
 }

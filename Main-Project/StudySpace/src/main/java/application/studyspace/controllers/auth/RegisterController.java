@@ -1,5 +1,6 @@
 package application.studyspace.controllers.auth;
 
+// Imports for navigation, validation, and UI controls
 import application.studyspace.services.Scenes.ViewManager;
 import application.studyspace.services.auth.ValidationUtils;
 import javafx.animation.PauseTransition;
@@ -13,30 +14,55 @@ import javafx.event.ActionEvent;
 
 import static application.studyspace.services.auth.PasswordHasher.saveToDatabase;
 
+/**
+ * Controller class for handling user registration.
+ * Manages input validation, account creation, and navigation to onboarding.
+ */
 public class RegisterController {
-    @FXML private TextField RegisterEmailField;
-    @FXML private PasswordField RegisterPassword_1;
-    @FXML private PasswordField RegisterPassword_2;
 
-    @FXML private void handleBackToLoginClick(MouseEvent event) {
+    // FXML bindings to registration form fields
+    @FXML private TextField RegisterEmailField;      // Email input field
+    @FXML private PasswordField RegisterPassword_1;  // Password input field
+    @FXML private PasswordField RegisterPassword_2;  // Confirm password input field
+
+    /**
+     * Called when "Back to Login" is clicked.
+     * Navigates back to the login screen.
+     */
+    @FXML
+    private void handleBackToLoginClick(MouseEvent event) {
         ViewManager.show("/application/studyspace/auth/Login.fxml");
     }
+
+    /**
+     * Called when the close button is clicked.
+     * Exits the application.
+     */
     @FXML
     public void handleCloseClick(javafx.scene.input.MouseEvent event) {
         System.exit(0); // Cleanly exits the app
     }
 
-    @FXML private void handleSubmitRegistrationButtonClick(ActionEvent event) {
-        // clear any previous error styling
+    /**
+     * Called when the "Register" button is clicked.
+     * Validates user input and, if valid, persists the new account and starts onboarding.
+     */
+    @FXML
+    private void handleSubmitRegistrationButtonClick(ActionEvent event) {
+        // Clear any existing error styling
         clearErrorStyle(RegisterEmailField);
         clearErrorStyle(RegisterPassword_1);
         clearErrorStyle(RegisterPassword_2);
 
+        // Collect user input
         String email = RegisterEmailField.getText();
         String pw1   = RegisterPassword_1.getText();
         String pw2   = RegisterPassword_2.getText();
+
+        // Validate the inputs
         ValidationUtils.ValidationResult result = ValidationUtils.validateRegistration(email, pw1, pw2);
 
+        // Handle validation outcomes
         switch (result) {
             case EMPTY_EMAIL ->
                     showInlineError(RegisterEmailField, "Please enter your e-mail address");
@@ -65,18 +91,26 @@ public class RegisterController {
             }
 
             case OK -> {
-                // persist new user and go to landing
+                // All validation passed, save user to the database
                 saveToDatabase(email, pw1);
+
+                // Navigate to landing page
                 ViewManager.show("/application/studyspace/landingpage/Landing-Page.fxml");
+
+                // Show onboarding overlay on top of the landing page
+                ViewManager.showOverlay("/application/studyspace/onboarding/OnboardingPage1.fxml", null);
             }
         }
     }
 
     /**
-     * Inline error: clears field, shows message as prompt text in red, red border, then clears after 2s
+     * Shows an inline error message by clearing the field, displaying a red prompt, and styling the border.
+     * Automatically resets styling after 2 seconds.
      */
     private void showInlineError(TextInputControl field, String message) {
+        // Clear input
         field.clear();
+        // Show prompt text and apply red styling
         field.setPromptText(message);
         field.setStyle(
                 "-fx-prompt-text-fill: red; " +
@@ -84,6 +118,7 @@ public class RegisterController {
                         "-fx-border-width: 2;"
         );
 
+        // Remove error styling after delay
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> {
             field.setPromptText("");
@@ -93,12 +128,16 @@ public class RegisterController {
     }
 
     /**
-     * Resets inline styles on a field.
+     * Clears any inline error styles from a field.
      */
     private void clearErrorStyle(TextInputControl field) {
         field.setStyle("");
     }
 
+    /**
+     * Called when the "About Us" button is clicked.
+     * Navigates to the About Us screen.
+     */
     @FXML
     public void handleAboutUsClick(ActionEvent event) {
         ViewManager.show("/application/studyspace/auth/AboutUs.fxml");

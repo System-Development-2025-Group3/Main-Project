@@ -11,21 +11,17 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Repository for saving, loading, and de-duplicating CalendarEvent objects.
+ * Repository for saving, loading, updating, and de-duplicating CalendarEvent objects.
+ * Provides methods to persist CalendarEvent data in the database.
  */
 public class CalendarEventRepository {
 
     /**
-     * Save or update a CalendarEvent, including its calendarId.
+     * Insert or update a CalendarEvent, including its calendarId.
      */
     public static void save(CalendarEvent e) throws SQLException {
         String sql = """
@@ -75,7 +71,7 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Delete a CalendarEvent by its UUID.
+     * Deletes a CalendarEvent by its UUID.
      */
     public static void delete(UUID eventId) throws SQLException {
         String sql = "DELETE FROM calendar_events WHERE event_id = ?";
@@ -90,7 +86,7 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Check if an event already exists to avoid duplicates.
+     * Checks whether an event exists to avoid duplicates.
      */
     public boolean exists(UUID userId, String title, ZonedDateTime start, ZonedDateTime end) throws SQLException {
         String sql = """
@@ -111,20 +107,22 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Load all events for a given calendar.
+     * Load all events for a specific calendar.
      */
     public static List<CalendarEvent> findByCalendarId(UUID calId) throws SQLException {
         return loadByClause("calendar_id = ?", UUIDHelper.uuidToBytes(calId));
     }
 
     /**
-     * Load all events for a given user (across all their calendars).
+     * Load all events for a user across all calendars.
      */
     public static List<CalendarEvent> findByUser(UUID userId) throws SQLException {
         return loadByClause("user_id = ?", UUIDHelper.uuidToBytes(userId));
     }
 
-
+    /**
+     * Helper method to load events using a WHERE clause.
+     */
     private static List<CalendarEvent> loadByClause(String where, Object param) throws SQLException {
         String sql = "SELECT event_id, calendar_id, user_id, title, description, location," +
                 " start_datetime, end_datetime, full_day, hidden," +
@@ -154,11 +152,10 @@ public class CalendarEventRepository {
         return list;
     }
 
-
     /**
-     * Batch-load events for multiple calendars in one query.
+     * Batch-load events for multiple calendars.
      */
-    public static Map<UUID,List<CalendarEvent>> findByCalendarIds(List<UUID> calIds) throws SQLException {
+    public static Map<UUID, List<CalendarEvent>> findByCalendarIds(List<UUID> calIds) throws SQLException {
         if (calIds.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -176,7 +173,7 @@ public class CalendarEventRepository {
             }
 
             ResultSet rs = ps.executeQuery();
-            Map<UUID,List<CalendarEvent>> map = new HashMap<>();
+            Map<UUID, List<CalendarEvent>> map = new HashMap<>();
             while (rs.next()) {
                 CalendarEvent e = mapRow(rs);
                 map.computeIfAbsent(e.getCalendarId(), k -> new ArrayList<>()).add(e);
@@ -186,7 +183,7 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Update an existing CalendarEvent in the DB.
+     * Update an existing CalendarEvent.
      */
     public void update(CalendarEvent e) throws SQLException {
         String sql = """
@@ -211,8 +208,8 @@ public class CalendarEventRepository {
         try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setBytes(1,  UUIDHelper.uuidToBytes(e.getCalendarId()));
-            ps.setBytes(2,  UUIDHelper.uuidToBytes(e.getUserId()));
+            ps.setBytes(1, UUIDHelper.uuidToBytes(e.getCalendarId()));
+            ps.setBytes(2, UUIDHelper.uuidToBytes(e.getUserId()));
             ps.setString(3, e.getTitle());
             ps.setString(4, e.getDescription());
             ps.setString(5, e.getLocation());
@@ -223,9 +220,7 @@ public class CalendarEventRepository {
             ps.setObject(10, e.getMinDuration() == null ? null : (int) e.getMinDuration().toMinutes());
             ps.setString(11, e.getRecurrenceRule());
             ps.setBytes(12, e.getRecurrenceSource() == null ? null : UUIDHelper.uuidToBytes(e.getRecurrenceSource()));
-            ps.setTimestamp(13, e.getRecurrenceId() == null
-                    ? null
-                    : Timestamp.from(e.getRecurrenceId().toInstant()));
+            ps.setTimestamp(13, e.getRecurrenceId() == null ? null : Timestamp.from(e.getRecurrenceId().toInstant()));
             ps.setBytes(14, e.getTagUuid() == null ? null : UUIDHelper.uuidToBytes(e.getTagUuid()));
             ps.setBytes(15, UUIDHelper.uuidToBytes(e.getId()));
 
@@ -234,7 +229,7 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Helper to map a JDBC row to a CalendarEvent.
+     * Maps a JDBC ResultSet row to a CalendarEvent object.
      */
     private static CalendarEvent mapRow(ResultSet rs) throws SQLException {
         UUID id      = UUIDHelper.BytesToUUID(rs.getBytes("event_id"));
@@ -244,10 +239,8 @@ public class CalendarEventRepository {
         String desc  = rs.getString("description");
         String loc   = rs.getString("location");
 
-        ZonedDateTime start = rs.getTimestamp("start_datetime")
-                .toInstant().atZone(ZoneId.systemDefault());
-        ZonedDateTime end   = rs.getTimestamp("end_datetime")
-                .toInstant().atZone(ZoneId.systemDefault());
+        ZonedDateTime start = rs.getTimestamp("start_datetime").toInstant().atZone(ZoneId.systemDefault());
+        ZonedDateTime end   = rs.getTimestamp("end_datetime").toInstant().atZone(ZoneId.systemDefault());
         boolean fullDay = rs.getBoolean("full_day");
         boolean hidden  = rs.getBoolean("hidden");
 
@@ -256,24 +249,10 @@ public class CalendarEventRepository {
                 : Duration.ofMinutes(rs.getInt("min_duration"));
 
         String recurRule = rs.getString("recurrence_rule");
-        UUID   recurSrc  = rs.getBytes("recurrence_source") == null
-                ? null
-                : UUIDHelper.BytesToUUID(rs.getBytes("recurrence_source"));
-        ZonedDateTime recurId = rs.getTimestamp("recurrence_id") == null
-                ? null
-                : rs.getTimestamp("recurrence_id")
-                .toInstant().atZone(ZoneId.systemDefault());
-        UUID tagUuid = rs.getBytes("tag_uuid") == null
-                ? null
-                : UUIDHelper.BytesToUUID(rs.getBytes("tag_uuid"));
-        int completedInt = rs.getInt("completed");
-        boolean completed = completedInt != 0;
-
-        // Debug output to verify correct reading of completed flag
-        System.out.println(String.format(
-                "Mapping Event: ID=%s, Title='%s', Raw completed int=%d, Interpreted completed=%b",
-                id, title, completedInt, completed
-        ));
+        UUID   recurSrc  = rs.getBytes("recurrence_source") == null ? null : UUIDHelper.BytesToUUID(rs.getBytes("recurrence_source"));
+        ZonedDateTime recurId = rs.getTimestamp("recurrence_id") == null ? null : rs.getTimestamp("recurrence_id").toInstant().atZone(ZoneId.systemDefault());
+        UUID tagUuid = rs.getBytes("tag_uuid") == null ? null : UUIDHelper.BytesToUUID(rs.getBytes("tag_uuid"));
+        boolean completed = rs.getInt("completed") != 0;
 
         CalendarEvent e = new CalendarEvent(
                 id, userId, title, desc, loc,
@@ -285,7 +264,7 @@ public class CalendarEventRepository {
     }
 
     /**
-     * Load all past events for a user that are not marked completed.
+     * Finds past events that are not marked as completed.
      */
     public static List<CalendarEvent> findUncompletedPastStudySessionsByUser(UUID userId) throws SQLException {
         String sql = """
@@ -310,6 +289,9 @@ public class CalendarEventRepository {
         return list;
     }
 
+    /**
+     * Save or update without changing the "completed" flag.
+     */
     public static void saveWithoutTouchingCompleted(CalendarEvent e) throws SQLException {
         String sql = """
         INSERT INTO calendar_events (
@@ -356,6 +338,9 @@ public class CalendarEventRepository {
         }
     }
 
+    /**
+     * Finds all completed events by user.
+     */
     public static List<CalendarEvent> findCompletedEventsByUser(UUID userId) throws SQLException {
         String sql = """
         SELECT event_id, calendar_id, user_id, title, description, location,
@@ -379,6 +364,9 @@ public class CalendarEventRepository {
         return list;
     }
 
+    /**
+     * Finds all events associated with a specific exam.
+     */
     public static List<CalendarEvent> findByUserAndExam(UUID userId, UUID examId) throws SQLException {
         String sql = """
         SELECT ce.*
@@ -391,7 +379,6 @@ public class CalendarEventRepository {
         List<CalendarEvent> list = new ArrayList<>();
         try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setBytes(1, UUIDHelper.uuidToBytes(userId));
             ps.setBytes(2, UUIDHelper.uuidToBytes(examId));
 
@@ -404,6 +391,9 @@ public class CalendarEventRepository {
         return list;
     }
 
+    /**
+     * Finds all completed events associated with a specific exam.
+     */
     public static List<CalendarEvent> findCompletedEventsByUserAndExam(UUID userId, UUID examId) throws SQLException {
         String sql = """
         SELECT ce.*
@@ -417,7 +407,6 @@ public class CalendarEventRepository {
         List<CalendarEvent> list = new ArrayList<>();
         try (Connection conn = DataSourceManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setBytes(1, UUIDHelper.uuidToBytes(examId));
             ps.setBytes(2, UUIDHelper.uuidToBytes(userId));
 

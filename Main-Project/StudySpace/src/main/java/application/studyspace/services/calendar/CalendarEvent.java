@@ -4,10 +4,19 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+/**
+ * Represents a calendar event (study session, blocker, etc.)
+ * Can be persisted to and loaded from the database.
+ */
 public class CalendarEvent {
 
+    // Unique identifier for this event
     private final UUID id;
+
+    // Owner of the event
     private final UUID userId;
+
+    // ID of the calendar this event belongs to
     private UUID calendarId;
 
     private String title;
@@ -15,16 +24,24 @@ public class CalendarEvent {
     private String location;
     private ZonedDateTime start;
     private ZonedDateTime end;
+
     private boolean fullDay;
     private boolean hidden;
+
     private Duration minDuration;
+
     private String recurrenceRule;
     private UUID recurrenceSource;
     private ZonedDateTime recurrenceId;
+
     private UUID tagUuid;
+
     private boolean completed;
 
-    // constructor for new events (calendarId to be set via setter)
+    /**
+     * Constructor for creating a new event.
+     * (calendarId can be set later via setter.)
+     */
     public CalendarEvent(UUID userId,
                          String title,
                          String description,
@@ -41,7 +58,10 @@ public class CalendarEvent {
         this.completed   = false;
     }
 
-    // full constructor (used when loading from DB—set calendarId via setter afterward)
+    /**
+     * Full constructor for loading an event from the database.
+     * (calendarId should be set via setter afterward.)
+     */
     public CalendarEvent(UUID id,
                          UUID userId,
                          String title,
@@ -55,7 +75,8 @@ public class CalendarEvent {
                          String recurrenceRule,
                          UUID recurrenceSource,
                          ZonedDateTime recurrenceId,
-                         UUID tagUuid, boolean completed) {
+                         UUID tagUuid,
+                         boolean completed) {
         this.id               = id;
         this.userId           = userId;
         this.title            = title;
@@ -70,10 +91,10 @@ public class CalendarEvent {
         this.recurrenceSource = recurrenceSource;
         this.recurrenceId     = recurrenceId;
         this.tagUuid          = tagUuid;
-        this.completed   = false;
+        this.completed        = false;
     }
 
-    // ---- New calendarId accessor methods ----
+    // ---- calendarId getter/setter ----
 
     public UUID getCalendarId() {
         return calendarId;
@@ -83,7 +104,7 @@ public class CalendarEvent {
         this.calendarId = calendarId;
     }
 
-    // ---- existing getters/setters ----
+    // ---- Basic getters/setters ----
 
     public UUID getId() {
         return id;
@@ -189,9 +210,12 @@ public class CalendarEvent {
         this.tagUuid = tagUuid;
     }
 
-    public boolean isCompleted() { return completed; }
+    public boolean isCompleted() {
+        return completed;
+    }
 
-    public void setCompleted(boolean completed) { this.completed = completed; }
-
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
 }

@@ -33,6 +33,4 @@ public class CalendarModel {
     public String getStyle() {
         return style;
     }
-
-
 }

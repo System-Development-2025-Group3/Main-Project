@@ -27,19 +27,25 @@ public class CalendarEventMapper {
         entry.setUserObject(e);
         entry.setCalendar(fxCalendar);
 
+        // Set start and end times
         entry.setInterval(
                 e.getStart().toLocalDate(),
                 e.getStart().toLocalTime(),
                 e.getEnd().toLocalDate(),
                 e.getEnd().toLocalTime()
         );
+
+        // Basic flags
         entry.setFullDay(e.isFullDay());
         entry.setHidden(e.isHidden());
         entry.setLocation(e.getLocation());
 
+        // Optional recurrence rule
         if (e.getRecurrenceRule() != null) {
             entry.setRecurrenceRule(e.getRecurrenceRule());
         }
+
+        // Optional minimum duration
         if (e.getMinDuration() != null) {
             entry.setMinimumDuration(e.getMinDuration());
         }
@@ -60,15 +66,18 @@ public class CalendarEventMapper {
         entry.setUserObject(e);
         entry.setCalendar(fxCalendar);
 
+        // Set start and end times
         entry.setInterval(
                 e.getStart().toLocalDate(),
                 e.getStart().toLocalTime(),
                 e.getEnd().toLocalDate(),
                 e.getEnd().toLocalTime()
         );
+
         entry.setFullDay(false);
         entry.setLocation(e.getLocation());
 
+        // Title can be updated here if needed
         entry.setTitle(e.getTitle());
 
         System.out.println("[CalendarEventMapper] Mapped ExamEvent to Entry: " + e.getId());

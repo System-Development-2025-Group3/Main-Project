@@ -109,20 +109,23 @@ public class OnboardingPage2Controller implements Initializable {
         if (window != null) {
             File selectedFile = chooser.showOpenDialog(window);
             if (selectedFile != null && selectedFile.exists()) {
+                System.out.printf("[IMPORT] Starting import for file: %s%n", selectedFile.getAbsolutePath());
+
                 boolean success = new CalendarImportHelper(userUUID)
                         .importFromFile(selectedFile.getAbsolutePath());
 
                 if (success) {
-                    System.out.println("✅ File imported: " + selectedFile.getName());
+                    System.out.printf("[IMPORT] ✅ Import successful for file: %s%n", selectedFile.getName());
                     refreshCalendar(userUUID);
+                    System.out.printf("[IMPORT] 🔄 CalendarView refreshed after import.%n");
                 } else {
-                    System.err.println("❌ Import failed: " + selectedFile.getName());
+                    System.err.printf("[IMPORT] ❌ Import failed for file: %s%n", selectedFile.getName());
                 }
             } else {
-                System.out.println("⚠️ No file selected or file not found.");
+                System.out.println("[IMPORT] ⚠️ No file selected or file does not exist.");
             }
         } else {
-            System.err.println("❌ Cannot open FileChooser—no window available.");
+            System.err.println("[IMPORT] ❌ Cannot open FileChooser: no window available.");
         }
     }
 

@@ -1,5 +1,6 @@
 package application.studyspace.services.auth;
 
+// Imports for cryptography, DB access, UUID handling
 import application.studyspace.services.DataBase.DataSourceManager;
 import application.studyspace.services.DataBase.DatabaseConnection;
 import application.studyspace.services.DataBase.UUIDHelper;
@@ -12,8 +13,16 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * Provides methods to hash passwords with salt and save or update them in the database.
+ */
 public class PasswordHasher {
 
+    /**
+     * Generates a random salt encoded in Base64.
+     *
+     * @return a new random salt string
+     */
     public static String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
@@ -21,6 +30,13 @@ public class PasswordHasher {
         return Base64.getEncoder().encodeToString(salt);
     }
 
+    /**
+     * Hashes a password concatenated with a salt using SHA-256.
+     *
+     * @param password The plaintext password
+     * @param salt     The salt string
+     * @return Base64-encoded hash
+     */
     public static String hashPassword(String password, String salt) {
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-256");
@@ -33,13 +49,12 @@ public class PasswordHasher {
     }
 
     /**
-     * Generates a new UUID, hashes the given password+salt, inserts
-     * (user_id, email, password_hash, salt) into the users table,
-     * and returns the generated UUID (or null on failure).
+     * Saves a new user to the database.
+     * Generates a salt, hashes the password, creates a UUID, and stores all values.
      *
      * @param email    The user's email
      * @param password The plaintext password
-     * @return the new user's UUID if saved successfully, or null on error
+     * @return the generated UUID if successful, or null on failure
      */
     public static UUID saveToDatabase(String email, String password) {
         String salt = generateSalt();
@@ -73,13 +88,12 @@ public class PasswordHasher {
     }
 
     /**
-     * Updates the password for an existing user identified by their email.
-     * A new salt is generated for the new password to enhance security.
+     * Updates the password for an existing user by email.
+     * Generates a new salt and hashed password.
      *
-     * @param email       The email of the user whose password needs to be updated.
-     * @param newPassword The new plaintext password.
-     * @return            {@code true} if the password was updated successfully,
-     *                    {@code false} otherwise (e.g., user not found, database error).
+     * @param email       The user's email
+     * @param newPassword The new plaintext password
+     * @return true if updated successfully, false otherwise
      */
     public static boolean updatePassword(String email, String newPassword) {
         if (email == null || email.isEmpty() || newPassword == null || newPassword.isEmpty()) {
@@ -115,6 +129,5 @@ public class PasswordHasher {
             return false;
         }
     }
-
 
 }

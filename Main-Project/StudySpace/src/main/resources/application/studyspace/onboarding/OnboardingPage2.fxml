@@ -23,13 +23,13 @@
         <Label text="Import your schedule"
                style="-fx-font-size:22px; -fx-font-weight:bold;"/>
 
-        <!-- ========== CARD 1: Upload CSV ========== -->
+        <!-- ========== CARD 1: Upload ICS ========== -->
         <VBox spacing="16"
               alignment="TOP_CENTER"
               styleClass="card-box"
               prefWidth="600">
             <VBox spacing="8" alignment="TOP_CENTER">
-                <Label text="Upload a CSV file to import your existing schedule. Make sure the file is formatted correctly."
+                <Label text="Upload a ICS file to import your existing schedule. Make sure the file is formatted correctly."
                        wrapText="true"
                        style="-fx-font-size:14px; -fx-text-fill:#555;"
                        maxWidth="580"/>
