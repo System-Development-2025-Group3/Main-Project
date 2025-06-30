@@ -89,45 +89,73 @@
                 <RowConstraints percentHeight="50" valignment="CENTER" vgrow="ALWAYS"/>
             </rowConstraints>
             <!-- Past sessions card -->
-            <VBox styleClass="card-box"
-                  alignment="TOP_LEFT"
-                  spacing="18"
-                  GridPane.rowIndex="0" GridPane.columnIndex="0"
-                  GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
-                  style="-fx-padding: 28 30 24 30;">
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Past Sessions" styleClass="main-title" />
-                    <Pane HBox.hgrow="ALWAYS"/>
-                    <Label text="Done?" styleClass="done-header"/>
+            <VBox spacing="14">
+                <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                    <Label text="Mathe Session 1" styleClass="session-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button styleClass="icon-btn check-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="✔"/>
+                    <Button styleClass="icon-btn minus-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="−"/>
                 </HBox>
-                <VBox spacing="14">
-                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
-                        <Label text="Mathe Session 1" styleClass="session-label"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button styleClass="icon-btn check-btn" text="✔"/>
-                        <Button styleClass="icon-btn minus-btn" text="−"/>
-                    </HBox>
-                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
-                        <Label text="Mathe Session 2" styleClass="session-label"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button styleClass="icon-btn check-btn" text="✔"/>
-                        <Button styleClass="icon-btn minus-btn" text="−"/>
-                    </HBox>
-                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
-                        <Label text="Mathe Session 3" styleClass="session-label"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button styleClass="icon-btn check-btn" text="✔"/>
-                        <Button styleClass="icon-btn minus-btn" text="−"/>
-                    </HBox>
-                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
-                        <Label text="Mathe Session 4" styleClass="session-label"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button styleClass="icon-btn check-btn" text="✔"/>
-                        <Button styleClass="icon-btn minus-btn" text="−"/>
-                    </HBox>
-
-                </VBox>
+                <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                    <Label text="Mathe Session 2" styleClass="session-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button styleClass="icon-btn check-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="✔"/>
+                    <Button styleClass="icon-btn minus-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="−"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                    <Label text="Mathe Session 3" styleClass="session-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button styleClass="icon-btn check-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="✔"/>
+                    <Button styleClass="icon-btn minus-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="−"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="14" styleClass="session-row">
+                    <Label text="Mathe Session 4" styleClass="session-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button styleClass="icon-btn check-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;"
+                            text="✔"/>
+                    <Button styleClass="icon-btn minus-btn"
+                            style="-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;
+                       -fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;
+                       -fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;
+                       -fx-font-size:11px;-fx-text-fill:white; -fx-padding:1 0 0 0;"
+                            text="−"/>
+                </HBox>
             </VBox>
+
 
             <VBox styleClass="card-box"
                   alignment="TOP_CENTER"

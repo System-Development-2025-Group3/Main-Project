@@ -160,32 +160,40 @@
     -fx-font-weight: 400;
 }
 
-.icon-btn {
+.button.icon-btn, .icon-btn {
     -fx-background-color: #232126;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-min-width: 32px;
-    -fx-min-height: 32px;
-    -fx-max-width: 32px;
-    -fx-max-height: 32px;
+    -fx-border-width: 0;
     -fx-padding: 0;
     -fx-alignment: center;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(30,30,30,0.10), 2, 0.18, 0, 1.2);
+    -fx-effect: none;
     -fx-font-size: 20px;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-content-display: center;
-    -fx-border-width: 0;
+
+    /* ENSURE SQUARE: */
+    -fx-min-width: 32px;
+    -fx-max-width: 32px;
+    -fx-pref-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-height: 32px;
+    -fx-pref-height: 32px;
+    -fx-border-color: red;
 }
 
-.check-btn {
-    /* Optionally you can set different hover color here */
-}
-.minus-btn {
-    /* Optionally you can set different hover color here */
+.button.icon-btn:focused,
+.button.icon-btn:pressed {
+    -fx-background-color: #19191b;
+    -fx-effect: none;
 }
 
+/* Optional: Give a little hover feedback */
+.button.icon-btn:hover {
+    -fx-background-color: #44444a;
+}
 
 .icon-btn:pressed, .icon-btn:focused {
     -fx-background-color: #19191b;
