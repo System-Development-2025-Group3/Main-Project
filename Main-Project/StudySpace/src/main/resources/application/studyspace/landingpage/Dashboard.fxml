@@ -72,16 +72,25 @@
             </Button>
         </VBox>
 
-        <!-- DASHBOARD CARDS AREA -->
-        <GridPane hgap="28" vgap="28" alignment="CENTER"
-                  HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+        <!-- Main content  -->
+        <GridPane fx:id="dashboardGrid"
+                  hgap="28" vgap="28"
+                  alignment="CENTER"
+                  VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" halignment="CENTER" hgrow="ALWAYS"/>
+                <ColumnConstraints percentWidth="50" halignment="CENTER" hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="50" valignment="CENTER" vgrow="ALWAYS"/>
+                <RowConstraints percentHeight="50" valignment="CENTER" vgrow="ALWAYS"/>
+            </rowConstraints>
             <!-- Past Sessions Card -->
             <VBox styleClass="card-box"
                   alignment="TOP_LEFT"
                   spacing="14"
-                  minWidth="0" minHeight="0"
-                  prefWidth="0" prefHeight="0"
                   GridPane.rowIndex="0" GridPane.columnIndex="0"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                 <Label text="Past Sessions" styleClass="main-title"/>
@@ -110,8 +119,6 @@
             <VBox styleClass="card-box"
                   alignment="TOP_CENTER"
                   spacing="16"
-                  minWidth="0" minHeight="0"
-                  prefWidth="0" prefHeight="0"
                   GridPane.rowIndex="0" GridPane.columnIndex="1"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                 <Label text="Time left until next exam" styleClass="main-title"/>
@@ -132,8 +139,6 @@
             <VBox styleClass="card-box"
                   alignment="CENTER"
                   spacing="18"
-                  minWidth="0" minHeight="0"
-                  prefWidth="0" prefHeight="0"
                   GridPane.rowIndex="1" GridPane.columnIndex="0"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                 <HBox alignment="CENTER" spacing="36">
@@ -158,37 +163,39 @@
                   GridPane.rowIndex="1" GridPane.columnIndex="1"
                   GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                 <Label text="Progress per Exam" styleClass="main-title"/>
-                <GridPane hgap="38" vgap="26" alignment="CENTER">
+                <GridPane hgap="90" vgap="60" alignment="CENTER">
+                    <!-- Row 0 -->
                     <VBox alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0">
-                        <Label fx:id="progressTitle1" styleClass="field-label"/>
+                        <Label fx:id="progressTitle1" text="Exam 1" styleClass="field-label"/>
                         <StackPane alignment="CENTER">
                             <Circle fx:id="progressBg1" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
                             <Circle fx:id="progressRing1" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
-                            <Label fx:id="progressLabel1" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                            <Label fx:id="progressLabel1" text="50%" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
                         </StackPane>
                     </VBox>
                     <VBox alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                        <Label fx:id="progressTitle2" styleClass="field-label"/>
+                        <Label fx:id="progressTitle2" text="Exam 2" styleClass="field-label"/>
                         <StackPane alignment="CENTER">
                             <Circle fx:id="progressBg2" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
                             <Circle fx:id="progressRing2" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
-                            <Label fx:id="progressLabel2" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                            <Label fx:id="progressLabel2" text="50%" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
                         </StackPane>
                     </VBox>
+                    <!-- Row 1 -->
                     <VBox alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0">
-                        <Label fx:id="progressTitle3" styleClass="field-label"/>
+                        <Label fx:id="progressTitle3" text="Exam 3" styleClass="field-label"/>
                         <StackPane alignment="CENTER">
                             <Circle fx:id="progressBg3" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
                             <Circle fx:id="progressRing3" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
-                            <Label fx:id="progressLabel3" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                            <Label fx:id="progressLabel3" text="50%" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
                         </StackPane>
                     </VBox>
                     <VBox alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="1">
-                        <Label fx:id="progressTitle4" styleClass="field-label"/>
+                        <Label fx:id="progressTitle4" text="Exam 4" styleClass="field-label"/>
                         <StackPane alignment="CENTER">
                             <Circle fx:id="progressBg4" radius="50" style="-fx-stroke: #ddd; -fx-stroke-width: 10; -fx-fill: transparent;"/>
                             <Circle fx:id="progressRing4" radius="50" style="-fx-stroke: #111; -fx-stroke-width: 10; -fx-fill: transparent;"/>
-                            <Label fx:id="progressLabel4" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
+                            <Label fx:id="progressLabel4" text="50%" style="-fx-font-size: 25px; -fx-font-weight: bold;"/>
                         </StackPane>
                     </VBox>
                 </GridPane>

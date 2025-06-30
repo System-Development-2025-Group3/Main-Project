@@ -74,6 +74,12 @@
     -fx-background-radius: 20px;
     -fx-effect: dropshadow(gaussian, #bbb, 12, 0.12, 0, 3);
     -fx-padding: 24px 32px 24px 32px;
+    -fx-min-width: 370px;
+    -fx-min-height: 270px;
+    -fx-pref-width: 500px;
+    -fx-pref-height: 340px;
+    -fx-max-width: 500px;
+    -fx-max-height: 340px;
 }
 
 /* ============ FIELD LABELS & MAIN TITLES ============ */
