@@ -146,5 +146,9 @@
 .button:pressed {
     -fx-background-color: #000000;
 }
+.big-bold-label {
+    -fx-font-size: 46px;
+    -fx-font-weight: bold;
+}
 
 

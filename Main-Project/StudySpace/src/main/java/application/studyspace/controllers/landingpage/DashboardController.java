@@ -4,9 +4,19 @@ import application.studyspace.services.Scenes.ViewManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 
 public class DashboardController {
+
+    @FXML private Label progressTitle1, progressTitle2, progressTitle3, progressTitle4;
+    @FXML private Circle progressRing1, progressRing2, progressRing3, progressRing4;
+    @FXML private Label progressLabel1, progressLabel2, progressLabel3, progressLabel4;
+
+    // --- New for streak/today ---
+    @FXML private Label timeStudiedLabel;
+    @FXML private Label studyStreakLabel;
+    @FXML private ImageView fireImage;
 
     @FXML
     private void handleSidebarCalendar() {
@@ -28,16 +38,15 @@ public class DashboardController {
         Platform.exit();
     }
 
-    @FXML private Label progressTitle1, progressTitle2, progressTitle3, progressTitle4;
-    @FXML private Circle progressRing1, progressRing2, progressRing3, progressRing4;
-    @FXML private Label progressLabel1, progressLabel2, progressLabel3, progressLabel4;
-
     @FXML
     private void initialize() {
         setProgress(progressRing1, progressLabel1, progressTitle1, "Mathe", 50);
         setProgress(progressRing2, progressLabel2, progressTitle2, "Economics", 60);
         setProgress(progressRing3, progressLabel3, progressTitle3, "English", 75);
         setProgress(progressRing4, progressLabel4, progressTitle4, "Statistics", 95);
+
+        // Set default values for time/streak, e.g. from DB
+        setStudyInfo("3h", 3);
     }
 
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
@@ -50,5 +59,12 @@ public class DashboardController {
 
         percentLabel.setText(String.format("%.0f%%", percent));
         titleLabel.setText(title);
+    }
+
+    // --- Update study time & streak programmatically ---
+    public void setStudyInfo(String studiedTime, int streak) {
+        timeStudiedLabel.setText(studiedTime);
+        studyStreakLabel.setText(String.valueOf(streak));
+        fireImage.setVisible(streak > 0);
     }
 }
