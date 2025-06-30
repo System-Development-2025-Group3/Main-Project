@@ -1,9 +1,8 @@
 package application.studyspace.controllers.landingpage;
 
 import application.studyspace.services.Scenes.ViewManager;
-import application.studyspace.services.calendar.CalendarEvent;
-import application.studyspace.services.calendar.ExamEvent;
-import application.studyspace.services.calendar.StudyPlanGenerator;
+import application.studyspace.services.auth.SessionManager;
+import application.studyspace.services.calendar.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,9 +17,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class DashboardController {
 
@@ -65,17 +67,10 @@ public class DashboardController {
 
     @FXML
     private void initialize() {
-        setProgress(progressRing1, progressLabel1, progressTitle1, "Mathe", 50);
-        setProgress(progressRing2, progressLabel2, progressTitle2, "Economics", 60);
-        setProgress(progressRing3, progressLabel3, progressTitle3, "English", 75);
-        setProgress(progressRing4, progressLabel4, progressTitle4, "Statistics", 95);
-
-        // Example default values for study info
-        setStudyInfo("3h", 3);
-
+        loadExamProgress();
         loadNextExam();
-
         loadPastSessions();
+        loadStudyStats();
     }
 
     private void setProgress(Circle ring, Label percentLabel, Label titleLabel, String title, double percent) {
@@ -184,16 +179,10 @@ public class DashboardController {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button doneButton = new Button("✔");
-        doneButton.setStyle("-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;"
-                + "-fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;"
-                + "-fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;"
-                + "-fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;");
+        doneButton.getStyleClass().addAll("dashboard-icon-btn", "dashboard-icon-btn-check");
 
         Button skipButton = new Button("−");
-        skipButton.setStyle("-fx-background-color:#232126;-fx-background-radius:4;-fx-border-radius:4;"
-                + "-fx-min-width:24px;-fx-pref-width:24px;-fx-max-width:24px;"
-                + "-fx-min-height:24px;-fx-pref-height:24px;-fx-max-height:24px;"
-                + "-fx-font-size:11px;-fx-text-fill:white;-fx-padding:1 0 0 0;");
+        skipButton.getStyleClass().addAll("dashboard-icon-btn", "dashboard-icon-btn-skip");
 
         // Add handlers for the buttons here
         doneButton.setOnAction(e -> markSessionCompleted(event));
@@ -218,7 +207,6 @@ public class DashboardController {
             // Load uncompleted past sessions
             List<CalendarEvent> pastEvents =
                     application.studyspace.services.calendar.CalendarEventRepository.findUncompletedPastStudySessionsByUser(userId);
-
             pastSessionsBox.getChildren().removeIf(node -> node instanceof HBox);
 
             pastEvents.stream()
@@ -238,11 +226,13 @@ public class DashboardController {
         }
     }
 
-    private void markSessionCompleted(application.studyspace.services.calendar.CalendarEvent event) {
+    private void markSessionCompleted(CalendarEvent event) {
         try {
             event.setCompleted(true);
-            application.studyspace.services.calendar.CalendarEventRepository.save(event);
+            CalendarEventRepository.save(event);
             loadPastSessions();
+            loadStudyStats();
+            loadExamProgress();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -252,8 +242,143 @@ public class DashboardController {
         try {
             StudyPlanGenerator.rescheduleOneSession(event);
             loadPastSessions();
+            loadStudyStats();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
+    private void loadStudyStats() {
+        try {
+            UUID userId = SessionManager.getInstance().getLoggedInUserId();
+
+            // Load only completed events from DB
+            List<CalendarEvent> completedEvents = CalendarEventRepository.findCompletedEventsByUser(userId);
+
+            LocalDate today = LocalDate.now();
+
+            // Calculate total minutes studied today
+            long totalMinutesToday = completedEvents.stream()
+                    .filter(e -> e.getStart().toLocalDate().equals(today))
+                    .mapToLong(e -> java.time.Duration.between(e.getStart(), e.getEnd()).toMinutes())
+                    .sum();
+
+            double hours = totalMinutesToday / 60.0;
+            String formattedHours = String.format("%.1f", hours);
+
+            // Calculate streak based on completed events
+            int streak = calculateStreak(completedEvents);
+
+            // Update UI
+            setStudyInfo(formattedHours + "h", streak);
+
+            System.out.println("[DEBUG] Total hours studied today: " + formattedHours + ", streak: " + streak);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setStudyInfo("0h", 0);
+        }
+    }
+
+
+    private int calculateStreak(List<CalendarEvent> completedEvents) {
+        // Map of LocalDate -> count of completed sessions
+        Map<LocalDate, Long> completedByDay = completedEvents.stream()
+                .collect(Collectors.groupingBy(
+                        e -> e.getStart().toLocalDate(),
+                        Collectors.counting()
+                ));
+
+        int streak = 0;
+        LocalDate today = LocalDate.now();
+
+        while (true) {
+            if (completedByDay.getOrDefault(today, 0L) > 0) {
+                streak++;
+                today = today.minusDays(1);
+            } else {
+                break;
+            }
+        }
+
+        return streak;
+    }
+
+    private void loadExamProgress() {
+        try {
+            UUID userId = SessionManager.getInstance().getLoggedInUserId();
+
+            // Fetch all exams for user, limit to 4
+            List<ExamEvent> exams = ExamEventRepository.findByUser(userId).stream()
+                    .limit(4)
+                    .collect(Collectors.toList());
+
+            // Debug: print loaded exams
+            System.out.println("[DEBUG] Loaded exams:");
+            for (ExamEvent exam : exams) {
+                System.out.println("  Exam: " + exam.getTitle() + " (" + exam.getId() + ")");
+            }
+
+            // Clear and hide all first
+            progressTitle1.setText("");
+            progressTitle2.setText("");
+            progressTitle3.setText("");
+            progressTitle4.setText("");
+
+            progressRing1.setVisible(false);
+            progressLabel1.setVisible(false);
+            progressTitle1.setVisible(false);
+
+            progressRing2.setVisible(false);
+            progressLabel2.setVisible(false);
+            progressTitle2.setVisible(false);
+
+            progressRing3.setVisible(false);
+            progressLabel3.setVisible(false);
+            progressTitle3.setVisible(false);
+
+            progressRing4.setVisible(false);
+            progressLabel4.setVisible(false);
+            progressTitle4.setVisible(false);
+
+            for (int i = 0; i < exams.size(); i++) {
+                ExamEvent exam = exams.get(i);
+                UUID examId = exam.getId();
+
+                // Fetch all sessions for this exam
+                List<CalendarEvent> allSessions = CalendarEventRepository.findByUserAndExam(userId, examId);
+                // Fetch only completed sessions for this exam and user from DB, same as study streak logic
+                List<CalendarEvent> completedSessions = CalendarEventRepository.findCompletedEventsByUserAndExam(userId, examId);
+
+
+                // Subtract 2 from total sessions count to exclude the exam event itself
+                int adjustedTotalSessions = Math.max(allSessions.size() - 2, 1);  // avoid division by zero
+                int percent = (int) ((completedSessions.size() * 100) / adjustedTotalSessions);
+
+                //DEBUG
+                System.out.println("[DEBUG] Exam '" + exam.getTitle() + "' has " + allSessions.size() + " sessions.");
+                System.out.println("[DEBUG] Completed sessions from DB: " + completedSessions.size());
+                System.out.println("[DEBUG] Adjusted total sessions (minus 2): " + adjustedTotalSessions);
+                System.out.println("[DEBUG] Completed sessions: " + completedSessions.size() + " / " + adjustedTotalSessions + " (" + percent + "%)");
+
+                switch (i) {
+                    case 0 -> updateProgress(progressRing1, progressLabel1, progressTitle1, exam.getTitle(), percent);
+                    case 1 -> updateProgress(progressRing2, progressLabel2, progressTitle2, exam.getTitle(), percent);
+                    case 2 -> updateProgress(progressRing3, progressLabel3, progressTitle3, exam.getTitle(), percent);
+                    case 3 -> updateProgress(progressRing4, progressLabel4, progressTitle4, exam.getTitle(), percent);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateProgress(Circle ring, Label percentLabel, Label titleLabel, String title, int percent) {
+        ring.setVisible(true);
+        percentLabel.setVisible(true);
+        titleLabel.setVisible(true);
+        setProgress(ring, percentLabel, titleLabel, title, percent);
+    }
+
+
 }

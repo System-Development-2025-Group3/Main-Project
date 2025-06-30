@@ -160,10 +160,12 @@
     -fx-font-weight: 400;
 }
 
-.button.icon-btn, .icon-btn {
+/* Base style for icon buttons */
+.button.icon-btn,
+.icon-btn {
     -fx-background-color: #232126;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
     -fx-border-width: 0;
     -fx-padding: 0;
     -fx-alignment: center;
@@ -174,62 +176,57 @@
     -fx-font-weight: bold;
     -fx-content-display: center;
 
-    /* ENSURE SQUARE: */
+    /* Ensuring square shape */
     -fx-min-width: 32px;
     -fx-max-width: 32px;
     -fx-pref-width: 32px;
     -fx-min-height: 32px;
     -fx-max-height: 32px;
     -fx-pref-height: 32px;
-    -fx-border-color: red;
 }
 
-.button.icon-btn:focused,
-.button.icon-btn:pressed {
-    -fx-background-color: #19191b;
-    -fx-effect: none;
-}
-
-/* Optional: Give a little hover feedback */
-.button.icon-btn:hover {
+/* Hover effect */
+.button.icon-btn:hover,
+.icon-btn:hover {
     -fx-background-color: #44444a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 1);
 }
 
-.icon-btn:pressed, .icon-btn:focused {
+/* Pressed/focused effect */
+.button.icon-btn:pressed,
+.button.icon-btn:focused,
+.icon-btn:pressed,
+.icon-btn:focused {
     -fx-background-color: #19191b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0, 0, 2);
 }
 
-.check-btn {
-    -fx-graphic: url('checkmark_white.svg'); /* See below for how to add SVGs as graphics */
+.button.dashboard-icon-btn {
+    -fx-background-color: #232126;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-min-width:24px;
+    -fx-pref-width:24px;
+    -fx-max-width:24px;
+    -fx-min-height:24px;
+    -fx-pref-height:24px;
+    -fx-max-height:24px;
+    -fx-font-size:11px;
+    -fx-text-fill:white;
+    -fx-padding:1 0 0 0;
 }
 
-.minus-btn {
-    -fx-graphic: url('minus_white.svg');
+/* Hover effect */
+.button.dashboard-icon-btn:hover {
+    -fx-background-color: #3a3f4b; /* or your pill color */
 }
 
-/* Minus Button Style */
-.remove-btn {
-    -fx-background-color: #232323;
-    -fx-background-radius: 8px;
-    -fx-min-width: 28px;
-    -fx-min-height: 28px;
-    -fx-max-width: 28px;
-    -fx-max-height: 28px;
-    -fx-padding: 0;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 1, 0, 0, 1);
-    -fx-alignment: center;
-}
-.remove-btn .text {
-    -fx-fill: white;
-    -fx-font-size: 17px;
+/* Optional: Different hover for check button */
+.button.dashboard-icon-btn-check:hover {
+    -fx-background-color: #2c9f48; /* e.g., greenish on hover */
 }
 
-/* Done? header above checkboxes */
-.done-header {
-    -fx-font-weight: 600;
-    -fx-font-size: 15px;
-    -fx-padding: 0 4 0 0;
-    -fx-text-fill: #333;
-    -fx-alignment: center;
+/* Optional: Different hover for skip button */
+.button.dashboard-icon-btn-skip:hover {
+    -fx-background-color: #c73b3b; /* e.g., reddish on hover */
 }

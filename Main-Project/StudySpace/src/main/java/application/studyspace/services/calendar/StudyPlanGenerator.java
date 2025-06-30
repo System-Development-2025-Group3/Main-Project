@@ -54,8 +54,11 @@ public class StudyPlanGenerator {
         for (CalendarModel examCal : examCals) {
             // 1. Clear only this calendar's own old sessions
             var events = CalendarEventRepository.findByCalendarId(examCal.getId());
+            ZonedDateTime now = ZonedDateTime.now();
             for (CalendarEvent ev : events) {
-                if (ev.getTitle().contains(" Session ") || ev.getTitle().endsWith(" Practice")) {
+                boolean isStudySession = ev.getTitle().contains(" Session ") || ev.getTitle().endsWith(" Practice");
+                boolean isInFuture = ev.getEnd().isAfter(now);
+                if (isStudySession && !ev.isCompleted() && isInFuture) {
                     CalendarEventRepository.delete(ev.getId());
                 }
             }
@@ -90,9 +93,7 @@ public class StudyPlanGenerator {
             LocalDateTime thisExamStart = exam.getStart().toLocalDateTime();
             LocalDateTime thisExamEnd   = exam.getEnd().toLocalDateTime();
             LocalDate thisExamDate      = thisExamStart.toLocalDate();
-
             List<LocalDateTime> slots = new ArrayList<>();
-            LocalDateTime now = LocalDateTime.now();
 
             for (LocalDate date = from; !date.isAfter(to); date = date.plusDays(1)) {
                 if (prefs.getBlockedDays().contains(date.getDayOfWeek())) continue;

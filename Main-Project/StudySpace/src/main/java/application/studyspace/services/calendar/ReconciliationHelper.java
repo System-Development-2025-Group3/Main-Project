@@ -128,7 +128,7 @@ public class ReconciliationHelper {
                         } else if (userObj instanceof CalendarEvent evt) {
                             evt.setStart(entry.getInterval().getStartZonedDateTime());
                             evt.setEnd(entry.getInterval().getEndZonedDateTime());
-                            CalendarEventRepository.save(evt);
+                            CalendarEventRepository.saveWithoutTouchingCompleted(evt);
                         }
                     }
                 }
