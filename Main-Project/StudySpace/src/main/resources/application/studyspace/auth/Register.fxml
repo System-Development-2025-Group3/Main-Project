@@ -23,17 +23,34 @@
                     <TextField fx:id="RegisterEmailField" styleClass="login-input"/>
                 </VBox>
 
-                <!-- Password field -->
-                <VBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Password" styleClass="input-label"/>
-                    <PasswordField fx:id="RegisterPassword_1" styleClass="login-input"/>
-                </VBox>
+                <!-- Password field with overlaid tooltip icon -->
+                <StackPane maxWidth="Infinity" prefHeight="40">  <!-- ensure a height -->
+                    <PasswordField fx:id="RegisterPassword_1" styleClass="login-input" />
 
-                <!-- Confirm Password field -->
-                <VBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Confirm password" styleClass="input-label"/>
-                    <PasswordField fx:id="RegisterPassword_2" styleClass="login-input"/>
-                </VBox>
+                    <Label fx:id="pwTooltipIcon1"
+                           text="?"
+                           styleClass="tooltip-icon"
+                           StackPane.alignment="CENTER_RIGHT">
+                        <StackPane.margin>
+                            <!-- 0 top, 5 right, 0 bottom, 0 left -->
+                            <Insets top="0" right="5" bottom="0" left="0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+
+                <!-- Confirm Password field with overlaid tooltip icon -->
+                <StackPane maxWidth="Infinity" prefHeight="40">
+                    <PasswordField fx:id="RegisterPassword_2" styleClass="login-input" />
+
+                    <Label fx:id="pwTooltipIcon2"
+                           text="?"
+                           styleClass="tooltip-icon"
+                           StackPane.alignment="CENTER_RIGHT">
+                        <StackPane.margin>
+                            <Insets top="0" right="5" bottom="0" left="0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
 
                 <!-- Register button + back link -->
                 <VBox alignment="CENTER" spacing="5">

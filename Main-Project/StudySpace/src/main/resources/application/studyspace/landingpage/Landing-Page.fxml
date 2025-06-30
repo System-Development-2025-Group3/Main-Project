@@ -33,7 +33,7 @@
         <!-- SIDEBAR CARD -->
         <VBox styleClass="login-card"
               maxWidth="240" spacing="20">
-            <Label text="Study Planner" styleClass="login-title"/>
+            <Label text="Planify Menu" styleClass="login-title"/>
 
             <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"

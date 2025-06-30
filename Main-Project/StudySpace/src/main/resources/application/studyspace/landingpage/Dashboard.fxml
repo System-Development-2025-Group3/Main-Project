@@ -34,7 +34,7 @@
               minWidth="240" maxWidth="240" prefWidth="240"
               VBox.vgrow="ALWAYS"
               spacing="20" alignment="TOP_LEFT">
-            <Label text="Study Planner" styleClass="login-title"/>
+            <Label text="Planify Menu" styleClass="login-title"/>
 
             <ToggleButton styleClass="sidebar-button"
                           toggleGroup="$navGroup"

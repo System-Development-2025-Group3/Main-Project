@@ -25,7 +25,6 @@ module application.studyspace {
     opens application.studyspace.controllers.landingpage to javafx.fxml;
     opens application.studyspace.controllers.onboarding to javafx.fxml;
     opens application.studyspace.controllers.scenes to javafx.fxml;
-    opens application.studyspace.services.API to javafx.fxml;
     opens application.studyspace.services.auth to javafx.fxml;
     opens application.studyspace.services.DataBase to javafx.fxml;
     opens application.studyspace.services.Styling to javafx.fxml;
@@ -37,7 +36,6 @@ module application.studyspace {
     exports application.studyspace;
     exports application.studyspace.controllers.auth;
     exports application.studyspace.controllers.landingpage;
-    exports application.studyspace.services.API;
     exports application.studyspace.services.auth;
     exports application.studyspace.services.DataBase;
     exports application.studyspace.services.Styling;

@@ -173,7 +173,7 @@ public class ValidationUtils {
         return pw.length() >= 12
                 && pw.chars().anyMatch(Character::isUpperCase)
                 && pw.chars().anyMatch(Character::isDigit)
-                && pw.matches(".*[%&!?#_\\-$].*");
+                && pw.matches(".*[%@&!?#_\\-$].*");
     }
 
     /**

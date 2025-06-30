@@ -108,7 +108,7 @@ public class OnboardingPage1Controller {
             satBtn.setSelected(blocked.contains(DayOfWeek.SATURDAY));
             sunBtn.setSelected(blocked.contains(DayOfWeek.SUNDAY));
 
-        } catch (SQLException ex) {
+        } catch (SQLException | IllegalStateException ex) {
             System.out.println("No existing prefs, defaults applied.");
         }
 

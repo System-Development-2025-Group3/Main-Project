@@ -6,7 +6,6 @@ import application.studyspace.services.auth.SessionManager;
 import application.studyspace.services.auth.ValidationUtils;
 import application.studyspace.services.auth.ValidationUtils.ExamValidationResult;
 import application.studyspace.services.calendar.*;
-import application.studyspace.services.onboarding.StudyPreferences;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
